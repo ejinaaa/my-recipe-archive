@@ -2,67 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Figma Foundation: Base Styles */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-  }
-}
+    /* Primary Colors (주요 액션용) */
+    --primary-base: #ff8762;
+    --primary-hover: #ff6b47;
+    --primary-active: #e65a3a;
+    --primary-light: #ffb299;
 
-@layer base {
+    /* Secondary Colors (보조 액션용) */
+    --secondary-base: #b9da99;
+    --secondary-hover: #a8cc88;
+    --secondary-active: #97bb77;
+    --secondary-light: #d0e8bb;
+
+    /* Neutral Colors (중립적 요소용) */
+    --neutral-base: #f0f0f0;
+    --neutral-hover: #e5e5e5;
+    --neutral-active: #d0d0d0;
+    --neutral-light: #f8f8f8;
+
+    /* Semantic Colors (의미적 색상) */
+    --background: #ffffff;
+    --surface: #fad6af;
+    --text-primary: #33312f;
+    --text-secondary: #666666;
+    --border: #e0e0e0;
+    --accent: #ffd580;
+
+    /* Border Radius */
+    --radius: 8px;
+  }
+
+  .dark {
+    /* Dark mode 색상 (필요시 확장) */
+    --background: #1a1a1a;
+    --surface: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --border: #404040;
+  }
+
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-text-primary;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+/* Figma Foundation: Component Utilities */
+@layer components {
+  /* Primary Button Styles */
+  .btn-primary {
+    @apply bg-primary-base text-white rounded-lg px-4 py-2 font-medium;
+    @apply hover:bg-primary-hover active:bg-primary-active;
+    @apply transition-colors duration-200;
+  }
+
+  /* Secondary Button Styles */
+  .btn-secondary {
+    @apply bg-secondary-base text-text-primary rounded-lg px-4 py-2 font-medium;
+    @apply hover:bg-secondary-hover active:bg-secondary-active;
+    @apply transition-colors duration-200;
+  }
+
+  /* Neutral Button Styles */
+  .btn-neutral {
+    @apply bg-neutral-base text-text-primary rounded-lg px-4 py-2 font-medium;
+    @apply hover:bg-neutral-hover active:bg-neutral-active;
+    @apply transition-colors duration-200;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-card rounded-lg border border-border p-6;
+    @apply shadow-sm hover:shadow-md transition-shadow duration-200;
+  }
+
+  /* Surface Container */
+  .surface {
+    @apply bg-surface rounded-lg p-4;
+  }
+
+  /* Text Styles */
+  .text-heading-1 {
+    @apply text-[24px] leading-[29px] font-bold;
+  }
+
+  .text-heading-2 {
+    @apply text-[20px] leading-[24px] font-bold;
+  }
+
+  .text-heading-3 {
+    @apply text-[18px] leading-[22px] font-semibold;
+  }
+
+  .text-body-1 {
+    @apply text-[16px] leading-[19px] font-normal;
+  }
+
+  .text-body-2 {
+    @apply text-[14px] leading-[17px] font-normal;
+  }
+
+  .text-caption {
+    @apply text-[12px] leading-[15px] font-normal text-text-secondary;
   }
 }
