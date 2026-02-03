@@ -1,35 +1,127 @@
-import * as React from "react";
-import { Slot } from "@radix-ui/react-slot";
-import { cva, type VariantProps } from "class-variance-authority";
+import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from "@/shared/lib/utils";
+import { cn } from '@/shared/lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        solid: '',
+        outline: 'border-2 bg-transparent',
+        ghost: 'bg-transparent',
+      },
+      colorScheme: {
+        primary: '',
+        secondary: '',
+        neutral: '',
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        sm: 'h-10 px-4 text-body-2',
+        md: 'h-12 px-6 text-body-1',
+        lg: 'h-14 px-8 text-body-1',
+      },
+      transparent: {
+        true: '',
+        false: '',
       },
     },
+    compoundVariants: [
+      // Solid + Primary
+      {
+        variant: 'solid',
+        colorScheme: 'primary',
+        transparent: false,
+        className:
+          'bg-primary-base text-white hover:bg-primary-hover active:bg-primary-active focus-visible:ring-primary-base',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'primary',
+        transparent: true,
+        className:
+          'bg-primary-base/80 text-white hover:bg-primary-hover/80 active:bg-primary-active/80 focus-visible:ring-primary-base backdrop-blur-sm',
+      },
+      // Solid + Secondary
+      {
+        variant: 'solid',
+        colorScheme: 'secondary',
+        transparent: false,
+        className:
+          'bg-secondary-base text-text-primary hover:bg-secondary-hover active:bg-secondary-active focus-visible:ring-secondary-base',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'secondary',
+        transparent: true,
+        className:
+          'bg-secondary-base/80 text-text-primary hover:bg-secondary-hover/80 active:bg-secondary-active/80 focus-visible:ring-secondary-base backdrop-blur-sm',
+      },
+      // Solid + Neutral
+      {
+        variant: 'solid',
+        colorScheme: 'neutral',
+        transparent: false,
+        className:
+          'bg-neutral-base text-text-primary hover:bg-neutral-hover active:bg-neutral-active focus-visible:ring-neutral-base',
+      },
+      {
+        variant: 'solid',
+        colorScheme: 'neutral',
+        transparent: true,
+        className:
+          'bg-neutral-base/80 text-text-primary hover:bg-neutral-hover/80 active:bg-neutral-active/80 focus-visible:ring-neutral-base backdrop-blur-sm',
+      },
+      // Outline + Primary
+      {
+        variant: 'outline',
+        colorScheme: 'primary',
+        className:
+          'border-primary-base text-primary-base hover:bg-primary-base hover:text-white active:bg-primary-hover active:text-white focus-visible:ring-primary-base',
+      },
+      // Outline + Secondary
+      {
+        variant: 'outline',
+        colorScheme: 'secondary',
+        className:
+          'border-secondary-base text-secondary-base hover:bg-secondary-base hover:text-text-primary active:bg-secondary-hover active:text-text-primary focus-visible:ring-secondary-base',
+      },
+      // Outline + Neutral
+      {
+        variant: 'outline',
+        colorScheme: 'neutral',
+        className:
+          'border-neutral-base text-text-primary hover:bg-neutral-base active:bg-neutral-hover focus-visible:ring-neutral-base',
+      },
+      // Ghost + Primary
+      {
+        variant: 'ghost',
+        colorScheme: 'primary',
+        className:
+          'text-primary-base hover:bg-primary-base/10 active:bg-primary-base/20 focus-visible:ring-primary-base',
+      },
+      // Ghost + Secondary
+      {
+        variant: 'ghost',
+        colorScheme: 'secondary',
+        className:
+          'text-secondary-base hover:bg-secondary-base/10 active:bg-secondary-base/20 focus-visible:ring-secondary-base',
+      },
+      // Ghost + Neutral
+      {
+        variant: 'ghost',
+        colorScheme: 'neutral',
+        className:
+          'text-text-primary hover:bg-neutral-base active:bg-neutral-hover focus-visible:ring-neutral-base',
+      },
+    ],
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      variant: 'solid',
+      colorScheme: 'primary',
+      size: 'md',
+      transparent: false,
     },
   },
 );
@@ -41,17 +133,36 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
+  (
+    {
+      className,
+      variant,
+      colorScheme,
+      size,
+      transparent,
+      asChild = false,
+      ...props
+    },
+    ref,
+  ) => {
+    const Comp = asChild ? Slot : 'button';
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({
+            variant,
+            colorScheme,
+            size,
+            transparent,
+            className,
+          }),
+        )}
         ref={ref}
         {...props}
       />
     );
   },
 );
-Button.displayName = "Button";
+Button.displayName = 'Button';
 
 export { Button, buttonVariants };
