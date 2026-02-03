@@ -5,12 +5,12 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         solid: '',
-        outline: 'border-2 bg-transparent',
+        outline: 'border-[1px] bg-transparent',
         ghost: 'bg-transparent',
       },
       colorScheme: {
@@ -19,9 +19,9 @@ const buttonVariants = cva(
         neutral: '',
       },
       size: {
-        sm: 'h-10 px-4 text-body-2',
-        md: 'h-12 px-6 text-body-1',
-        lg: 'h-14 px-8 text-body-1',
+        sm: 'h-10 px-3 text-body-2 [&_svg]:size-4',
+        md: 'h-12 px-4 text-body-1 [&_svg]:size-4',
+        lg: 'h-14 px-[18px] text-body-1 [&_svg]:size-5',
       },
       transparent: {
         true: '',
@@ -123,7 +123,7 @@ const buttonVariants = cva(
       size: 'md',
       transparent: false,
     },
-  },
+  }
 );
 
 export interface ButtonProps
@@ -143,7 +143,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       ...props
     },
-    ref,
+    ref
   ) => {
     const Comp = asChild ? Slot : 'button';
     return (
@@ -155,13 +155,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             size,
             transparent,
             className,
-          }),
+          })
         )}
         ref={ref}
         {...props}
       />
     );
-  },
+  }
 );
 Button.displayName = 'Button';
 
