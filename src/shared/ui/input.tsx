@@ -1,22 +1,59 @@
-import * as React from "react";
+import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from "@/shared/lib/utils";
+import { cn } from '@/shared/lib/utils';
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+const inputVariants = cva(
+  'flex w-full transition-all outline-none disabled:cursor-not-allowed disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        filled: 'border-0 hover:bg-neutral-hover focus:bg-neutral-hover',
+      },
+      size: {
+        sm: 'h-10 px-5 text-body-2 rounded-full',
+        md: 'h-12 px-6 text-body-1 rounded-full',
+        lg: 'h-14 px-6 text-body-1 rounded-full',
+      },
+      colorScheme: {
+        neutral:
+          'bg-neutral-base text-text-primary placeholder:text-text-secondary',
+      },
+    },
+    defaultVariants: {
+      variant: 'filled',
+      size: 'md',
+      colorScheme: 'neutral',
+    },
+  }
+);
+
+export interface InputProps
+  extends Omit<React.ComponentProps<'input'>, 'size'>,
+    VariantProps<typeof inputVariants> {}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  (
+    {
+      className,
+      type = 'text',
+      variant = 'filled',
+      size = 'md',
+      colorScheme = 'neutral',
+      ...props
+    },
+    ref
+  ) => {
     return (
       <input
         type={type}
-        className={cn(
-          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-          className,
-        )}
+        className={cn(inputVariants({ variant, size, colorScheme }), className)}
         ref={ref}
         {...props}
       />
     );
-  },
+  }
 );
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
-export { Input };
+export { Input, inputVariants };
