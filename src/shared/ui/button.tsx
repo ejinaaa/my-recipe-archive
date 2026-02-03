@@ -42,7 +42,7 @@ const buttonVariants = cva(
         colorScheme: 'primary',
         transparent: true,
         className:
-          'bg-primary-base/80 text-white hover:bg-primary-hover/80 active:bg-primary-active/80 focus-visible:ring-primary-base backdrop-blur-sm',
+          'bg-primary-base/60 text-white hover:bg-primary-hover/60 active:bg-primary-active/60 focus-visible:ring-primary-base backdrop-blur-sm',
       },
       // Solid + Secondary
       {
@@ -57,7 +57,7 @@ const buttonVariants = cva(
         colorScheme: 'secondary',
         transparent: true,
         className:
-          'bg-secondary-base/80 text-text-primary hover:bg-secondary-hover/80 active:bg-secondary-active/80 focus-visible:ring-secondary-base backdrop-blur-sm',
+          'bg-secondary-base/60 text-text-primary hover:bg-secondary-hover/60 active:bg-secondary-active/60 focus-visible:ring-secondary-base backdrop-blur-sm',
       },
       // Solid + Neutral
       {
@@ -72,7 +72,7 @@ const buttonVariants = cva(
         colorScheme: 'neutral',
         transparent: true,
         className:
-          'bg-neutral-base/80 text-text-primary hover:bg-neutral-hover/80 active:bg-neutral-active/80 focus-visible:ring-neutral-base backdrop-blur-sm',
+          'bg-neutral-base/60 text-text-primary hover:bg-neutral-hover/60 active:bg-neutral-active/60 focus-visible:ring-neutral-base backdrop-blur-sm',
       },
       // Outline + Primary
       {

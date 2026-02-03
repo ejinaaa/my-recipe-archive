@@ -46,7 +46,7 @@ const badgeVariants = cva(
         colorScheme: 'primary',
         transparent: true,
         className:
-          'bg-primary-base/80 text-white hover:bg-primary-hover/80 active:bg-primary-active/80 focus-visible:ring-primary-base backdrop-blur-sm',
+          'bg-primary-base/60 text-white hover:bg-primary-hover/60 active:bg-primary-active/60 focus-visible:ring-primary-base backdrop-blur-sm',
       },
       // Solid + Secondary
       {
@@ -61,7 +61,7 @@ const badgeVariants = cva(
         colorScheme: 'secondary',
         transparent: true,
         className:
-          'bg-secondary-base/80 text-text-primary hover:bg-secondary-hover/80 active:bg-secondary-active/80 focus-visible:ring-secondary-base backdrop-blur-sm',
+          'bg-secondary-base/60 text-text-primary hover:bg-secondary-hover/60 active:bg-secondary-active/60 focus-visible:ring-secondary-base backdrop-blur-sm',
       },
       // Solid + Neutral (연한 회색)
       {
@@ -78,7 +78,7 @@ const badgeVariants = cva(
         transparent: true,
         selected: false,
         className:
-          'bg-neutral-base/80 text-text-primary hover:bg-neutral-hover/80 active:bg-neutral-active/80 focus-visible:ring-neutral-base backdrop-blur-sm',
+          'bg-neutral-base/60 text-text-primary hover:bg-neutral-hover/60 active:bg-neutral-active/60 focus-visible:ring-neutral-base backdrop-blur-sm',
       },
       // Solid + Surface (연한 베이지)
       {
@@ -93,7 +93,7 @@ const badgeVariants = cva(
         colorScheme: 'surface',
         transparent: true,
         selected: false,
-        className: 'bg-surface/80 text-text-primary',
+        className: 'bg-surface/60 text-text-primary',
       },
       // Outline + Primary
       {
@@ -108,7 +108,7 @@ const badgeVariants = cva(
         colorScheme: 'primary',
         transparent: true,
         className:
-          'border-primary-base/80 text-primary-base hover:border-transparent hover:bg-primary-base/80 hover:text-white active:border-transparent active:bg-primary-hover/80 active:text-white focus-visible:ring-primary-base backdrop-blur-sm',
+          'border-primary-base/60 text-primary-base hover:border-transparent hover:bg-primary-base/60 hover:text-white active:border-transparent active:bg-primary-hover/60 active:text-white focus-visible:ring-primary-base backdrop-blur-sm',
       },
       // Outline + Secondary
       {
@@ -123,7 +123,7 @@ const badgeVariants = cva(
         colorScheme: 'secondary',
         transparent: true,
         className:
-          'border-secondary-base/80 text-secondary-base hover:border-transparent hover:bg-secondary-base/80 hover:text-text-primary active:border-transparent active:bg-secondary-hover/80 active:text-text-primary focus-visible:ring-secondary-base backdrop-blur-sm',
+          'border-secondary-base/60 text-secondary-base hover:border-transparent hover:bg-secondary-base/60 hover:text-text-primary active:border-transparent active:bg-secondary-hover/60 active:text-text-primary focus-visible:ring-secondary-base backdrop-blur-sm',
       },
       // Outline + Neutral
       {
@@ -138,7 +138,7 @@ const badgeVariants = cva(
         colorScheme: 'neutral',
         transparent: true,
         className:
-          'border-neutral-active/80 text-text-primary hover:border-transparent hover:bg-text-primary/80 hover:text-white active:border-transparent active:bg-text-primary/70 active:text-white focus-visible:ring-text-primary backdrop-blur-sm',
+          'border-neutral-active/60 text-text-primary hover:border-transparent hover:bg-text-primary/60 hover:text-white active:border-transparent active:bg-text-primary/70 active:text-white focus-visible:ring-text-primary backdrop-blur-sm',
       },
       // Outline + Surface
       {
@@ -151,7 +151,7 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'surface',
         transparent: true,
-        className: 'border-surface/80 text-text-primary',
+        className: 'border-surface/60 text-text-primary',
       },
       // Selected + Solid + Primary
       {
@@ -175,7 +175,7 @@ const badgeVariants = cva(
         variant: 'solid',
         colorScheme: 'neutral',
         className:
-          'bg-text-primary text-white hover:bg-text-primary/90 active:bg-text-primary/80 focus-visible:ring-text-primary',
+          'bg-text-primary text-white hover:bg-text-primary/90 active:bg-text-primary/60 focus-visible:ring-text-primary',
       },
       // Selected + Solid + Surface
       {
@@ -206,7 +206,7 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'neutral',
         className:
-          'border-transparent bg-text-primary text-white hover:bg-text-primary/90 active:bg-text-primary/80 focus-visible:ring-text-primary',
+          'border-transparent bg-text-primary text-white hover:bg-text-primary/90 active:bg-text-primary/60 focus-visible:ring-text-primary',
       },
       // Selected + Outline + Surface
       {
@@ -222,7 +222,7 @@ const badgeVariants = cva(
         colorScheme: 'primary',
         transparent: true,
         className:
-          'bg-primary-active/80 text-white hover:bg-primary-hover/80 active:bg-primary-active/70 focus-visible:ring-primary-base backdrop-blur-sm',
+          'bg-primary-active/60 text-white hover:bg-primary-hover/60 active:bg-primary-active/70 focus-visible:ring-primary-base backdrop-blur-sm',
       },
       // Selected + Solid + Secondary + Transparent
       {
@@ -231,7 +231,7 @@ const badgeVariants = cva(
         colorScheme: 'secondary',
         transparent: true,
         className:
-          'bg-secondary-active/80 text-text-primary hover:bg-secondary-hover/80 active:bg-secondary-active/70 focus-visible:ring-secondary-base backdrop-blur-sm',
+          'bg-secondary-active/60 text-text-primary hover:bg-secondary-hover/60 active:bg-secondary-active/70 focus-visible:ring-secondary-base backdrop-blur-sm',
       },
       // Selected + Solid + Neutral + Transparent
       {
@@ -240,7 +240,7 @@ const badgeVariants = cva(
         colorScheme: 'neutral',
         transparent: true,
         className:
-          'bg-text-primary/80 text-white hover:bg-text-primary/70 active:bg-text-primary/60 focus-visible:ring-text-primary backdrop-blur-sm',
+          'bg-text-primary/60 text-white hover:bg-text-primary/70 active:bg-text-primary/60 focus-visible:ring-text-primary backdrop-blur-sm',
       },
       // Selected + Solid + Surface + Transparent
       {
@@ -248,7 +248,7 @@ const badgeVariants = cva(
         variant: 'solid',
         colorScheme: 'surface',
         transparent: true,
-        className: 'bg-text-primary/80 text-white',
+        className: 'bg-text-primary/60 text-white',
       },
       // Selected + Outline + Primary + Transparent
       {
@@ -257,7 +257,7 @@ const badgeVariants = cva(
         colorScheme: 'primary',
         transparent: true,
         className:
-          'border-transparent bg-primary-base/80 text-white hover:bg-primary-hover/80 active:bg-primary-active/80 focus-visible:ring-primary-base backdrop-blur-sm',
+          'border-transparent bg-primary-base/60 text-white hover:bg-primary-hover/60 active:bg-primary-active/60 focus-visible:ring-primary-base backdrop-blur-sm',
       },
       // Selected + Outline + Secondary + Transparent
       {
@@ -266,7 +266,7 @@ const badgeVariants = cva(
         colorScheme: 'secondary',
         transparent: true,
         className:
-          'border-transparent bg-secondary-base/80 text-text-primary hover:bg-secondary-hover/80 active:bg-secondary-active/80 focus-visible:ring-secondary-base backdrop-blur-sm',
+          'border-transparent bg-secondary-base/60 text-text-primary hover:bg-secondary-hover/60 active:bg-secondary-active/60 focus-visible:ring-secondary-base backdrop-blur-sm',
       },
       // Selected + Outline + Neutral + Transparent
       {
@@ -275,7 +275,7 @@ const badgeVariants = cva(
         colorScheme: 'neutral',
         transparent: true,
         className:
-          'border-transparent bg-text-primary/80 text-white hover:bg-text-primary/70 active:bg-text-primary/60 focus-visible:ring-text-primary backdrop-blur-sm',
+          'border-transparent bg-text-primary/60 text-white hover:bg-text-primary/70 active:bg-text-primary/60 focus-visible:ring-text-primary backdrop-blur-sm',
       },
       // Selected + Outline + Surface + Transparent
       {
@@ -283,7 +283,7 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'surface',
         transparent: true,
-        className: 'border-transparent bg-text-primary/80 text-white',
+        className: 'border-transparent bg-text-primary/60 text-white',
       },
     ],
     defaultVariants: {
