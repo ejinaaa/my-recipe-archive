@@ -65,7 +65,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
         <div className='absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60' />
 
         {/* Content Container */}
-        <div className='relative flex h-full flex-col justify-between pl-2 pr-1.5 pt-1.5 pb-2'>
+        <div className='relative flex h-full flex-col justify-between pl-2 pr-1.5 pt-1.5 pb-4'>
           {/* Top Section: Favorite Button */}
           <div className='flex items-start justify-end'>
             <Button

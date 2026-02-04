@@ -1,14 +1,14 @@
 import type { Recipe } from './types';
 
 /**
- * Mock recipe data for testing and development
+ * 테스트 및 개발용 목업 레시피 데이터
  */
 export const mockRecipes: Recipe[] = [
   {
     id: '1',
     user_id: 'user-1',
-    title: 'Pasta Pomodoro with Basil',
-    description: 'Classic Italian pasta with fresh tomatoes and basil',
+    title: '바질 토마토 파스타',
+    description: '신선한 토마토와 바질을 곁들인 클래식 이탈리아 파스타',
     thumbnail_url:
       'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=800&h=600&fit=crop',
     cooking_time: 15,
@@ -20,8 +20,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '2',
     user_id: 'user-1',
-    title: 'Pasta Aglio Olio with Olives',
-    description: 'Simple garlic and olive oil pasta with Mediterranean flavors',
+    title: '올리브 알리오 올리오',
+    description: '지중해풍 풍미를 담은 심플한 마늘 올리브유 파스타',
     thumbnail_url:
       'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=800&h=600&fit=crop',
     cooking_time: 15,
@@ -33,8 +33,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '3',
     user_id: 'user-2',
-    title: 'Pasta Bolognese',
-    description: 'Rich meat sauce with penne pasta',
+    title: '볼로네제 파스타',
+    description: '진한 미트소스와 펜네 파스타',
     thumbnail_url:
       'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=800&h=600&fit=crop',
     cooking_time: 15,
@@ -46,8 +46,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '4',
     user_id: 'user-2',
-    title: 'Pasta Carbonara',
-    description: 'Creamy Roman pasta with bacon and egg',
+    title: '까르보나라',
+    description: '베이컨과 계란으로 만든 크리미한 로마식 파스타',
     thumbnail_url:
       'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&h=600&fit=crop',
     cooking_time: 15,
@@ -59,7 +59,7 @@ export const mockRecipes: Recipe[] = [
   {
     id: '5',
     user_id: 'user-3',
-    title: 'Pasta Alfredo',
+    title: '알프레도 파스타',
     thumbnail_url:
       'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=800&h=600&fit=crop',
     cooking_time: 20,
@@ -71,8 +71,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '6',
     user_id: 'user-3',
-    title: 'Spaghetti Marinara',
-    description: 'Fresh seafood pasta with tomato sauce',
+    title: '해산물 마리나라 스파게티',
+    description: '토마토소스를 곁들인 신선한 해산물 파스타',
     thumbnail_url:
       'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=800&h=600&fit=crop',
     cooking_time: 25,
@@ -83,8 +83,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '7',
     user_id: 'user-4',
-    title: 'Pesto Pasta',
-    description: 'Vibrant basil pesto with pine nuts',
+    title: '페스토 파스타',
+    description: '잣과 함께하는 생동감 넘치는 바질 페스토',
     thumbnail_url:
       'https://images.unsplash.com/photo-1595295333158-4742f28fbd85?w=800&h=600&fit=crop',
     cooking_time: 10,
@@ -96,7 +96,7 @@ export const mockRecipes: Recipe[] = [
   {
     id: '8',
     user_id: 'user-4',
-    title: 'Mushroom Risotto',
+    title: '버섯 리조또',
     thumbnail_url:
       'https://images.unsplash.com/photo-1476124369491-f51aae654b1d?w=800&h=600&fit=crop',
     cooking_time: 35,
@@ -108,8 +108,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '9',
     user_id: 'user-5',
-    title: 'Caesar Salad',
-    description: 'Crispy romaine with parmesan and croutons',
+    title: '시저 샐러드',
+    description: '파마산과 크루통을 곁들인 아삭한 로메인 샐러드',
     thumbnail_url:
       'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&h=600&fit=crop',
     servings: 2,
@@ -120,8 +120,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '10',
     user_id: 'user-5',
-    title: 'Grilled Salmon',
-    description: 'Pan-seared salmon with lemon butter sauce',
+    title: '구운 연어',
+    description: '레몬 버터 소스를 곁들인 팬 시어 연어',
     thumbnail_url:
       'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&h=600&fit=crop',
     cooking_time: 20,
@@ -133,7 +133,7 @@ export const mockRecipes: Recipe[] = [
   {
     id: '11',
     user_id: 'user-6',
-    title: 'Chicken Teriyaki Bowl',
+    title: '데리야끼 치킨 덮밥',
     thumbnail_url:
       'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop',
     cooking_time: 30,
@@ -145,8 +145,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '12',
     user_id: 'user-6',
-    title: 'Vegetable Stir Fry',
-    description: 'Colorful mixed vegetables with soy sauce',
+    title: '야채 볶음',
+    description: '간장으로 볶은 알록달록 모둠 채소',
     thumbnail_url:
       'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&h=600&fit=crop',
     cooking_time: 15,
@@ -157,8 +157,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '13',
     user_id: 'user-7',
-    title: 'Beef Burger',
-    description: 'Juicy beef patty with fresh toppings',
+    title: '비프 버거',
+    description: '신선한 토핑을 곁들인 육즙 가득 소고기 패티',
     thumbnail_url:
       'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&h=600&fit=crop',
     cooking_time: 25,
@@ -170,7 +170,7 @@ export const mockRecipes: Recipe[] = [
   {
     id: '14',
     user_id: 'user-7',
-    title: 'Margherita Pizza',
+    title: '마르게리타 피자',
     thumbnail_url:
       'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop',
     cooking_time: 40,
@@ -182,8 +182,8 @@ export const mockRecipes: Recipe[] = [
   {
     id: '15',
     user_id: 'user-8',
-    title: 'Avocado Toast',
-    description: 'Creamy avocado on toasted sourdough',
+    title: '아보카도 토스트',
+    description: '사워도우 토스트 위의 크리미한 아보카도',
     thumbnail_url:
       'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&h=600&fit=crop',
     cooking_time: 5,
