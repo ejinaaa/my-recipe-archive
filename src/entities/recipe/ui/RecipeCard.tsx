@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Clock, UtensilsCrossed, Heart } from 'lucide-react';
+import { Clock, UtensilsCrossed } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { cn } from '@/shared/lib/utils';
 import type { Recipe } from '../model/types';
 
@@ -31,11 +31,6 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
   ) => {
     const { title, description, thumbnail_url, cooking_time, servings } =
       recipe;
-
-    const handleFavoriteClick = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      onToggleFavorite?.();
-    };
 
     return (
       <div
@@ -68,20 +63,10 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
         <div className='relative flex h-full flex-col justify-between pl-2 pr-1.5 pt-1.5 pb-4'>
           {/* Top Section: Favorite Button */}
           <div className='flex items-start justify-end'>
-            <Button
-              variant='solid'
-              colorScheme='neutral'
-              size='sm'
-              transparent={true}
-              onClick={handleFavoriteClick}
-              className={cn(
-                'shrink-0 hover:scale-110',
-                isFavorite && 'text-primary-base'
-              )}
-              aria-label={isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가'}
-            >
-              <Heart className={cn('size-5', isFavorite && 'fill-current')} />
-            </Button>
+            <FavoriteButton
+              isFavorite={isFavorite}
+              onToggle={onToggleFavorite}
+            />
           </div>
 
           {/* Bottom Section: Badges, Title and Description */}
