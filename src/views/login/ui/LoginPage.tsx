@@ -3,11 +3,28 @@
 import { AppLogo } from '@/shared/ui/app-logo';
 import { Button } from '@/shared/ui/button';
 import { KakaoIcon } from '@/shared/ui/kakao-icon';
+import { createClient } from '@/shared/api/supabase/client';
 
 export function LoginPage() {
-  const handleKakaoLogin = () => {
-    // TODO: 카카오 로그인 로직 구현
-    console.log('카카오 로그인 시작');
+  const handleKakaoLogin = async () => {
+    try {
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'kakao',
+        options: {
+          redirectTo: `${window.location.origin}/auth/confirm?next=/recipes`,
+        },
+      });
+
+      if (error) {
+        console.error('카카오 로그인 오류:', error.message);
+        alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('카카오 로그인 예외:', error);
+      alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
