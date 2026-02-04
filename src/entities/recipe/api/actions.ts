@@ -1,0 +1,63 @@
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
+import { createRecipe, updateRecipe, deleteRecipe } from './server';
+
+/**
+ * Server Action: Create a new recipe
+ * Automatically revalidates the recipes page after creation
+ */
+export async function createRecipeAction(data: RecipeInsert): Promise<Recipe> {
+  try {
+    const recipe = await createRecipe(data);
+
+    // Revalidate related pages
+    revalidatePath('/recipes');
+    revalidatePath(`/recipes/${recipe.id}`);
+
+    return recipe;
+  } catch (error) {
+    console.error('[Recipe Actions] createRecipeAction error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Server Action: Update an existing recipe
+ * Automatically revalidates the recipe pages after update
+ */
+export async function updateRecipeAction(
+  id: string,
+  data: RecipeUpdate
+): Promise<Recipe> {
+  try {
+    const recipe = await updateRecipe(id, data);
+
+    // Revalidate related pages
+    revalidatePath('/recipes');
+    revalidatePath(`/recipes/${id}`);
+
+    return recipe;
+  } catch (error) {
+    console.error('[Recipe Actions] updateRecipeAction error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Server Action: Delete a recipe
+ * Automatically revalidates the recipes page after deletion
+ */
+export async function deleteRecipeAction(id: string): Promise<void> {
+  try {
+    await deleteRecipe(id);
+
+    // Revalidate related pages
+    revalidatePath('/recipes');
+    revalidatePath(`/recipes/${id}`);
+  } catch (error) {
+    console.error('[Recipe Actions] deleteRecipeAction error:', error);
+    throw error;
+  }
+}
