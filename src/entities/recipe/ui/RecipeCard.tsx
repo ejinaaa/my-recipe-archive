@@ -65,7 +65,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
         <div className='absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60' />
 
         {/* Content Container */}
-        <div className='relative flex h-full flex-col justify-between p-4'>
+        <div className='relative flex h-full flex-col justify-between pl-2 pr-1.5 pt-1.5 pb-2'>
           {/* Top Section: Favorite Button */}
           <div className='flex items-start justify-end'>
             <Button
@@ -85,10 +85,10 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
           </div>
 
           {/* Bottom Section: Badges, Title and Description */}
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-1.5'>
             {/* Badges */}
             {(cooking_time || servings) && (
-              <div className='flex flex-wrap gap-2'>
+              <div className='flex flex-wrap gap-1'>
                 {cooking_time && (
                   <Badge
                     variant='solid'
@@ -116,11 +116,9 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
 
             {/* Title and Description */}
             <div className='flex flex-col gap-1'>
-              <h3 className='text-heading-3 text-white line-clamp-2'>
-                {title}
-              </h3>
+              <h3 className='text-body-1 text-white line-clamp-2'>{title}</h3>
               {description && (
-                <p className='text-body-2 text-white/90 line-clamp-1'>
+                <p className='text-caption text-white/90 line-clamp-1'>
                   {description}
                 </p>
               )}

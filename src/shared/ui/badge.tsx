@@ -5,7 +5,7 @@ import { X } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const badgeVariants = cva(
         surface: '',
       },
       size: {
-        sm: 'h-7 px-2.5 text-caption [&_svg]:size-3',
+        sm: 'h-6 px-1.5 text-caption [&_svg]:size-3',
         md: 'h-8 px-3 text-body-2 [&_svg]:size-3.5',
         lg: 'h-9 px-4 text-body-1 [&_svg]:size-4',
       },

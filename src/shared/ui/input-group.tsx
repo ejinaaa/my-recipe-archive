@@ -175,7 +175,8 @@ function InputGroupButton({
     <Button
       type={type}
       data-size={size}
-      variant={'ghost'}
+      variant={'solid'}
+      // transparent
       colorScheme={colorScheme || buttonColorScheme}
       disabled={disabled}
       className={cn(
