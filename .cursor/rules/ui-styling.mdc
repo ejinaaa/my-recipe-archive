@@ -1,0 +1,139 @@
+---
+description: UI 스타일링 및 디자인 시스템 규칙
+globs: '**/*.tsx'
+alwaysApply: false
+---
+
+# UI 스타일링 규칙
+
+모든 UI 컴포넌트는 tailwind.config.ts에 정의된 디자인 시스템을 따릅니다.
+
+## Typography
+
+```typescript
+// ✅ GOOD - tailwind.config.ts의 커스텀 클래스 사용
+<h1 className="text-heading-1">제목</h1>
+<h2 className="text-heading-2">섹션 제목</h2>
+<h3 className="text-heading-3">카드 제목</h3>
+<p className="text-body-1">본문</p>
+<p className="text-body-2">설명</p>
+<span className="text-caption">작은 텍스트</span>
+
+// ❌ BAD - 임의의 크기 사용 금지
+<h1 className="text-2xl font-bold">제목</h1>
+<p className="text-base">본문</p>
+```
+
+### Typography 정의
+
+| 클래스           | 크기 | Weight   | 용도              |
+| ---------------- | ---- | -------- | ----------------- |
+| `text-heading-1` | 24px | Bold     | 페이지 제목       |
+| `text-heading-2` | 20px | Bold     | 섹션 제목         |
+| `text-heading-3` | 18px | SemiBold | 카드 제목         |
+| `text-body-1`    | 16px | Regular  | 본문              |
+| `text-body-2`    | 14px | Regular  | 설명, 부가 정보   |
+| `text-caption`   | 12px | Regular  | 작은 텍스트, 라벨 |
+
+## Colors
+
+```typescript
+// ✅ GOOD - 정의된 컬러 사용
+<button className="bg-primary-base text-white">버튼</button>
+<p className="text-text-primary">주요 텍스트</p>
+<span className="text-text-secondary">보조 텍스트</span>
+
+// ❌ BAD - 임의의 색상 사용 금지
+<button className="bg-red-500">버튼</button>
+<p className="text-gray-900">텍스트</p>
+```
+
+### Color Palette
+
+| 용도           | 클래스                                      | 색상    |
+| -------------- | ------------------------------------------- | ------- |
+| Primary        | `text-primary-base` / `bg-primary-base`     | #FF8762 |
+| Secondary      | `text-secondary-base` / `bg-secondary-base` | #B9DA99 |
+| Text Primary   | `text-text-primary`                         | #33312F |
+| Text Secondary | `text-text-secondary`                       | #666666 |
+| Background     | `bg-background`                             | #FFFFFF |
+| Border         | `border-border`                             | #E0E0E0 |
+
+## Spacing
+
+```typescript
+// ✅ GOOD - 일관된 간격 사용
+<div className="gap-1">4px</div>
+<div className="gap-2">8px</div>
+<div className="gap-3">12px</div>
+<div className="gap-4">16px</div>
+
+<div className="px-2 py-3">패딩</div>
+<div className="px-4 py-4">패딩</div>
+```
+
+## Icons
+
+```typescript
+// ✅ GOOD - lucide-react 아이콘 사용
+import { Search, Heart, User } from 'lucide-react';
+
+<Search className="size-4" /> // 16px
+<Heart className="size-5" />  // 20px
+<User className="size-6" />   // 24px
+
+// ❌ BAD - 다른 아이콘 라이브러리 사용 금지
+import SearchIcon from '@mui/icons-material/Search'; // ❌
+```
+
+## 공통 컴포넌트 사용
+
+```typescript
+// ✅ GOOD - shared/ui 컴포넌트 우선 사용
+import { Button } from '@/shared/ui/button';
+import { InputGroup } from '@/shared/ui/input-group';
+import { Badge } from '@/shared/ui/badge';
+
+<Button variant="solid" colorScheme="primary" size="md">
+  버튼
+</Button>
+
+// ❌ BAD - 직접 스타일링 금지 (공통 컴포넌트 있는 경우)
+<button className="rounded-full bg-primary px-4 py-2">
+  버튼
+</button>
+```
+
+## Border Radius
+
+```typescript
+// ✅ GOOD - 정의된 radius 사용
+<div className="rounded-sm">4px</div>
+<div className="rounded-md">6px</div>
+<div className="rounded-lg">8px</div>
+<div className="rounded-full">완전히 둥글게</div>
+```
+
+## 반응형 디자인
+
+```typescript
+// ✅ GOOD - 모바일 우선 접근
+<div className="px-2 md:px-4 lg:px-6">
+  컨텐츠
+</div>
+
+// 그리드 레이아웃
+<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+  카드들
+</div>
+```
+
+## 체크리스트
+
+새 UI 컴포넌트 생성 시:
+
+- [ ] Typography는 커스텀 클래스 사용?
+- [ ] Color는 정의된 팔레트 사용?
+- [ ] 아이콘은 lucide-react 사용?
+- [ ] 공통 컴포넌트 재사용 확인?
+- [ ] 반응형 디자인 고려?
