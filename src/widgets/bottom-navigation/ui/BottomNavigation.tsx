@@ -2,6 +2,7 @@
 
 import { Home, Search, Heart, User } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
+import { Button } from '@/shared/ui/button';
 
 type NavTab = 'home' | 'search' | 'favorites' | 'profile';
 
@@ -27,29 +28,31 @@ export function BottomNavigation({
         {tabs.map(({ id, icon: Icon, label }) => {
           const isActive = activeTab === id;
           return (
-            <button
+            <Button
               key={id}
               onClick={() => onTabChange?.(id)}
+              variant='ghost'
+              colorScheme='neutral'
               className={cn(
-                'flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors',
+                'flex flex-col items-center justify-center gap-1',
                 'hover:bg-neutral-base/50'
               )}
             >
               <Icon
                 className={cn(
-                  'size-6',
-                  isActive ? 'text-primary-base' : 'text-text-secondary'
+                  'size-5',
+                  isActive ? 'text-text-primary' : 'text-text-secondary'
                 )}
               />
               <span
                 className={cn(
                   'text-caption',
-                  isActive ? 'text-primary-base' : 'text-text-secondary'
+                  isActive ? 'text-text-primary' : 'text-text-secondary'
                 )}
               >
                 {label}
               </span>
-            </button>
+            </Button>
           );
         })}
       </div>
