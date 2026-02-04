@@ -2,6 +2,7 @@
 export {
   getRecipes,
   getRecipe,
+  getRecipesPaginated,
   createRecipe,
   updateRecipe,
   deleteRecipe,
@@ -9,6 +10,9 @@ export {
 
 // Server Actions
 export {
+  getRecipesAction,
+  getRecipeAction,
+  getRecipesPaginatedAction,
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,
@@ -18,6 +22,7 @@ export {
 export {
   useRecipes,
   useRecipe,
+  useInfiniteRecipes,
   useCreateRecipe,
   useUpdateRecipe,
   useDeleteRecipe,
@@ -26,3 +31,4 @@ export {
 
 // Re-export types for convenience
 export type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
+export type { GetRecipesParams, PaginatedRecipes } from './server';

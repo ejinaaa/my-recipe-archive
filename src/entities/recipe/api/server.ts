@@ -8,34 +8,72 @@ import type {
   toRecipeDB,
 } from '../model/types';
 
+export interface GetRecipesParams {
+  userId?: string;
+  limit?: number;
+  offset?: number;
+  searchQuery?: string;
+}
+
+export interface PaginatedRecipes {
+  recipes: Recipe[];
+  total: number;
+  hasMore: boolean;
+}
+
 /**
- * Get all recipes, optionally filtered by user ID
+ * Get recipes with pagination support
  */
-export async function getRecipes(userId?: string): Promise<Recipe[]> {
+export async function getRecipesPaginated(
+  params: GetRecipesParams = {}
+): Promise<PaginatedRecipes> {
   try {
+    const { userId, limit = 6, offset = 0, searchQuery } = params;
     const supabase = await createClient();
-    let query = supabase.from('recipes').select('*');
+
+    let query = supabase.from('recipes').select('*', { count: 'exact' });
 
     if (userId) {
       query = query.eq('user_id', userId);
     }
 
-    const { data, error } = await query.order('created_at', {
-      ascending: false,
-    });
+    if (searchQuery?.trim()) {
+      query = query.or(
+        `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`
+      );
+    }
+
+    const { data, error, count } = await query
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error('[Recipe API] Failed to fetch recipes:', error);
       throw new Error('레시피 목록을 불러오는데 실패했습니다.');
     }
 
-    // Import the conversion function dynamically to avoid circular dependencies
     const { toRecipe } = await import('../model/types');
-    return (data as RecipeDB[]).map(toRecipe);
+    const recipes = (data as RecipeDB[]).map(toRecipe);
+    const total = count || 0;
+
+    return {
+      recipes,
+      total,
+      hasMore: offset + recipes.length < total,
+    };
   } catch (error) {
-    console.error('[Recipe API] getRecipes error:', error);
+    console.error('[Recipe API] getRecipesPaginated error:', error);
     throw error;
   }
+}
+
+/**
+ * Get all recipes, optionally filtered by user ID
+ * For backward compatibility
+ */
+export async function getRecipes(userId?: string): Promise<Recipe[]> {
+  const result = await getRecipesPaginated({ userId, limit: 1000 });
+  return result.recipes;
 }
 
 /**

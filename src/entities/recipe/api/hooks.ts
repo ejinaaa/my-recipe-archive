@@ -2,6 +2,7 @@
 
 import {
   useQuery,
+  useInfiniteQuery,
   useMutation,
   useQueryClient,
   type UseQueryResult,
@@ -9,6 +10,9 @@ import {
 } from '@tanstack/react-query';
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
+  getRecipesAction,
+  getRecipeAction,
+  getRecipesPaginatedAction,
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,
@@ -31,10 +35,7 @@ export const recipeKeys = {
 export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
   return useQuery({
     queryKey: recipeKeys.list(userId),
-    queryFn: async () => {
-      const { getRecipes } = await import('./server');
-      return getRecipes(userId);
-    },
+    queryFn: () => getRecipesAction(userId),
   });
 }
 
@@ -44,11 +45,37 @@ export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
 export function useRecipe(id: string): UseQueryResult<Recipe | null, Error> {
   return useQuery({
     queryKey: recipeKeys.detail(id),
-    queryFn: async () => {
-      const { getRecipe } = await import('./server');
-      return getRecipe(id);
-    },
+    queryFn: () => getRecipeAction(id),
     enabled: !!id,
+  });
+}
+
+/**
+ * Hook to fetch recipes with infinite scroll
+ */
+export function useInfiniteRecipes(params?: {
+  userId?: string;
+  searchQuery?: string;
+}) {
+  return useInfiniteQuery({
+    queryKey: [...recipeKeys.lists(), 'infinite', params],
+    queryFn: ({ pageParam = 0 }) =>
+      getRecipesPaginatedAction({
+        ...params,
+        limit: 6,
+        offset: pageParam,
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined;
+      const loadedCount = allPages.reduce(
+        (sum, page) => sum + page.recipes.length,
+        0
+      );
+      return loadedCount;
+    },
+    initialPageParam: 0,
+    // 검색어 변경 시 기존 데이터 유지 (로딩 UI 없음)
+    placeholderData: previousData => previousData,
   });
 }
 

@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { SearchHeader } from '@/features/recipe-search';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList } from '@/widgets/recipe-list';
-import { mockRecipes } from '@/entities/recipe/model/mock';
+import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function RecipesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,7 +13,14 @@ export function RecipesPage() {
   return (
     <div className='min-h-screen pb-20 bg-background'>
       <SearchHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
-      <RecipeList recipes={mockRecipes} searchQuery={searchQuery} />
+
+      <ErrorBoundary
+        FallbackComponent={RecipeListError}
+        resetKeys={[searchQuery]} // 검색어 변경 시 에러 리셋
+      >
+        <RecipeList searchQuery={searchQuery} />
+      </ErrorBoundary>
+
       <BottomNavigation activeTab='search' />
     </div>
   );
