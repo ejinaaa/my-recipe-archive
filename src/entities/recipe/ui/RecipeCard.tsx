@@ -37,7 +37,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
         ref={ref}
         className={cn(
           'group relative h-[280px] w-full max-w-[400px] overflow-hidden rounded-[20px] cursor-pointer',
-          'transition-transform duration-200 hover:scale-[1.02]',
+          'transition-transform duration-200',
           className
         )}
         onClick={onClick}
