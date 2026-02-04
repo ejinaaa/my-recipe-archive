@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
+import { DebugLogoutButton } from '@/shared/ui/debug-logout-button';
 import './globals.css';
 
 const defaultUrl = process.env.VERCEL_URL
@@ -34,6 +35,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <DebugLogoutButton />
         </ThemeProvider>
       </body>
     </html>
