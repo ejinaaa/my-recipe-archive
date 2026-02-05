@@ -76,6 +76,10 @@ export interface CategoryOptionDB {
   name: string;
   /** Sort order for display */
   sort_order: number | null;
+  /** Icon (emoji or icon name) */
+  icon: string | null;
+  /** Image URL */
+  image_url: string | null;
 }
 
 /**
@@ -94,6 +98,10 @@ export type CategoryOption =
       name: string;
       /** 정렬 순서 */
       sort_order?: number;
+      /** 아이콘 (이모지) */
+      icon?: string;
+      /** 이미지 URL */
+      image_url?: string;
     }
   | {
       /** Unique identifier */
@@ -106,6 +114,10 @@ export type CategoryOption =
       name: string;
       /** 정렬 순서 */
       sort_order?: number;
+      /** 아이콘 (이모지) */
+      icon?: string;
+      /** 이미지 URL */
+      image_url?: string;
     }
   | {
       /** Unique identifier */
@@ -118,6 +130,10 @@ export type CategoryOption =
       name: string;
       /** 정렬 순서 */
       sort_order?: number;
+      /** 아이콘 (이모지) */
+      icon?: string;
+      /** 이미지 URL */
+      image_url?: string;
     };
 
 /**
@@ -134,6 +150,10 @@ export type CategoryOptionInsert =
       name: string;
       /** 정렬 순서 */
       sort_order?: number;
+      /** 아이콘 (이모지) */
+      icon?: string;
+      /** 이미지 URL */
+      image_url?: string;
     }
   | {
       /** 장르/나라별 카테고리 */
@@ -144,6 +164,10 @@ export type CategoryOptionInsert =
       name: string;
       /** 정렬 순서 */
       sort_order?: number;
+      /** 아이콘 (이모지) */
+      icon?: string;
+      /** 이미지 URL */
+      image_url?: string;
     }
   | {
       /** 요리 종류별 카테고리 */
@@ -154,6 +178,10 @@ export type CategoryOptionInsert =
       name: string;
       /** 정렬 순서 */
       sort_order?: number;
+      /** 아이콘 (이모지) */
+      icon?: string;
+      /** 이미지 URL */
+      image_url?: string;
     };
 
 /**
@@ -169,6 +197,10 @@ export interface CategoryOptionUpdate {
   name?: string;
   /** Sort order for display */
   sort_order?: number;
+  /** 아이콘 (이모지) */
+  icon?: string;
+  /** 이미지 URL */
+  image_url?: string;
 }
 
 /**
@@ -191,6 +223,8 @@ export function toCategoryOption(dbOption: CategoryOptionDB): CategoryOption {
     code: dbOption.code,
     name: dbOption.name,
     ...(dbOption.sort_order !== null && { sort_order: dbOption.sort_order }),
+    ...(dbOption.icon !== null && { icon: dbOption.icon }),
+    ...(dbOption.image_url !== null && { image_url: dbOption.image_url }),
   };
 
   // Type assertion is safe here because CategoryOptionDB guarantees the correct type-code relationship

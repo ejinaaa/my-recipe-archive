@@ -94,6 +94,7 @@ export function CategoryFilterSection({
               selected={isSelected}
               onClick={() => onToggle(option.code)}
             >
+              {option.icon}
               {option.name}
             </Badge>
           );
