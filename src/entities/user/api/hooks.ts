@@ -9,6 +9,8 @@ import {
 } from '@tanstack/react-query';
 import type { Profile, ProfileInsert, ProfileUpdate } from '../model/types';
 import {
+  getProfileAction,
+  getCurrentProfileAction,
   createProfileAction,
   updateProfileAction,
   deleteProfileAction,
@@ -30,10 +32,7 @@ export const profileKeys = {
 export function useProfile(id: string): UseQueryResult<Profile | null, Error> {
   return useQuery({
     queryKey: profileKeys.detail(id),
-    queryFn: async () => {
-      const { getProfile } = await import('./server');
-      return getProfile(id);
-    },
+    queryFn: () => getProfileAction(id),
     enabled: !!id,
   });
 }
@@ -44,10 +43,7 @@ export function useProfile(id: string): UseQueryResult<Profile | null, Error> {
 export function useCurrentProfile(): UseQueryResult<Profile | null, Error> {
   return useQuery({
     queryKey: profileKeys.current(),
-    queryFn: async () => {
-      const { getCurrentProfile } = await import('./server');
-      return getCurrentProfile();
-    },
+    queryFn: getCurrentProfileAction,
   });
 }
 

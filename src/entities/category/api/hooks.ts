@@ -15,6 +15,9 @@ import type {
   CategoryGroup,
 } from '../model/types';
 import {
+  getCategoryOptionsAction,
+  getCategoryOptionAction,
+  getCategoryGroupsAction,
   createCategoryOptionAction,
   updateCategoryOptionAction,
   deleteCategoryOptionAction,
@@ -40,10 +43,7 @@ export function useCategoryOptions(
 ): UseQueryResult<CategoryOption[], Error> {
   return useQuery({
     queryKey: categoryKeys.list(type),
-    queryFn: async () => {
-      const { getCategoryOptions } = await import('./server');
-      return getCategoryOptions(type);
-    },
+    queryFn: () => getCategoryOptionsAction(type),
   });
 }
 
@@ -55,10 +55,7 @@ export function useCategoryOption(
 ): UseQueryResult<CategoryOption | null, Error> {
   return useQuery({
     queryKey: categoryKeys.detail(id),
-    queryFn: async () => {
-      const { getCategoryOption } = await import('./server');
-      return getCategoryOption(id);
-    },
+    queryFn: () => getCategoryOptionAction(id),
     enabled: !!id,
   });
 }
@@ -69,10 +66,7 @@ export function useCategoryOption(
 export function useCategoryGroups(): UseQueryResult<CategoryGroup[], Error> {
   return useQuery({
     queryKey: categoryKeys.groups(),
-    queryFn: async () => {
-      const { getCategoryGroups } = await import('./server');
-      return getCategoryGroups();
-    },
+    queryFn: getCategoryGroupsAction,
   });
 }
 
