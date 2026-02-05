@@ -1,10 +1,10 @@
 'use client';
 
-import { Home, Search, Heart, User } from 'lucide-react';
+import { Home, Search, Heart, Plus } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 
-type NavTab = 'home' | 'search' | 'favorites' | 'profile';
+type NavTab = 'home' | 'search' | 'favorites' | 'register';
 
 interface BottomNavigationProps {
   activeTab?: NavTab;
@@ -19,7 +19,7 @@ export function BottomNavigation({
     { id: 'home' as NavTab, icon: Home, label: '홈' },
     { id: 'search' as NavTab, icon: Search, label: '검색' },
     { id: 'favorites' as NavTab, icon: Heart, label: '즐겨찾기' },
-    { id: 'profile' as NavTab, icon: User, label: '프로필' },
+    { id: 'register' as NavTab, icon: Plus, label: '등록하기' },
   ];
 
   return (
