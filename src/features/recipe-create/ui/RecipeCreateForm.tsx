@@ -11,6 +11,12 @@ import { cn } from '@/shared/lib/utils';
 import { useRecipeForm, type RecipeFormData } from '../model/hooks';
 import type { RecipeCategory } from '@/entities/recipe/model/types';
 import type { CategoryGroup } from '@/entities/category/model/types';
+import {
+  COOKING_TIME_MIN,
+  COOKING_TIME_MAX,
+  COOKING_TIME_STEP,
+} from '@/entities/recipe/model/constants';
+import { formatCookingTime } from '@/entities/recipe/model/utils';
 
 /**
  * 카테고리 타입별 한글 레이블
@@ -90,7 +96,9 @@ export function RecipeCreateForm({
 
       {/* 설명 */}
       <section className='flex flex-col gap-2'>
-        <Label className='text-body-2 text-text-primary font-medium'>설명</Label>
+        <Label className='text-body-2 text-text-primary font-medium'>
+          설명
+        </Label>
         <Textarea
           placeholder='이 요리의 매력을 소개해 주세요'
           value={formData.description}
@@ -112,7 +120,7 @@ export function RecipeCreateForm({
           min={1}
           max={10}
           step={1}
-          unit='인분'
+          valueDisplay={`${formData.servings}인분`}
           disabled={isDisabled}
         />
       </section>
@@ -126,10 +134,10 @@ export function RecipeCreateForm({
           onValueChange={value =>
             updateField('cooking_time', Array.isArray(value) ? value[0] : value)
           }
-          min={5}
-          max={180}
-          step={5}
-          unit='분'
+          min={COOKING_TIME_MIN}
+          max={COOKING_TIME_MAX}
+          step={COOKING_TIME_STEP}
+          valueDisplay={formatCookingTime(formData.cooking_time)}
           disabled={isDisabled}
         />
       </section>
@@ -162,6 +170,7 @@ export function RecipeCreateForm({
                     isDisabled && 'cursor-not-allowed opacity-50',
                   )}
                 >
+                  {option.icon}
                   {option.name}
                 </Badge>
               );

@@ -13,9 +13,9 @@ import type {
  * 카테고리 타입별 한글 라벨
  */
 const CATEGORY_TYPE_LABELS: Record<CategoryType, string> = {
-  situation: '상황별',
-  cuisine: '장르별',
-  dishType: '종류별',
+  situation: '먹는 상황',
+  cuisine: '요리 장르',
+  dishType: '요리 종류',
 };
 
 interface CategoryFilterSectionProps {

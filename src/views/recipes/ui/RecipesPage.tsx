@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Search, User } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
-import { useSearchStore, SearchModal } from '@/features/recipe-search';
+import { FilterBottomSheet } from '@/features/recipe-search';
 import { Button } from '@/shared/ui/button';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList } from '@/widgets/recipe-list';
@@ -12,10 +12,9 @@ import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
-  const openModal = useSearchStore(state => state.openModal);
 
   const handleSearchClick = () => {
-    openModal();
+    // TODO: 검색 버튼 클릭 시 동작 구현
   };
 
   return (
@@ -51,6 +50,7 @@ export function RecipesPage() {
             variant='solid'
             colorScheme='primary'
             size='sm'
+            transparent
             className='size-10 p-0'
             onClick={handleSearchClick}
             aria-label='검색'
@@ -66,8 +66,8 @@ export function RecipesPage() {
 
       <BottomNavigation activeTab='search' />
 
-      {/* 검색 모달 */}
-      <SearchModal />
+      {/* 필터 바텀시트 */}
+      <FilterBottomSheet />
     </div>
   );
 }

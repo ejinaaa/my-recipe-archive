@@ -25,7 +25,7 @@ const meta = {
     max: { control: 'number' },
     step: { control: 'number' },
     label: { control: 'text' },
-    unit: { control: 'text' },
+    valueDisplay: { control: 'text' },
     disabled: { control: 'boolean' },
   },
   decorators: [
@@ -50,12 +50,12 @@ export const Default: Story = {
 };
 
 /**
- * 라벨과 단위 표시
+ * 라벨과 값 표시
  */
-export const WithLabelAndUnit: Story = {
+export const WithLabelAndValue: Story = {
   args: {
     label: '볼륨',
-    unit: '%',
+    valueDisplay: '75%',
     defaultValue: 75,
   },
 };
@@ -66,7 +66,7 @@ export const WithLabelAndUnit: Story = {
 export const Range: Story = {
   args: {
     label: '가격 범위',
-    unit: '원',
+    valueDisplay: '20원 ~ 80원',
     defaultValue: [20, 80],
     min: 0,
     max: 100,
@@ -80,7 +80,7 @@ export const SecondaryColorScheme: Story = {
   args: {
     colorScheme: 'secondary',
     label: '밝기',
-    unit: '%',
+    valueDisplay: '60%',
     defaultValue: 60,
   },
 };
@@ -104,7 +104,7 @@ export const Sizes: Story = {
 export const Disabled: Story = {
   args: {
     label: '비활성화',
-    unit: '%',
+    valueDisplay: '50%',
     defaultValue: 50,
     disabled: true,
   },
@@ -116,7 +116,7 @@ export const Disabled: Story = {
 export const CustomRange: Story = {
   args: {
     label: '예산',
-    unit: '만원',
+    valueDisplay: '500만원',
     defaultValue: 500,
     min: 0,
     max: 1000,
@@ -135,7 +135,7 @@ export const Controlled: Story = {
       <div className='space-y-4'>
         <Slider
           label='제어 슬라이더'
-          unit='%'
+          valueDisplay={`${value}%`}
           value={value}
           onValueChange={(v) => setValue(v as number)}
         />
@@ -156,7 +156,7 @@ export const ControlledRange: Story = {
       <div className='space-y-4'>
         <Slider
           label='가격 범위'
-          unit='만원'
+          valueDisplay={`${value[0]}만원 ~ ${value[1]}만원`}
           value={value}
           onValueChange={(v) => setValue(v as number[])}
           max={100}

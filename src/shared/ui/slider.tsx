@@ -89,8 +89,9 @@ export interface SliderProps
   min?: number;
   max?: number;
   step?: number;
-  unit?: string;
   label?: string;
+  /** 라벨 우측에 표시할 값 텍스트 */
+  valueDisplay?: string;
 }
 
 function Slider({
@@ -103,8 +104,8 @@ function Slider({
   min = 0,
   max = 100,
   step = 1,
-  unit,
   label,
+  valueDisplay,
   ...props
 }: SliderProps) {
   // value를 항상 배열로 변환
@@ -129,22 +130,14 @@ function Slider({
     }
   };
 
-  // 값 포맷팅 (범위인 경우와 단일 값 구분)
-  const displayValue = React.useMemo(() => {
-    if (arrayValue.length === 1) {
-      return `${arrayValue[0]}${unit || ''}`;
-    }
-    return `${arrayValue[0]}${unit || ''} - ${arrayValue[1]}${unit || ''}`;
-  }, [arrayValue, unit]);
-
   return (
     <div className='w-full space-y-2'>
-      {(label || unit) && (
+      {(label || valueDisplay) && (
         <div className='flex items-center justify-between text-body-2'>
           {label && <span className='text-text-primary font-medium'>{label}</span>}
-          <span className='text-text-secondary font-medium'>
-            {displayValue}
-          </span>
+          {valueDisplay && (
+            <span className='text-text-secondary font-medium'>{valueDisplay}</span>
+          )}
         </div>
       )}
       <SliderPrimitive.Root
