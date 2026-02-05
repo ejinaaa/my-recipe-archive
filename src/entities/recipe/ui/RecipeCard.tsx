@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Clock, UtensilsCrossed } from 'lucide-react';
+import { Clock, ImageOff, UtensilsCrossed } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { cn } from '@/shared/lib/utils';
@@ -32,6 +32,12 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
     const { title, description, thumbnail_url, cooking_time, servings } =
       recipe;
 
+    const [imageError, setImageError] = React.useState(false);
+
+    const handleImageError = () => {
+      setImageError(true);
+    };
+
     return (
       <div
         ref={ref}
@@ -45,14 +51,17 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
       >
         {/* Background Image */}
         <div className='absolute inset-0'>
-          {thumbnail_url ? (
+          {thumbnail_url && !imageError ? (
             <img
               src={thumbnail_url}
               alt={title}
               className='h-full w-full object-cover'
+              onError={handleImageError}
             />
           ) : (
-            <div className='h-full w-full bg-neutral-base' />
+            <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
+              <ImageOff className='size-12 text-text-secondary' />
+            </div>
           )}
         </div>
 
