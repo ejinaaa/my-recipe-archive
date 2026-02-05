@@ -8,11 +8,37 @@ import type {
   toRecipeDB,
 } from '../model/types';
 
+/** 정렬 옵션 */
+export type RecipeSortBy = 'latest' | 'oldest' | 'popular' | 'favorites';
+
+/** 카테고리 필터 */
+export interface CategoryFilter {
+  situation?: string;
+  cuisine?: string;
+  dishType?: string;
+}
+
+/** 조리 시간 범위 필터 */
+export interface CookingTimeRange {
+  min?: number;
+  max?: number;
+}
+
 export interface GetRecipesParams {
   userId?: string;
   limit?: number;
   offset?: number;
   searchQuery?: string;
+  /** 공개 레시피만 조회 */
+  isPublic?: boolean;
+  /** 카테고리 필터 */
+  categories?: CategoryFilter;
+  /** 조리 시간 범위 */
+  cookingTimeRange?: CookingTimeRange;
+  /** 태그 필터 (AND 조건) */
+  tags?: string[];
+  /** 정렬 기준 */
+  sortBy?: RecipeSortBy;
 }
 
 export interface PaginatedRecipes {
@@ -28,24 +54,83 @@ export async function getRecipesPaginated(
   params: GetRecipesParams = {}
 ): Promise<PaginatedRecipes> {
   try {
-    const { userId, limit = 6, offset = 0, searchQuery } = params;
+    const {
+      userId,
+      limit = 6,
+      offset = 0,
+      searchQuery,
+      isPublic,
+      categories,
+      cookingTimeRange,
+      tags,
+      sortBy = 'latest',
+    } = params;
     const supabase = await createClient();
 
     let query = supabase.from('recipes').select('*', { count: 'exact' });
 
+    // 유저 ID 필터
     if (userId) {
       query = query.eq('user_id', userId);
     }
 
+    // 공개 여부 필터
+    if (isPublic !== undefined) {
+      query = query.eq('is_public', isPublic);
+    }
+
+    // 텍스트 검색 (제목, 설명, 태그)
     if (searchQuery?.trim()) {
       query = query.or(
         `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`
       );
     }
 
-    const { data, error, count } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    // 카테고리 필터 (JSONB 필드)
+    if (categories?.situation) {
+      query = query.eq('categories->situation->>code', categories.situation);
+    }
+    if (categories?.cuisine) {
+      query = query.eq('categories->cuisine->>code', categories.cuisine);
+    }
+    if (categories?.dishType) {
+      query = query.eq('categories->dishType->>code', categories.dishType);
+    }
+
+    // 조리 시간 범위 필터
+    if (cookingTimeRange?.min !== undefined) {
+      query = query.gte('cooking_time', cookingTimeRange.min);
+    }
+    if (cookingTimeRange?.max !== undefined) {
+      query = query.lte('cooking_time', cookingTimeRange.max);
+    }
+
+    // 태그 필터 (배열에 모든 태그 포함)
+    if (tags && tags.length > 0) {
+      query = query.contains('tags', tags);
+    }
+
+    // 정렬
+    switch (sortBy) {
+      case 'oldest':
+        query = query.order('created_at', { ascending: true });
+        break;
+      case 'popular':
+        query = query.order('view_count', { ascending: false });
+        break;
+      case 'favorites':
+        query = query.order('favorite_count', { ascending: false });
+        break;
+      case 'latest':
+      default:
+        query = query.order('created_at', { ascending: false });
+        break;
+    }
+
+    const { data, error, count } = await query.range(
+      offset,
+      offset + limit - 1
+    );
 
     if (error) {
       console.error('[Recipe API] Failed to fetch recipes:', error);
@@ -181,5 +266,31 @@ export async function deleteRecipe(id: string): Promise<void> {
   } catch (error) {
     console.error('[Recipe API] deleteRecipe error:', error);
     throw error;
+  }
+}
+
+/**
+ * Increment view count for a recipe
+ * Uses RPC function to handle deduplication (1 view per user per day)
+ */
+export async function incrementViewCount(
+  recipeId: string,
+  userId: string
+): Promise<void> {
+  try {
+    const supabase = await createClient();
+
+    const { error } = await supabase.rpc('increment_view_count', {
+      p_recipe_id: recipeId,
+      p_user_id: userId,
+    });
+
+    if (error) {
+      console.error('[Recipe API] Failed to increment view count:', error);
+      // 조회수 증가 실패는 치명적이지 않으므로 에러를 던지지 않음
+    }
+  } catch (error) {
+    console.error('[Recipe API] incrementViewCount error:', error);
+    // 조회수 증가 실패는 치명적이지 않으므로 에러를 던지지 않음
   }
 }

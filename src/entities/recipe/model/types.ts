@@ -89,6 +89,14 @@ export interface RecipeDB {
   ingredients: Ingredient[];
   /** Cooking steps as JSON array */
   steps: CookingStep[];
+  /** Whether the recipe is public */
+  is_public: boolean;
+  /** View count */
+  view_count: number;
+  /** Favorite count */
+  favorite_count: number;
+  /** Tags for search */
+  tags: string[];
   /** Creation timestamp */
   created_at: string | null;
   /** Last update timestamp */
@@ -120,6 +128,14 @@ export interface Recipe {
   ingredients: Ingredient[];
   /** Cooking steps */
   steps: CookingStep[];
+  /** Whether the recipe is public */
+  is_public: boolean;
+  /** View count */
+  view_count: number;
+  /** Favorite count */
+  favorite_count: number;
+  /** Tags for search */
+  tags: string[];
   /** Creation timestamp */
   created_at?: Date;
   /** Last update timestamp */
@@ -148,6 +164,10 @@ export interface RecipeInsert {
   ingredients?: Ingredient[];
   /** Cooking steps */
   steps?: CookingStep[];
+  /** Whether the recipe is public */
+  is_public?: boolean;
+  /** Tags for search */
+  tags?: string[];
 }
 
 /**
@@ -171,6 +191,10 @@ export interface RecipeUpdate {
   ingredients?: Ingredient[];
   /** Cooking steps */
   steps?: CookingStep[];
+  /** Whether the recipe is public */
+  is_public?: boolean;
+  /** Tags for search */
+  tags?: string[];
 }
 
 /**
@@ -192,6 +216,10 @@ export function toRecipe(dbRecipe: RecipeDB): Recipe {
         ),
     ingredients: dbRecipe.ingredients || [],
     steps: dbRecipe.steps || [],
+    is_public: dbRecipe.is_public ?? false,
+    view_count: dbRecipe.view_count ?? 0,
+    favorite_count: dbRecipe.favorite_count ?? 0,
+    tags: dbRecipe.tags || [],
     ...(dbRecipe.created_at && { created_at: new Date(dbRecipe.created_at) }),
     ...(dbRecipe.updated_at && { updated_at: new Date(dbRecipe.updated_at) }),
   };
@@ -225,6 +253,8 @@ export function toRecipeDB(
   }
   if (recipe.ingredients !== undefined) result.ingredients = recipe.ingredients;
   if (recipe.steps !== undefined) result.steps = recipe.steps;
+  if (recipe.is_public !== undefined) result.is_public = recipe.is_public;
+  if (recipe.tags !== undefined) result.tags = recipe.tags;
 
   return result;
 }

@@ -9,6 +9,7 @@ import {
   createRecipe,
   updateRecipe,
   deleteRecipe,
+  incrementViewCount,
 } from './server';
 import type { GetRecipesParams, PaginatedRecipes } from './server';
 
@@ -91,4 +92,15 @@ export async function deleteRecipeAction(id: string): Promise<void> {
     console.error('[Recipe Actions] deleteRecipeAction error:', error);
     throw error;
   }
+}
+
+/**
+ * Server Action: Increment view count
+ * 하루에 유저당 1회만 카운트됨
+ */
+export async function incrementViewCountAction(
+  recipeId: string,
+  userId: string
+): Promise<void> {
+  await incrementViewCount(recipeId, userId);
 }

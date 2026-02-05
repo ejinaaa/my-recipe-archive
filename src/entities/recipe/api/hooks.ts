@@ -17,7 +17,14 @@ import {
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,
+  incrementViewCountAction,
 } from './actions';
+import type {
+  GetRecipesParams,
+  RecipeSortBy,
+  CategoryFilter,
+  CookingTimeRange,
+} from './server';
 
 /**
  * Query keys factory for recipes
@@ -61,13 +68,21 @@ export function useSuspenseRecipe(id: string) {
   });
 }
 
+/** 레시피 목록 조회 파라미터 */
+export interface UseInfiniteRecipesParams {
+  userId?: string;
+  searchQuery?: string;
+  isPublic?: boolean;
+  categories?: CategoryFilter;
+  cookingTimeRange?: CookingTimeRange;
+  tags?: string[];
+  sortBy?: RecipeSortBy;
+}
+
 /**
  * Hook to fetch recipes with infinite scroll
  */
-export function useInfiniteRecipes(params?: {
-  userId?: string;
-  searchQuery?: string;
-}) {
+export function useInfiniteRecipes(params?: UseInfiniteRecipesParams) {
   return useInfiniteQuery({
     queryKey: [...recipeKeys.lists(), 'infinite', params],
     queryFn: ({ pageParam = 0 }) =>
@@ -75,7 +90,7 @@ export function useInfiniteRecipes(params?: {
         ...params,
         limit: 6,
         offset: pageParam,
-      }),
+      } as GetRecipesParams),
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.hasMore) return undefined;
       const loadedCount = allPages.reduce(
@@ -120,6 +135,10 @@ export function useCreateRecipe(): UseMutationResult<
           categories: newRecipe.categories || [],
           ingredients: newRecipe.ingredients || [],
           steps: newRecipe.steps || [],
+          is_public: newRecipe.is_public ?? false,
+          view_count: 0,
+          favorite_count: 0,
+          tags: newRecipe.tags || [],
           created_at: new Date(),
           updated_at: new Date(),
         };
@@ -217,6 +236,30 @@ export function useDeleteRecipe(): UseMutationResult<void, Error, string> {
     onSettled: () => {
       // Refetch after mutation
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+    },
+  });
+}
+
+/**
+ * Hook to increment view count
+ * 하루에 유저당 1회만 카운트됨
+ */
+export function useIncrementViewCount(): UseMutationResult<
+  void,
+  Error,
+  { recipeId: string; userId: string }
+> {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ recipeId, userId }) =>
+      incrementViewCountAction(recipeId, userId),
+    onSuccess: (_, { recipeId }) => {
+      // Optimistically update view count
+      queryClient.setQueryData<Recipe>(recipeKeys.detail(recipeId), old => {
+        if (!old) return old;
+        return { ...old, view_count: old.view_count + 1 };
+      });
     },
   });
 }
