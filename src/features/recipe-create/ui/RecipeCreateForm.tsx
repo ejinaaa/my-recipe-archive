@@ -72,7 +72,7 @@ export function RecipeCreateForm({
 
       {/* 제목 */}
       <section className='flex flex-col gap-2'>
-        <Label className='text-caption text-text-secondary'>
+        <Label className='text-body-2 text-text-primary font-medium'>
           제목 <span className='text-primary-base'>*</span>
         </Label>
         <Input
@@ -90,7 +90,7 @@ export function RecipeCreateForm({
 
       {/* 설명 */}
       <section className='flex flex-col gap-2'>
-        <Label className='text-caption text-text-secondary'>설명</Label>
+        <Label className='text-body-2 text-text-primary font-medium'>설명</Label>
         <Textarea
           placeholder='이 요리의 매력을 소개해 주세요'
           value={formData.description}

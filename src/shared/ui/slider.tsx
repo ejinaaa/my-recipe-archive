@@ -141,7 +141,7 @@ function Slider({
     <div className='w-full space-y-2'>
       {(label || unit) && (
         <div className='flex items-center justify-between text-body-2'>
-          {label && <span className='text-text-primary'>{label}</span>}
+          {label && <span className='text-text-primary font-medium'>{label}</span>}
           <span className='text-text-secondary font-medium'>
             {displayValue}
           </span>
