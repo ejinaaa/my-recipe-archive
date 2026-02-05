@@ -1,2 +1,2 @@
-export { RecipeDetailView } from './ui/RecipeDetailView';
-export type { RecipeDetailViewProps } from './ui/RecipeDetailView';
+export { RecipeDetailPage } from './ui/RecipeDetailPage';
+export { RecipeDetailSkeleton } from './ui/RecipeDetailSkeleton';

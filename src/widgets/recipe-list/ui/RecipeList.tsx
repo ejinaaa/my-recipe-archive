@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
 import { useInfiniteRecipes } from '@/entities/recipe/api/hooks';
 import { InfiniteScrollList } from '@/shared/ui/infinite-scroll-list';
@@ -10,10 +11,15 @@ interface RecipeListProps {
 }
 
 export function RecipeList({ searchQuery }: RecipeListProps) {
+  const router = useRouter();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
     useInfiniteRecipes({ searchQuery });
 
   const recipes = data?.pages.flatMap(page => page.recipes) ?? [];
+
+  const handleRecipeClick = (recipeId: string) => {
+    router.push(`/recipes/${recipeId}`);
+  };
 
   return (
     <InfiniteScrollList
@@ -53,6 +59,7 @@ export function RecipeList({ searchQuery }: RecipeListProps) {
         <RecipeCard
           key={recipe.id}
           recipe={recipe}
+          onClick={() => handleRecipeClick(recipe.id)}
           className='w-full max-w-none'
         />
       ))}

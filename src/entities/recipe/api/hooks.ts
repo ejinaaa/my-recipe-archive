@@ -2,6 +2,7 @@
 
 import {
   useQuery,
+  useSuspenseQuery,
   useInfiniteQuery,
   useMutation,
   useQueryClient,
@@ -47,6 +48,16 @@ export function useRecipe(id: string): UseQueryResult<Recipe | null, Error> {
     queryKey: recipeKeys.detail(id),
     queryFn: () => getRecipeAction(id),
     enabled: !!id,
+  });
+}
+
+/**
+ * Suspense를 지원하는 단일 레시피 조회 hook
+ */
+export function useSuspenseRecipe(id: string) {
+  return useSuspenseQuery({
+    queryKey: recipeKeys.detail(id),
+    queryFn: () => getRecipeAction(id),
   });
 }
 

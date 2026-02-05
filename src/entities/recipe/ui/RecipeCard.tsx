@@ -9,7 +9,7 @@ export interface RecipeCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Recipe data */
   recipe: Pick<
     Recipe,
-    'title' | 'description' | 'thumbnail_url' | 'cooking_time' | 'servings'
+    'id' | 'title' | 'description' | 'thumbnail_url' | 'cooking_time' | 'servings'
   >;
   /** Whether the recipe is favorited */
   isFavorite?: boolean;
