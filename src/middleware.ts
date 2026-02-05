@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { ROUTES } from '@/shared/config';
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -17,7 +18,7 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
+          cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
           response = NextResponse.next({
@@ -38,18 +39,18 @@ export async function middleware(request: NextRequest) {
   // 로그인하지 않은 사용자가 로그인 페이지가 아닌 곳에 접근하면 로그인 페이지로 리다이렉트
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
+    !request.nextUrl.pathname.startsWith(ROUTES.AUTH.LOGIN) &&
     !request.nextUrl.pathname.startsWith('/auth')
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = '/login';
+    url.pathname = ROUTES.AUTH.LOGIN;
     return NextResponse.redirect(url);
   }
 
   // 이미 로그인한 사용자가 로그인 페이지에 접근하면 /recipes로 리다이렉트
-  if (user && request.nextUrl.pathname === '/login') {
+  if (user && request.nextUrl.pathname === ROUTES.AUTH.LOGIN) {
     const url = request.nextUrl.clone();
-    url.pathname = '/recipes';
+    url.pathname = ROUTES.RECIPES.LIST;
     return NextResponse.redirect(url);
   }
 

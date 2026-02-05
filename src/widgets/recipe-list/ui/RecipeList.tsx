@@ -1,10 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
 import { useInfiniteRecipes } from '@/entities/recipe/api/hooks';
+import { ROUTES } from '@/shared/config';
 import { InfiniteScrollList } from '@/shared/ui/infinite-scroll-list';
-import { Loader2 } from 'lucide-react';
 
 interface RecipeListProps {
   searchQuery?: string;
@@ -18,7 +19,7 @@ export function RecipeList({ searchQuery }: RecipeListProps) {
   const recipes = data?.pages.flatMap(page => page.recipes) ?? [];
 
   const handleRecipeClick = (recipeId: string) => {
-    router.push(`/recipes/${recipeId}`);
+    router.push(ROUTES.RECIPES.DETAIL(recipeId));
   };
 
   return (

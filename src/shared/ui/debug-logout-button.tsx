@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/shared/api/supabase/client';
+import { ROUTES } from '@/shared/config';
 import { Button } from '@/shared/ui/button';
 
 export function DebugLogoutButton() {
@@ -9,14 +10,14 @@ export function DebugLogoutButton() {
   const router = useRouter();
 
   // 로그인 페이지에서는 버튼을 숨김
-  if (pathname === '/login') {
+  if (pathname === ROUTES.AUTH.LOGIN) {
     return null;
   }
 
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push('/login');
+    router.push(ROUTES.AUTH.LOGIN);
     router.refresh();
   };
 

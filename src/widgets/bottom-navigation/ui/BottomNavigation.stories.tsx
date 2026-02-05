@@ -11,12 +11,8 @@ const meta = {
   argTypes: {
     activeTab: {
       control: 'select',
-      options: ['home', 'search', 'favorites', 'profile'],
+      options: ['home', 'search', 'favorites', 'register'],
       description: '현재 활성화된 탭',
-    },
-    onTabChange: {
-      action: 'tab changed',
-      description: '탭 변경 시 호출되는 콜백 함수',
     },
   },
 } satisfies Meta<typeof BottomNavigation>;

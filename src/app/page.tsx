@@ -1,3 +1,6 @@
+import { redirect } from 'next/navigation';
+import { ROUTES } from '@/shared/config';
+
 export default function Home() {
-  return <main className=''>TODO: 홈 페이지 구현</main>;
+  redirect(ROUTES.RECIPES.LIST);
 }
