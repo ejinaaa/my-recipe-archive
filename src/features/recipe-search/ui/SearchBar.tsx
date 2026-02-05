@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Search, CornerDownLeft } from 'lucide-react';
 import {
   InputGroup,
@@ -9,23 +10,32 @@ import {
 } from '@/shared/ui/input-group';
 
 interface SearchBarProps {
-  value: string;
-  onChange: (value: string) => void;
-  onSearch: () => void;
+  defaultValue?: string;
+  onSearch: (query: string) => void;
   placeholder?: string;
 }
 
 export function SearchBar({
-  value,
-  onChange,
+  defaultValue = '',
   onSearch,
   placeholder = '어떤 요리를 찾으세요?',
 }: SearchBarProps) {
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && value) {
-      onSearch();
+  const [inputValue, setInputValue] = useState(defaultValue);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleSearch = () => {
+    if (inputValue) {
+      onSearch(inputValue);
     }
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const showSearchButton = isFocused && inputValue;
 
   return (
     <InputGroup size='sm' className='flex-1'>
@@ -34,13 +44,16 @@ export function SearchBar({
       </InputGroupAddon>
       <InputGroupInput
         placeholder={placeholder}
-        value={value}
-        onChange={e => onChange(e.target.value)}
+        value={inputValue}
+        onChange={e => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
       />
-      {value && (
+      {showSearchButton && (
         <InputGroupButton
-          onClick={onSearch}
+          onMouseDown={e => e.preventDefault()}
+          onClick={handleSearch}
           aria-label='검색'
           className='bg-primary-base text-white hover:bg-primary-base/90'
         >
