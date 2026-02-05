@@ -8,7 +8,6 @@ import type {
   CategoryOption,
   CategoryType,
 } from '@/entities/category/model/types';
-import { useEffect } from 'react';
 
 /**
  * 카테고리 타입별 한글 라벨
@@ -39,10 +38,6 @@ export function CategoryFilterSection({
   onRetry,
 }: CategoryFilterSectionProps) {
   const title = CATEGORY_TYPE_LABELS[type];
-
-  useEffect(() => {
-    console.log('카테고리 필터 섹션', type, selectedCodes);
-  }, [type, selectedCodes]);
 
   // 로딩 상태
   if (isLoading) {

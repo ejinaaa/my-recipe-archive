@@ -56,17 +56,12 @@ export function SearchModal() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  useEffect(() => {
-    console.log('Temp Filters updated:', tempFilters);
-  }, [tempFilters]);
-
   // 모달이 닫혀있으면 렌더링하지 않음
   if (!isOpen) {
     return null;
   }
 
   const handleToggleCategory = (type: CategoryType, code: string) => {
-    console.log('Toggling category filter:', type, code);
     setTempFilters(prev => toggleCategoryFilter(prev, type, code));
   };
 
