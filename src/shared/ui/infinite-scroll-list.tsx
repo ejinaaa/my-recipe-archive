@@ -34,14 +34,14 @@ interface InfiniteScrollListProps {
 const DefaultLoadingComponent = () => (
   <div className='flex items-center justify-center py-8'>
     <Loader2 className='size-6 animate-spin text-text-secondary' />
-    <span className='ml-2 text-body-2 text-text-secondary'>로딩 중...</span>
+    <span className='ml-2 text-body-2 text-text-secondary'>불러오는 중...</span>
   </div>
 );
 
 // 기본 종료 컴포넌트
 const DefaultEndComponent = () => (
   <div className='flex items-center justify-center py-8'>
-    <p className='text-body-2 text-text-secondary'>모든 항목을 불러왔습니다</p>
+    <p className='text-body-2 text-text-secondary'>더 이상 항목이 없어요</p>
   </div>
 );
 
@@ -49,7 +49,7 @@ const DefaultEndComponent = () => (
 const DefaultEmptyState = () => (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
     <p className='text-body-1 text-text-secondary text-center'>
-      항목이 없습니다
+      아직 항목이 없어요
     </p>
   </div>
 );

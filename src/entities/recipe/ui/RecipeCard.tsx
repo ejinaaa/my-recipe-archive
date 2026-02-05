@@ -91,7 +91,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
                     transparent={true}
                   >
                     <Clock className='size-3' />
-                    {cooking_time} min
+                    {cooking_time}분
                   </Badge>
                 )}
                 {servings && (

@@ -19,11 +19,11 @@ export function LoginPage() {
 
       if (error) {
         console.error('카카오 로그인 오류:', error.message);
-        alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+        alert('로그인에 실패했어요. 다시 시도해 주세요.');
       }
     } catch (error) {
       console.error('카카오 로그인 예외:', error);
-      alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+      alert('로그인에 실패했어요. 다시 시도해 주세요.');
     }
   };
 
@@ -47,7 +47,7 @@ export function LoginPage() {
         >
           <KakaoIcon size={24} className='shrink-0' />
           <span className='font-semibold' style={{ opacity: 0.85 }}>
-            카카오 로그인
+            카카오로 시작하기
           </span>
         </Button>
       </div>

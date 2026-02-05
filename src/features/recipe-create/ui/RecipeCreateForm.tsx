@@ -66,7 +66,7 @@ export function RecipeCreateForm({
           </div>
         </div>
         <span className='text-caption text-text-secondary'>
-          이미지 추가 기능은 준비 중입니다
+          곧 이미지를 추가할 수 있어요
         </span>
       </section>
 
@@ -76,7 +76,7 @@ export function RecipeCreateForm({
           제목 <span className='text-primary-base'>*</span>
         </Label>
         <Input
-          placeholder='레시피 제목을 입력하세요'
+          placeholder='맛있는 요리 이름을 알려주세요'
           value={formData.title}
           onChange={e => updateField('title', e.target.value)}
           maxLength={30}
@@ -92,7 +92,7 @@ export function RecipeCreateForm({
       <section className='flex flex-col gap-2'>
         <Label className='text-caption text-text-secondary'>설명</Label>
         <Textarea
-          placeholder='레시피에 대한 간단한 설명을 입력하세요'
+          placeholder='이 요리의 매력을 소개해 주세요'
           value={formData.description}
           onChange={e => updateField('description', e.target.value)}
           disabled={isDisabled}
@@ -180,7 +180,7 @@ export function RecipeCreateForm({
             <div key={index} className='flex gap-2 items-center'>
               <Input
                 size='sm'
-                placeholder='재료명'
+                placeholder='재료'
                 value={ingredient.name}
                 onChange={e => updateIngredient(index, 'name', e.target.value)}
                 disabled={isDisabled}
@@ -188,7 +188,7 @@ export function RecipeCreateForm({
               />
               <Input
                 size='sm'
-                placeholder='양'
+                placeholder='분량'
                 value={ingredient.amount}
                 onChange={e =>
                   updateIngredient(index, 'amount', e.target.value)
@@ -243,7 +243,7 @@ export function RecipeCreateForm({
                 {step.step}
               </div>
               <Textarea
-                placeholder={`${step.step}단계 조리 방법을 입력하세요`}
+                placeholder={`${step.step}단계에서 할 일을 알려주세요`}
                 value={step.description}
                 onChange={e => updateStep(index, e.target.value)}
                 disabled={isDisabled}
@@ -287,7 +287,7 @@ export function RecipeCreateForm({
         disabled={!isValid || isDisabled}
         className='w-full mt-4'
       >
-        {isSubmitting ? '저장 중...' : '저장'}
+        {isSubmitting ? '저장하는 중...' : '레시피 저장'}
       </Button>
     </div>
   );

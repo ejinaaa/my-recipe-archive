@@ -26,7 +26,10 @@ export function RecipeList({ searchQuery }: RecipeListProps) {
       emptyState={
         <div className='flex flex-col items-center justify-center py-20 px-3'>
           <p className='text-body-1 text-text-secondary text-center'>
-            검색 결과가 없습니다
+            검색 결과를 찾지 못했어요
+          </p>
+          <p className='text-body-2 text-text-secondary text-center mt-1'>
+            다른 키워드로 검색해 보세요
           </p>
         </div>
       }
@@ -34,14 +37,14 @@ export function RecipeList({ searchQuery }: RecipeListProps) {
         <div className='flex items-center justify-center py-8'>
           <Loader2 className='size-6 animate-spin text-text-secondary' />
           <span className='ml-2 text-body-2 text-text-secondary'>
-            로딩 중...
+            불러오는 중...
           </span>
         </div>
       }
       endComponent={
         <div className='flex items-center justify-center py-8'>
           <p className='text-body-2 text-text-secondary'>
-            모든 레시피를 불러왔습니다
+            모든 레시피를 둘러봤어요
           </p>
         </div>
       }

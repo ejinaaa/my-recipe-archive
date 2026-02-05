@@ -16,10 +16,10 @@ export function BottomNavigation({
   onTabChange,
 }: BottomNavigationProps) {
   const tabs = [
-    { id: 'home' as NavTab, icon: Home, label: 'Home' },
-    { id: 'search' as NavTab, icon: Search, label: 'Search' },
-    { id: 'favorites' as NavTab, icon: Heart, label: 'Favorites' },
-    { id: 'profile' as NavTab, icon: User, label: 'Profile' },
+    { id: 'home' as NavTab, icon: Home, label: '홈' },
+    { id: 'search' as NavTab, icon: Search, label: '검색' },
+    { id: 'favorites' as NavTab, icon: Heart, label: '즐겨찾기' },
+    { id: 'profile' as NavTab, icon: User, label: '프로필' },
   ];
 
   return (

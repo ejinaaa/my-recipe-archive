@@ -62,7 +62,7 @@ const RecipeDetailView = ({
               transparent={true}
             >
               <Clock className='size-3' />
-              {recipe.cooking_time} min
+              {recipe.cooking_time}분
             </Badge>
           )}
           {recipe.servings && (
@@ -135,7 +135,7 @@ const RecipeDetailView = ({
                     {step.image_url && (
                       <img
                         src={step.image_url}
-                        alt={`Step ${step.step}`}
+                        alt={`${step.step}단계`}
                         className='mb-3 rounded-xl w-full object-cover'
                       />
                     )}

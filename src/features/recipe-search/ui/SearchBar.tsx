@@ -17,7 +17,7 @@ interface SearchBarProps {
 export function SearchBar({
   value,
   onChange,
-  placeholder = 'Pasta',
+  placeholder = '어떤 요리를 찾으세요?',
 }: SearchBarProps) {
   const handleClear = () => {
     onChange('');
