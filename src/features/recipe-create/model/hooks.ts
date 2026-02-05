@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useCallback, useMemo } from 'react';
-import type { RecipeCategory, Ingredient, CookingStep } from '@/entities/recipe/model/types';
+import type {
+  RecipeCategory,
+  Ingredient,
+  CookingStep,
+} from '@/entities/recipe/model/types';
 import type { CategoryType } from '@/entities/category/model/types';
 
 /**
@@ -65,7 +69,7 @@ export function useRecipeForm({ onSubmit }: UseRecipeFormOptions) {
     <K extends keyof RecipeFormData>(field: K, value: RecipeFormData[K]) => {
       setFormData(prev => ({ ...prev, [field]: value }));
     },
-    []
+    [],
   );
 
   // 카테고리 토글
@@ -90,7 +94,7 @@ export function useRecipeForm({ onSubmit }: UseRecipeFormOptions) {
         return { ...prev, ingredients: newIngredients };
       });
     },
-    []
+    [],
   );
 
   // 재료 삽입 (특정 인덱스 아래에)
@@ -126,7 +130,10 @@ export function useRecipeForm({ onSubmit }: UseRecipeFormOptions) {
       const newSteps = [...prev.steps];
       newSteps.splice(index + 1, 0, createEmptyStep(index + 2));
       // step 번호 재정렬
-      const reorderedSteps = newSteps.map((step, i) => ({ ...step, step: i + 1 }));
+      const reorderedSteps = newSteps.map((step, i) => ({
+        ...step,
+        step: i + 1,
+      }));
       return { ...prev, steps: reorderedSteps };
     });
   }, []);
@@ -147,9 +154,26 @@ export function useRecipeForm({ onSubmit }: UseRecipeFormOptions) {
     // title 필수
     if (!formData.title.trim()) return false;
 
+    // 인분 필수 (기본값이 있으므로 항상 통과)
+    if (!formData.servings) return false;
+
+    // 조리 시간 필수 (기본값이 있으므로 항상 통과)
+    if (!formData.cooking_time) return false;
+
+    // 카테고리 필수 (situation, cuisine, dishType 모두 선택)
+    const requiredCategories: Array<keyof typeof formData.categories> = [
+      'situation',
+      'cuisine',
+      'dishType',
+    ];
+    const hasAllCategories = requiredCategories.every(
+      type => formData.categories[type] !== undefined,
+    );
+    if (!hasAllCategories) return false;
+
     // 재료 최소 1개 내용 필수
     const hasValidIngredient = formData.ingredients.some(
-      ing => ing.name.trim() && ing.amount.trim()
+      ing => ing.name.trim() && ing.amount.trim(),
     );
     if (!hasValidIngredient) return false;
 
@@ -170,7 +194,7 @@ export function useRecipeForm({ onSubmit }: UseRecipeFormOptions) {
       const cleanedData: RecipeFormData = {
         ...formData,
         ingredients: formData.ingredients.filter(
-          ing => ing.name.trim() && ing.amount.trim()
+          ing => ing.name.trim() && ing.amount.trim(),
         ),
         steps: formData.steps
           .filter(step => step.description.trim())

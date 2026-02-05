@@ -65,23 +65,25 @@ export function RecipeCreatePage({ categoryGroups }: RecipeCreatePageProps) {
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
       <header className='sticky top-0 z-10 bg-background px-4 pt-4 pb-3'>
-        <div className='flex items-center gap-3'>
+        <div className='relative flex items-center justify-center'>
           <Button
             variant='solid'
             colorScheme='neutral'
             size='sm'
-            className='size-10 p-0'
+            className='absolute left-0 size-10 p-0'
             onClick={handleBack}
             aria-label='뒤로가기'
           >
             <ChevronLeft className='size-5' />
           </Button>
-          <h1 className='text-heading-2 text-text-primary'>레시피 등록</h1>
+          <h1 className='text-heading-2 text-text-primary'>
+            나만의 레시피 만들기
+          </h1>
         </div>
       </header>
 
       {/* Form */}
-      <main className='px-4'>
+      <main className='px-4 pt-6'>
         <RecipeCreateForm
           categoryGroups={categoryGroups}
           onSubmit={handleSubmit}

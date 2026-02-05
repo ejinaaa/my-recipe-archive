@@ -11,21 +11,13 @@ import { cn } from '@/shared/lib/utils';
 import { useRecipeForm, type RecipeFormData } from '../model/hooks';
 import type { RecipeCategory } from '@/entities/recipe/model/types';
 import type { CategoryGroup } from '@/entities/category/model/types';
+import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
   COOKING_TIME_STEP,
 } from '@/entities/recipe/model/constants';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
-
-/**
- * 카테고리 타입별 한글 레이블
- */
-const categoryTypeLabels: Record<string, string> = {
-  situation: '상황별',
-  cuisine: '장르/나라별',
-  dishType: '요리 종류별',
-};
 
 interface RecipeCreateFormProps {
   /** 카테고리 그룹 목록 */
@@ -62,7 +54,7 @@ export function RecipeCreateForm({
   const isDisabled = isSubmitting;
 
   return (
-    <div className={cn('flex flex-col gap-6 pb-8', className)}>
+    <div className={cn('flex flex-col gap-6 pb-6', className)}>
       {/* 썸네일 이미지 영역 (플레이스홀더) */}
       <section className='flex flex-col items-center gap-2'>
         <div className='relative size-24 rounded-full bg-neutral-base flex items-center justify-center'>
@@ -79,7 +71,7 @@ export function RecipeCreateForm({
       {/* 제목 */}
       <section className='flex flex-col gap-2'>
         <Label className='text-body-2 text-text-primary font-medium'>
-          제목 <span className='text-primary-base'>*</span>
+          요리 이름 <span className='text-primary-base'>*</span>
         </Label>
         <Input
           placeholder='맛있는 요리 이름을 알려주세요'
@@ -97,7 +89,7 @@ export function RecipeCreateForm({
       {/* 설명 */}
       <section className='flex flex-col gap-2'>
         <Label className='text-body-2 text-text-primary font-medium'>
-          설명
+          요리 소개
         </Label>
         <Textarea
           placeholder='이 요리의 매력을 소개해 주세요'
@@ -110,9 +102,11 @@ export function RecipeCreateForm({
 
       {/* 인분 */}
       <section className='flex flex-col gap-2'>
+        <Label className='text-body-2 text-text-primary font-medium'>
+          몇 인분 <span className='text-primary-base'>*</span>
+        </Label>
         <Slider
           size='sm'
-          label='인분'
           value={formData.servings}
           onValueChange={value =>
             updateField('servings', Array.isArray(value) ? value[0] : value)
@@ -127,9 +121,11 @@ export function RecipeCreateForm({
 
       {/* 조리 시간 */}
       <section className='flex flex-col gap-2'>
+        <Label className='text-body-2 text-text-primary font-medium'>
+          만드는 시간 <span className='text-primary-base'>*</span>
+        </Label>
         <Slider
           size='sm'
-          label='조리 시간'
           value={formData.cooking_time}
           onValueChange={value =>
             updateField('cooking_time', Array.isArray(value) ? value[0] : value)
@@ -146,7 +142,8 @@ export function RecipeCreateForm({
       {categoryGroups.map(group => (
         <section key={group.type} className='flex flex-col gap-3'>
           <Label className='text-body-2 text-text-primary font-medium'>
-            {categoryTypeLabels[group.type] || group.type}
+            {CATEGORY_TYPE_LABELS[group.type]}{' '}
+            <span className='text-primary-base'>*</span>
           </Label>
           <div className='flex flex-wrap gap-2'>
             {group.options.map(option => {
@@ -182,22 +179,24 @@ export function RecipeCreateForm({
       {/* 재료 */}
       <section className='flex flex-col gap-3'>
         <Label className='text-body-2 text-text-primary font-medium'>
-          재료 <span className='text-primary-base'>*</span>
+          필요한 재료 <span className='text-primary-base'>*</span>
         </Label>
         <div className='flex flex-col gap-3'>
           {formData.ingredients.map((ingredient, index) => (
             <div key={index} className='flex gap-2 items-center'>
+              {/* 재료명 */}
               <Input
                 size='sm'
-                placeholder='재료'
+                placeholder='감자'
                 value={ingredient.name}
                 onChange={e => updateIngredient(index, 'name', e.target.value)}
                 disabled={isDisabled}
                 className='flex-1'
               />
+              {/* 분량 */}
               <Input
                 size='sm'
-                placeholder='분량'
+                placeholder='2'
                 value={ingredient.amount}
                 onChange={e =>
                   updateIngredient(index, 'amount', e.target.value)
@@ -205,9 +204,10 @@ export function RecipeCreateForm({
                 disabled={isDisabled}
                 className='w-16'
               />
+              {/* 단위 */}
               <Input
                 size='sm'
-                placeholder='단위'
+                placeholder='개'
                 value={ingredient.unit || ''}
                 onChange={e => updateIngredient(index, 'unit', e.target.value)}
                 disabled={isDisabled}
@@ -243,7 +243,7 @@ export function RecipeCreateForm({
       {/* 조리 단계 */}
       <section className='flex flex-col gap-3'>
         <Label className='text-body-2 text-text-primary font-medium'>
-          조리 단계 <span className='text-primary-base'>*</span>
+          만드는 순서 <span className='text-primary-base'>*</span>
         </Label>
         <div className='flex flex-col gap-3'>
           {formData.steps.map((step, index) => (
@@ -296,7 +296,7 @@ export function RecipeCreateForm({
         disabled={!isValid || isDisabled}
         className='w-full mt-4'
       >
-        {isSubmitting ? '저장하는 중...' : '레시피 저장'}
+        {isSubmitting ? '레시피 만드는 중...' : '나만의 레시피 완성!'}
       </Button>
     </div>
   );

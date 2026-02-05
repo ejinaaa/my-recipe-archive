@@ -8,15 +8,7 @@ import type {
   CategoryOption,
   CategoryType,
 } from '@/entities/category/model/types';
-
-/**
- * 카테고리 타입별 한글 라벨
- */
-const CATEGORY_TYPE_LABELS: Record<CategoryType, string> = {
-  situation: '먹는 상황',
-  cuisine: '요리 장르',
-  dishType: '요리 종류',
-};
+import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 
 interface CategoryFilterSectionProps {
   type: CategoryType;
