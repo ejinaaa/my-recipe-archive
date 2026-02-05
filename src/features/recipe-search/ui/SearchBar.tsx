@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, CornerDownLeft } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import {
   InputGroup,
   InputGroupAddon,
@@ -21,21 +21,12 @@ export function SearchBar({
   placeholder = '어떤 요리를 찾으세요?',
 }: SearchBarProps) {
   const [inputValue, setInputValue] = useState(defaultValue);
-  const [isFocused, setIsFocused] = useState(false);
 
-  const handleSearch = () => {
-    if (inputValue) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && inputValue) {
       onSearch(inputValue);
     }
   };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
-  const showSearchButton = isFocused && inputValue;
 
   return (
     <InputGroup size='sm' className='flex-1'>
@@ -47,17 +38,14 @@ export function SearchBar({
         value={inputValue}
         onChange={e => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
       />
-      {showSearchButton && (
+      {inputValue && (
         <InputGroupButton
-          onMouseDown={e => e.preventDefault()}
-          onClick={handleSearch}
-          aria-label='검색'
-          className='bg-primary-base text-white hover:bg-primary-base/90'
+          onClick={() => setInputValue('')}
+          aria-label='검색어 삭제'
+          className='bg-white/80'
         >
-          <CornerDownLeft />
+          <X />
         </InputGroupButton>
       )}
     </InputGroup>
