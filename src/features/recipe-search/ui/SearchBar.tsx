@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, X } from 'lucide-react';
+import { Search, CornerDownLeft } from 'lucide-react';
 import {
   InputGroup,
   InputGroupAddon,
@@ -11,16 +11,20 @@ import {
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
+  onSearch: () => void;
   placeholder?: string;
 }
 
 export function SearchBar({
   value,
   onChange,
+  onSearch,
   placeholder = '어떤 요리를 찾으세요?',
 }: SearchBarProps) {
-  const handleClear = () => {
-    onChange('');
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && value) {
+      onSearch();
+    }
   };
 
   return (
@@ -32,14 +36,15 @@ export function SearchBar({
         placeholder={placeholder}
         value={value}
         onChange={e => onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       {value && (
         <InputGroupButton
-          onClick={handleClear}
-          aria-label='검색어 지우기'
-          className='bg-white'
+          onClick={onSearch}
+          aria-label='검색'
+          className='bg-primary-base text-white hover:bg-primary-base/90'
         >
-          <X />
+          <CornerDownLeft />
         </InputGroupButton>
       )}
     </InputGroup>

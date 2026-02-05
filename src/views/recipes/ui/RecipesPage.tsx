@@ -8,11 +8,20 @@ import { RecipeList } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function RecipesPage() {
+  const [inputValue, setInputValue] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = () => {
+    setSearchQuery(inputValue);
+  };
 
   return (
     <div className='min-h-screen pb-20 bg-background'>
-      <SearchHeader searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+      <SearchHeader
+        searchQuery={inputValue}
+        onSearchChange={setInputValue}
+        onSearch={handleSearch}
+      />
 
       <ErrorBoundary
         FallbackComponent={RecipeListError}
