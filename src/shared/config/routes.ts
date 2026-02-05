@@ -22,6 +22,7 @@ export const ROUTES = {
 
   /** 검색 */
   SEARCH: '/search',
+  SEARCH_RESULTS: '/search/results',
 
   /** 즐겨찾기 */
   FAVORITES: '/favorites',

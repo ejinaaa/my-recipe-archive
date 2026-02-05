@@ -4,17 +4,30 @@ import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
 import { useInfiniteRecipes } from '@/entities/recipe/api/hooks';
+import type {
+  CategoryFilter,
+  CookingTimeRange,
+  RecipeSortBy,
+} from '@/entities/recipe/api/server';
 import { ROUTES } from '@/shared/config';
 import { InfiniteScrollList } from '@/shared/ui/infinite-scroll-list';
 
 interface RecipeListProps {
   searchQuery?: string;
+  categories?: CategoryFilter;
+  cookingTimeRange?: CookingTimeRange;
+  sortBy?: RecipeSortBy;
 }
 
-export function RecipeList({ searchQuery }: RecipeListProps) {
+export function RecipeList({
+  searchQuery,
+  categories,
+  cookingTimeRange,
+  sortBy,
+}: RecipeListProps) {
   const router = useRouter();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
-    useInfiniteRecipes({ searchQuery });
+    useInfiniteRecipes({ searchQuery, categories, cookingTimeRange, sortBy });
 
   const recipes = data?.pages.flatMap(page => page.recipes) ?? [];
 
