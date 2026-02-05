@@ -35,14 +35,14 @@ const buttonVariants = cva(
         colorScheme: 'primary',
         transparent: false,
         className:
-          'bg-primary-base text-white hover:bg-primary-hover active:bg-primary-active focus-visible:ring-primary-base',
+          'bg-primary-base text-text-primary focus-visible:ring-primary-base',
       },
       {
         variant: 'solid',
         colorScheme: 'primary',
         transparent: true,
         className:
-          'bg-primary-base/60 text-white hover:bg-primary-hover/60 active:bg-primary-active/60 focus-visible:ring-primary-base backdrop-blur-sm',
+          'bg-primary-base/60 text-text-primary focus-visible:ring-primary-base backdrop-blur-sm',
       },
       // Solid + Secondary
       {
@@ -50,14 +50,14 @@ const buttonVariants = cva(
         colorScheme: 'secondary',
         transparent: false,
         className:
-          'bg-secondary-base text-text-primary hover:bg-secondary-hover active:bg-secondary-active focus-visible:ring-secondary-base',
+          'bg-secondary-base text-text-primary focus-visible:ring-secondary-base',
       },
       {
         variant: 'solid',
         colorScheme: 'secondary',
         transparent: true,
         className:
-          'bg-secondary-base/60 text-text-primary hover:bg-secondary-hover/60 active:bg-secondary-active/60 focus-visible:ring-secondary-base backdrop-blur-sm',
+          'bg-secondary-base/60 text-text-primary focus-visible:ring-secondary-base backdrop-blur-sm',
       },
       // Solid + Neutral
       {
@@ -65,56 +65,52 @@ const buttonVariants = cva(
         colorScheme: 'neutral',
         transparent: false,
         className:
-          'bg-neutral-base text-text-primary hover:bg-neutral-hover active:bg-neutral-active focus-visible:ring-neutral-base',
+          'bg-neutral-base text-text-primary focus-visible:ring-neutral-base',
       },
       {
         variant: 'solid',
         colorScheme: 'neutral',
         transparent: true,
         className:
-          'bg-neutral-base/60 text-text-primary hover:bg-neutral-hover/60 active:bg-neutral-active/60 focus-visible:ring-neutral-base backdrop-blur-sm',
+          'bg-neutral-base/60 text-text-primary focus-visible:ring-neutral-base backdrop-blur-sm',
       },
       // Outline + Primary
       {
         variant: 'outline',
         colorScheme: 'primary',
         className:
-          'border-primary-base text-primary-base hover:bg-primary-base hover:text-white active:bg-primary-hover active:text-white focus-visible:ring-primary-base',
+          'border-primary-base text-primary-base focus-visible:ring-primary-base',
       },
       // Outline + Secondary
       {
         variant: 'outline',
         colorScheme: 'secondary',
         className:
-          'border-secondary-base text-secondary-base hover:bg-secondary-base hover:text-text-primary active:bg-secondary-hover active:text-text-primary focus-visible:ring-secondary-base',
+          'border-secondary-base text-secondary-base focus-visible:ring-secondary-base',
       },
       // Outline + Neutral
       {
         variant: 'outline',
         colorScheme: 'neutral',
-        className:
-          'border-neutral-base text-text-primary hover:bg-neutral-base active:bg-neutral-hover focus-visible:ring-neutral-base',
+        className: 'border-neutral-base text-text-primary focus-visible:ring-neutral-base',
       },
       // Ghost + Primary
       {
         variant: 'ghost',
         colorScheme: 'primary',
-        className:
-          'text-primary-base hover:bg-primary-base/10 active:bg-primary-base/20 focus-visible:ring-primary-base',
+        className: 'text-primary-base focus-visible:ring-primary-base',
       },
       // Ghost + Secondary
       {
         variant: 'ghost',
         colorScheme: 'secondary',
-        className:
-          'text-secondary-base hover:bg-secondary-base/10 active:bg-secondary-base/20 focus-visible:ring-secondary-base',
+        className: 'text-secondary-base focus-visible:ring-secondary-base',
       },
       // Ghost + Neutral
       {
         variant: 'ghost',
         colorScheme: 'neutral',
-        className:
-          'text-text-primary hover:bg-neutral-base active:bg-neutral-hover focus-visible:ring-neutral-base',
+        className: 'text-text-primary focus-visible:ring-neutral-base',
       },
     ],
     defaultVariants: {

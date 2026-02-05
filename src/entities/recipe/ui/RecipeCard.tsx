@@ -27,7 +27,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
       onClick,
       ...props
     },
-    ref
+    ref,
   ) => {
     const { title, description, thumbnail_url, cooking_time, servings } =
       recipe;
@@ -42,9 +42,9 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
       <div
         ref={ref}
         className={cn(
-          'group relative h-[280px] w-full max-w-[400px] overflow-hidden rounded-[20px] cursor-pointer',
+          'group relative h-[240px] w-full max-w-[400px] overflow-hidden rounded-[20px] cursor-pointer',
           'transition-transform duration-200',
-          className
+          className,
         )}
         onClick={onClick}
         {...props}
@@ -121,7 +121,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 RecipeCard.displayName = 'RecipeCard';
