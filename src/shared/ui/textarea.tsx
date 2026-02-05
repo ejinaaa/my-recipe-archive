@@ -17,7 +17,7 @@ const textareaVariants = cva(
       },
       colorScheme: {
         neutral:
-          'bg-neutral-base text-text-primary placeholder:text-text-secondary',
+          'bg-neutral-base text-text-primary placeholder:text-text-secondary/60',
       },
     },
     defaultVariants: {
@@ -25,11 +25,12 @@ const textareaVariants = cva(
       size: 'md',
       colorScheme: 'neutral',
     },
-  }
+  },
 );
 
 export interface TextareaProps
-  extends Omit<React.ComponentProps<'textarea'>, 'size'>,
+  extends
+    Omit<React.ComponentProps<'textarea'>, 'size'>,
     VariantProps<typeof textareaVariants> {}
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -41,20 +42,20 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       colorScheme = 'neutral',
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <textarea
         data-slot='textarea'
         className={cn(
           textareaVariants({ variant, size, colorScheme }),
-          className
+          className,
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 Textarea.displayName = 'Textarea';
 

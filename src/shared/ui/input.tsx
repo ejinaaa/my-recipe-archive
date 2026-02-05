@@ -17,7 +17,7 @@ const inputVariants = cva(
       },
       colorScheme: {
         neutral:
-          'bg-neutral-base text-text-primary placeholder:text-text-secondary',
+          'bg-neutral-base text-text-primary placeholder:text-text-secondary/60',
       },
     },
     defaultVariants: {
@@ -25,11 +25,12 @@ const inputVariants = cva(
       size: 'md',
       colorScheme: 'neutral',
     },
-  }
+  },
 );
 
 export interface InputProps
-  extends Omit<React.ComponentProps<'input'>, 'size'>,
+  extends
+    Omit<React.ComponentProps<'input'>, 'size'>,
     VariantProps<typeof inputVariants> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -42,7 +43,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       colorScheme = 'neutral',
       ...props
     },
-    ref
+    ref,
   ) => {
     return (
       <input
@@ -52,7 +53,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {...props}
       />
     );
-  }
+  },
 );
 Input.displayName = 'Input';
 
