@@ -15,7 +15,11 @@ interface Tab {
   href: string;
 }
 
-export function BottomNavigation({ activeTab = 'search' }: { activeTab?: NavTab }) {
+export function BottomNavigation({
+  activeTab = 'search',
+}: {
+  activeTab?: NavTab;
+}) {
   const tabs: Tab[] = [
     { id: 'home', icon: Home, label: '홈', href: ROUTES.RECIPES.LIST },
     { id: 'search', icon: Search, label: '검색', href: ROUTES.SEARCH },
@@ -35,21 +39,23 @@ export function BottomNavigation({ activeTab = 'search' }: { activeTab?: NavTab 
               href={href}
               variant='ghost'
               colorScheme='neutral'
-              className={cn(
-                'flex flex-col items-center justify-center gap-1',
-                'hover:bg-neutral-base/50'
-              )}
+              className={cn('flex flex-col items-center justify-center gap-1')}
             >
-              <Icon
-                className={cn(
-                  'size-5',
-                  isActive ? 'text-text-primary' : 'text-text-secondary'
+              <div className='relative'>
+                <Icon
+                  className={cn(
+                    'size-5',
+                    isActive ? 'text-text-primary' : 'text-neutral-400',
+                  )}
+                />
+                {isActive && (
+                  <span className='absolute -top-1 -right-1 size-1.5 rounded-full bg-primary-light' />
                 )}
-              />
+              </div>
               <span
                 className={cn(
                   'text-caption',
-                  isActive ? 'text-text-primary' : 'text-text-secondary'
+                  isActive ? 'text-text-primary' : 'text-neutral-400',
                 )}
               >
                 {label}
