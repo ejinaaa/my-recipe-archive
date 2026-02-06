@@ -14,6 +14,8 @@ import {
   useUrlQueryParams,
   toCategoryFilter,
   toCookingTimeRange,
+  isSortActive,
+  isFilterActive,
 } from '@/features/recipe-search';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api/hooks';
@@ -93,8 +95,8 @@ export function FavoritesPage() {
             onSearch={handleSearch}
             placeholder='어떤 요리를 찾으세요?'
           />
-          <SortButton onClick={handleSortClick} />
-          <FilterButton onClick={handleFilterClick} />
+          <SortButton onClick={handleSortClick} isActive={isSortActive(sortBy)} />
+          <FilterButton onClick={handleFilterClick} isActive={isFilterActive(categoryFilters, cookingTimeRange)} />
         </div>
       </header>
 
@@ -104,7 +106,7 @@ export function FavoritesPage() {
           searchQuery={searchQuery}
           categories={toCategoryFilter(categoryFilters)}
           cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
-          sortBy={sortBy}
+          sortBy={sortBy ?? undefined}
           favoritesByUserId={userId}
           emptyState={favoritesEmptyState}
         />
@@ -118,7 +120,7 @@ export function FavoritesPage() {
         open={isFilterOpen}
         onOpenChange={setIsFilterOpen}
         initialFilters={categoryFilters}
-        initialCookingTime={cookingTimeRange}
+        initialCookingTime={cookingTimeRange ?? undefined}
         onApply={setFilters}
         onApplyEmpty={resetFilters}
         requireFilter={false}
@@ -128,7 +130,7 @@ export function FavoritesPage() {
       <SortBottomSheet
         open={isSortOpen}
         onOpenChange={setIsSortOpen}
-        initialSortBy={sortBy}
+        initialSortBy={sortBy ?? 'latest'}
         onApply={setSortBy}
       />
     </div>

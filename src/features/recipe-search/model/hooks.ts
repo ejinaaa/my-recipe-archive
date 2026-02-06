@@ -1,6 +1,4 @@
-'use client';
-
-import type { CategoryFilter } from '@/entities/recipe/api/server';
+import type { CategoryFilter, RecipeSortBy } from '@/entities/recipe/api/server';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
@@ -41,10 +39,37 @@ export const isDefaultCookingTimeRange = (range: CookingTimeRange): boolean => {
  * 기본값인 경우 undefined 반환
  */
 export const toCookingTimeRange = (
-  range: CookingTimeRange,
+  range: CookingTimeRange | null,
 ): { min: number; max: number } | undefined => {
-  if (isDefaultCookingTimeRange(range)) {
+  if (range === null || isDefaultCookingTimeRange(range)) {
     return undefined;
   }
   return { min: range.min, max: range.max };
+};
+
+/**
+ * 정렬 버튼 활성화 상태 계산
+ * 기본값(latest)이 아닐 때 활성화
+ */
+export const isSortActive = (sortBy: RecipeSortBy | null): boolean => {
+  return sortBy !== null;
+};
+
+/**
+ * 필터 버튼 활성화 상태 계산
+ * 카테고리 필터가 있거나 조리시간이 기본값이 아닐 때 활성화
+ */
+export const isFilterActive = (
+  categoryFilters: CategoryFilters,
+  cookingTimeRange: CookingTimeRange | null,
+): boolean => {
+  const hasCategoryFilter =
+    categoryFilters.situation.length > 0 ||
+    categoryFilters.cuisine.length > 0 ||
+    categoryFilters.dishType.length > 0;
+
+  const hasTimeFilter =
+    cookingTimeRange !== null && !isDefaultCookingTimeRange(cookingTimeRange);
+
+  return hasCategoryFilter || hasTimeFilter;
 };

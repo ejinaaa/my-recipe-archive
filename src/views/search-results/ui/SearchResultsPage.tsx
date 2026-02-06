@@ -12,6 +12,8 @@ import {
   useUrlQueryParams,
   toCategoryFilter,
   toCookingTimeRange,
+  isSortActive,
+  isFilterActive,
 } from '@/features/recipe-search';
 import { BackButton } from '@/shared/ui/back-button';
 import { ROUTES } from '@/shared/config';
@@ -64,8 +66,8 @@ export function SearchResultsPage() {
             onSearch={handleSearch}
             placeholder='어떤 요리를 찾으세요?'
           />
-          <SortButton onClick={handleSortClick} />
-          <FilterButton onClick={handleFilterClick} />
+          <SortButton onClick={handleSortClick} isActive={isSortActive(sortBy)} />
+          <FilterButton onClick={handleFilterClick} isActive={isFilterActive(categoryFilters, cookingTimeRange)} />
         </div>
       </header>
 
@@ -75,7 +77,7 @@ export function SearchResultsPage() {
           searchQuery={searchQuery}
           categories={toCategoryFilter(categoryFilters)}
           cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
-          sortBy={sortBy}
+          sortBy={sortBy ?? undefined}
         />
       </ErrorBoundary>
 
@@ -87,7 +89,7 @@ export function SearchResultsPage() {
         open={isFilterOpen}
         onOpenChange={setIsFilterOpen}
         initialFilters={categoryFilters}
-        initialCookingTime={cookingTimeRange}
+        initialCookingTime={cookingTimeRange ?? undefined}
         onApply={setFilters}
         requireFilter={true}
       />
@@ -96,7 +98,7 @@ export function SearchResultsPage() {
       <SortBottomSheet
         open={isSortOpen}
         onOpenChange={setIsSortOpen}
-        initialSortBy={sortBy}
+        initialSortBy={sortBy ?? 'latest'}
         onApply={setSortBy}
       />
     </div>

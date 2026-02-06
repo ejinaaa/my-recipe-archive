@@ -1,6 +1,11 @@
 'use client';
 
-import { useQueryStates, parseAsString, parseAsStringEnum, parseAsInteger } from 'nuqs';
+import {
+  useQueryStates,
+  parseAsString,
+  parseAsStringEnum,
+  parseAsInteger,
+} from 'nuqs';
 import type { RecipeSortBy } from '@/entities/recipe/api/server';
 import {
   COOKING_TIME_MIN,
@@ -8,7 +13,13 @@ import {
 } from '@/entities/recipe/model/constants';
 import type { CategoryFilters, CookingTimeRange } from './store';
 
-const SORT_OPTIONS_VALUES: RecipeSortBy[] = ['latest', 'oldest', 'popular', 'unpopular', 'favorites'];
+const SORT_OPTIONS_VALUES: RecipeSortBy[] = [
+  'latest',
+  'oldest',
+  'popular',
+  'unpopular',
+  'favorites',
+];
 
 /**
  * URL 쿼리 파라미터에서 검색/필터/정렬 상태를 읽고 쓰는 훅
@@ -16,17 +27,20 @@ const SORT_OPTIONS_VALUES: RecipeSortBy[] = ['latest', 'oldest', 'popular', 'unp
  * URL이 Source of Truth로 동작하며, 브라우저 히스토리/새로고침/URL 공유를 지원
  */
 export function useUrlQueryParams() {
-  const [params, setParams] = useQueryStates({
-    q: parseAsString.withDefault(''),
-    sort: parseAsStringEnum<RecipeSortBy>(SORT_OPTIONS_VALUES).withDefault('latest'),
-    situation: parseAsString.withDefault(''),
-    cuisine: parseAsString.withDefault(''),
-    dishType: parseAsString.withDefault(''),
-    timeMin: parseAsInteger.withDefault(COOKING_TIME_MIN),
-    timeMax: parseAsInteger.withDefault(COOKING_TIME_MAX),
-  }, {
-    shallow: true,
-  });
+  const [params, setParams] = useQueryStates(
+    {
+      q: parseAsString.withDefault(''),
+      sort: parseAsStringEnum<RecipeSortBy>(SORT_OPTIONS_VALUES),
+      situation: parseAsString,
+      cuisine: parseAsString,
+      dishType: parseAsString,
+      timeMin: parseAsInteger,
+      timeMax: parseAsInteger,
+    },
+    {
+      shallow: true,
+    },
+  );
 
   // URL 파라미터를 CategoryFilters 형식으로 변환
   const categoryFilters: CategoryFilters = {
@@ -35,10 +49,13 @@ export function useUrlQueryParams() {
     dishType: params.dishType ? [params.dishType] : [],
   };
 
-  const cookingTimeRange: CookingTimeRange = {
-    min: params.timeMin,
-    max: params.timeMax,
-  };
+  const cookingTimeRange: CookingTimeRange | null =
+    params.timeMin !== null && params.timeMax !== null
+      ? {
+          min: params.timeMin,
+          max: params.timeMax,
+        }
+      : null;
 
   return {
     // 읽기 (현재 URL 값)

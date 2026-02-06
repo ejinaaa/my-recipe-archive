@@ -15,6 +15,8 @@ export {
   toCategoryFilter,
   toCookingTimeRange,
   isDefaultCookingTimeRange,
+  isSortActive,
+  isFilterActive,
 } from './model/hooks';
 
 // Types & Constants
