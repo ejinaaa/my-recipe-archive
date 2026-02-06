@@ -77,7 +77,7 @@ export function RecipeCreatePage({ categoryGroups }: RecipeCreatePageProps) {
             <ChevronLeft className='size-5' />
           </Button>
           <h1 className='text-heading-2 text-text-primary'>
-            나만의 레시피 만들기
+            오늘은 어떤 요리를 기록할까요?
           </h1>
         </div>
       </header>
