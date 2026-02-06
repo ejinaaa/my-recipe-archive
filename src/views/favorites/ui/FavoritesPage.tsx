@@ -74,7 +74,7 @@ export function FavoritesPage() {
           <SearchBar
             defaultValue={searchQuery}
             onSearch={handleSearch}
-            placeholder="즐겨찾기에서 검색"
+            placeholder="저장한 요리 중 뭘 찾으세요?"
           />
           <SortButton onClick={handleSortClick} />
           <FilterButton onClick={handleFilterClick} />
