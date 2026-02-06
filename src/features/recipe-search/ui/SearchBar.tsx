@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 import {
   InputGroup,
@@ -21,6 +21,8 @@ export function SearchBar({
   placeholder = '어떤 요리를 찾으세요?',
 }: SearchBarProps) {
   const [inputValue, setInputValue] = useState(defaultValue);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const isSearchingRef = useRef(false);
 
   // defaultValue 변경 시 inputValue 동기화
   useEffect(() => {
@@ -28,9 +30,25 @@ export function SearchBar({
   }, [defaultValue]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && inputValue) {
+    if (e.nativeEvent.isComposing) return;
+    if (e.key === 'Enter') {
+      isSearchingRef.current = true;
       onSearch(inputValue);
+      inputRef.current?.blur();
     }
+  };
+
+  const handleClear = () => {
+    setInputValue('');
+    inputRef.current?.focus();
+  };
+
+  const handleBlur = () => {
+    if (isSearchingRef.current) {
+      isSearchingRef.current = false;
+      return;
+    }
+    setInputValue(defaultValue);
   };
 
   return (
@@ -39,14 +57,17 @@ export function SearchBar({
         <Search />
       </InputGroupAddon>
       <InputGroupInput
+        ref={inputRef}
         placeholder={placeholder}
         value={inputValue}
         onChange={e => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
       />
       {inputValue && (
         <InputGroupButton
-          onClick={() => setInputValue('')}
+          onMouseDown={e => e.preventDefault()}
+          onClick={handleClear}
           aria-label='검색어 삭제'
           className='bg-white/80'
         >
