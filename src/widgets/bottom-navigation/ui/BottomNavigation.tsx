@@ -39,7 +39,9 @@ export function BottomNavigation({
               href={href}
               variant='ghost'
               colorScheme='neutral'
-              className={cn('flex flex-col items-center justify-center gap-1')}
+              className={cn(
+                'flex-1 flex flex-col items-center justify-center gap-1',
+              )}
             >
               <div className='relative'>
                 <Icon
