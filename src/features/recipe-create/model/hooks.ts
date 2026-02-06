@@ -55,13 +55,17 @@ const initialFormData: RecipeFormData = {
 
 interface UseRecipeFormOptions {
   onSubmit: (data: RecipeFormData) => Promise<void>;
+  /** 수정 모드에서 사용할 초기 데이터 */
+  initialData?: RecipeFormData;
 }
 
 /**
- * 레시피 생성 폼 상태 관리 훅
+ * 레시피 생성/수정 폼 상태 관리 훅
  */
-export function useRecipeForm({ onSubmit }: UseRecipeFormOptions) {
-  const [formData, setFormData] = useState<RecipeFormData>(initialFormData);
+export function useRecipeForm({ onSubmit, initialData }: UseRecipeFormOptions) {
+  const [formData, setFormData] = useState<RecipeFormData>(
+    initialData ?? initialFormData,
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 기본 필드 업데이트

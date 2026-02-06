@@ -19,6 +19,18 @@ import {
 } from '@/entities/recipe/model/constants';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
 
+/** 폼 모드 */
+type RecipeFormMode = 'create' | 'edit';
+
+/** 모드별 버튼 텍스트 */
+const SUBMIT_BUTTON_TEXT: Record<
+  RecipeFormMode,
+  { default: string; loading: string }
+> = {
+  create: { default: '나만의 레시피 완성!', loading: '레시피 만드는 중...' },
+  edit: { default: '레시피 수정 완료!', loading: '수정하는 중...' },
+};
+
 interface RecipeCreateFormProps {
   /** 카테고리 그룹 목록 */
   categoryGroups: CategoryGroup[];
@@ -26,15 +38,21 @@ interface RecipeCreateFormProps {
   onSubmit: (data: RecipeFormData) => Promise<void>;
   /** 추가 클래스명 */
   className?: string;
+  /** 폼 모드 (생성 또는 수정) */
+  mode?: RecipeFormMode;
+  /** 수정 모드에서 사용할 초기 데이터 */
+  initialData?: RecipeFormData;
 }
 
 /**
- * 레시피 생성 폼 컴포넌트
+ * 레시피 생성/수정 폼 컴포넌트
  */
 export function RecipeCreateForm({
   categoryGroups,
   onSubmit,
   className,
+  mode = 'create',
+  initialData,
 }: RecipeCreateFormProps) {
   const {
     formData,
@@ -49,7 +67,9 @@ export function RecipeCreateForm({
     insertStepAt,
     removeStep,
     handleSubmit,
-  } = useRecipeForm({ onSubmit });
+  } = useRecipeForm({ onSubmit, initialData });
+
+  const buttonText = SUBMIT_BUTTON_TEXT[mode];
 
   const isDisabled = isSubmitting;
 
@@ -296,7 +316,7 @@ export function RecipeCreateForm({
         disabled={!isValid || isDisabled}
         className='w-full mt-4'
       >
-        {isSubmitting ? '레시피 만드는 중...' : '나만의 레시피 완성!'}
+        {isSubmitting ? buttonText.loading : buttonText.default}
       </Button>
     </div>
   );

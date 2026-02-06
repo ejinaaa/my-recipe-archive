@@ -18,6 +18,7 @@ export const ROUTES = {
     LIST: '/recipes',
     DETAIL: (id: string) => `/recipes/${id}`,
     NEW: '/recipes/new',
+    EDIT: (id: string) => `/recipes/${id}/edit`,
   },
 
   /** 검색 */

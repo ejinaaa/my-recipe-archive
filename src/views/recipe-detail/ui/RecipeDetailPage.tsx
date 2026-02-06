@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
-import { Clock, ImageOff, UtensilsCrossed } from 'lucide-react';
+import { Clock, ImageOff, Pencil, UtensilsCrossed } from 'lucide-react';
 import { BackButton } from '@/shared/ui/back-button';
 import { Badge } from '@/shared/ui/badge';
+import { Button } from '@/shared/ui/button';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
+import { ROUTES } from '@/shared/config';
 import { useSuspenseRecipe } from '@/entities/recipe/api/hooks';
 import { RecipeIngredients } from './RecipeIngredients';
 import { RecipeCookingSteps } from './RecipeCookingSteps';
@@ -32,6 +34,10 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
     router.back();
   };
 
+  const handleEdit = () => {
+    router.push(ROUTES.RECIPES.EDIT(id));
+  };
+
   const handleToggleFavorite = () => {
     // TODO: 즐겨찾기 기능 구현 시 추가
   };
@@ -45,11 +51,24 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
       {/* Fixed Header */}
       <div className='fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full px-4 py-2'>
         <BackButton onBack={handleBack} />
-        <FavoriteButton
-          isFavorite={false}
-          onToggle={handleToggleFavorite}
-          size='sm'
-        />
+        <div className='flex items-center gap-2'>
+          <Button
+            variant='solid'
+            colorScheme='neutral'
+            size='sm'
+            transparent
+            className='size-10 p-0'
+            onClick={handleEdit}
+            aria-label='레시피 수정'
+          >
+            <Pencil className='size-5' />
+          </Button>
+          <FavoriteButton
+            isFavorite={false}
+            onToggle={handleToggleFavorite}
+            size='sm'
+          />
+        </div>
       </div>
 
       {/* Thumbnail Section - 350px 고정 */}
