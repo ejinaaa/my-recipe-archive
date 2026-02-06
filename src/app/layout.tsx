@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { QueryProvider } from '@/shared/providers/query-provider';
 import { DebugLogoutButton } from '@/shared/ui/debug-logout-button';
 import './globals.css';
@@ -29,17 +30,19 @@ export default function RootLayout({
   return (
     <html lang='ko' suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
-        <QueryProvider>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <DebugLogoutButton />
-          </ThemeProvider>
-        </QueryProvider>
+        <NuqsAdapter>
+          <QueryProvider>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='system'
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <DebugLogoutButton />
+            </ThemeProvider>
+          </QueryProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );

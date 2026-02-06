@@ -1,12 +1,19 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SortBottomSheet } from './SortBottomSheet';
-import { useSortStore } from '../model/sortStore';
 import { Button } from '@/shared/ui/button';
+import type { RecipeSortBy } from '@/entities/recipe/api/server';
 
 const meta = {
   title: 'features/recipe-search/SortBottomSheet',
   component: SortBottomSheet,
   tags: ['autodocs'],
+  args: {
+    open: false,
+    onOpenChange: () => {},
+    initialSortBy: 'latest',
+    onApply: () => {},
+  },
   decorators: [
     Story => (
       <div className='min-h-screen'>
@@ -24,12 +31,26 @@ type Story = StoryObj<typeof meta>;
  */
 export const Default: Story = {
   render: function Render() {
-    const openBottomSheet = useSortStore(state => state.openBottomSheet);
+    const [open, setOpen] = useState(false);
+    const [sortBy, setSortBy] = useState<RecipeSortBy>('latest');
+
+    const handleApply = (newSortBy: RecipeSortBy) => {
+      setSortBy(newSortBy);
+      setOpen(false);
+    };
 
     return (
       <div className='p-4'>
-        <Button onClick={openBottomSheet}>정렬 열기</Button>
-        <SortBottomSheet />
+        <div className='mb-4'>
+          <p className='text-body-2 text-text-secondary'>현재 정렬: {sortBy}</p>
+        </div>
+        <Button onClick={() => setOpen(true)}>정렬 열기</Button>
+        <SortBottomSheet
+          open={open}
+          onOpenChange={setOpen}
+          initialSortBy={sortBy}
+          onApply={handleApply}
+        />
       </div>
     );
   },
@@ -39,17 +60,8 @@ export const Default: Story = {
  * 바텀시트가 열린 상태
  */
 export const Open: Story = {
-  render: function Render() {
-    const openBottomSheet = useSortStore(state => state.openBottomSheet);
-
-    // 스토리 로드 시 자동으로 열기
-    setTimeout(() => openBottomSheet(), 100);
-
-    return (
-      <div className='p-4'>
-        <Button onClick={openBottomSheet}>정렬 열기</Button>
-        <SortBottomSheet />
-      </div>
-    );
+  args: {
+    open: true,
+    initialSortBy: 'popular',
   },
 };

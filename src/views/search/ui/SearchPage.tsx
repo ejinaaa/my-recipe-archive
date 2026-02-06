@@ -24,11 +24,11 @@ export function SearchPage() {
   };
 
   const handleCuisineSelect = (code: string) => {
-    router.push(`${ROUTES.SEARCH_RESULTS}?type=cuisine&code=${code}`);
+    router.push(`${ROUTES.SEARCH_RESULTS}?cuisine=${code}`);
   };
 
   const handleCategorySelect = (type: CategoryType, code: string) => {
-    router.push(`${ROUTES.SEARCH_RESULTS}?type=${type}&code=${code}`);
+    router.push(`${ROUTES.SEARCH_RESULTS}?${type}=${code}`);
   };
 
   return (

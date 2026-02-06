@@ -11,28 +11,47 @@ import {
   DrawerTitle,
 } from '@/shared/ui/drawer';
 import type { RecipeSortBy } from '@/entities/recipe/api/server';
-import { useSortStore, SORT_OPTIONS } from '../model/sortStore';
+import { SORT_OPTIONS } from '../model/sortStore';
 
-export function SortBottomSheet() {
-  const { isOpen, sortBy, closeBottomSheet, applySortBy } = useSortStore();
+interface SortBottomSheetProps {
+  /** 바텀시트 열림 상태 */
+  open: boolean;
+  /** 열림 상태 변경 핸들러 */
+  onOpenChange: (open: boolean) => void;
+  /** 초기 정렬값 */
+  initialSortBy?: RecipeSortBy;
+  /** 정렬 적용 핸들러 */
+  onApply: (sortBy: RecipeSortBy) => void;
+}
 
-  // 로컬 상태 (바텀시트 내 편집용)
-  const [tempSortBy, setTempSortBy] = useState<RecipeSortBy>(sortBy);
+/**
+ * 정렬 바텀시트 (순수 UI 컴포넌트)
+ *
+ * URL/store 로직 없이 props만으로 동작.
+ */
+export function SortBottomSheet({
+  open,
+  onOpenChange,
+  initialSortBy = 'latest',
+  onApply,
+}: SortBottomSheetProps) {
+  // 로컬 임시 상태 (바텀시트 내 편집용)
+  const [tempSortBy, setTempSortBy] = useState<RecipeSortBy>(initialSortBy);
 
-  // 바텀시트 열릴 때 전역 상태를 로컬로 복사
+  // 바텀시트 열릴 때 초기값으로 리셋
   useEffect(() => {
-    if (isOpen) {
-      setTempSortBy(sortBy);
+    if (open) {
+      setTempSortBy(initialSortBy);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, [open, initialSortBy]);
 
   const handleApply = () => {
-    applySortBy(tempSortBy);
+    onApply(tempSortBy);
+    onOpenChange(false);
   };
 
   return (
-    <Drawer open={isOpen} onOpenChange={open => !open && closeBottomSheet()}>
+    <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
         {/* Header */}
         <DrawerHeader className='relative flex items-center justify-center'>

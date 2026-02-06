@@ -1,17 +1,18 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import {
   SearchBar,
   SortButton,
   FilterButton,
-  SearchFilterBottomSheet,
-  useFilterStore,
-  useRecipeFilters,
+  FilterBottomSheet,
+  SortBottomSheet,
+  useUrlQueryParams,
+  toCategoryFilter,
+  toCookingTimeRange,
 } from '@/features/recipe-search';
-import type { CategoryType } from '@/entities/category/model/types';
 import { BackButton } from '@/shared/ui/back-button';
 import { ROUTES } from '@/shared/config';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
@@ -20,44 +21,36 @@ import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function SearchResultsPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
-  // URL 쿼리 파라미터
-  const query = searchParams.get('q') || '';
-  const categoryType = searchParams.get('type') as CategoryType | null;
-  const categoryCode = searchParams.get('code') || '';
+  // URL 쿼리 파라미터에서 상태 읽기/쓰기
+  const {
+    searchQuery,
+    sortBy,
+    categoryFilters,
+    cookingTimeRange,
+    setSearchQuery,
+    setSortBy,
+    setFilters,
+  } = useUrlQueryParams();
 
-  // Filter store
-  const { initializeFromUrl } = useFilterStore();
-  const { categoryFilter, cookingTimeFilter, openBottomSheet } =
-    useRecipeFilters();
-
-  // URL 파라미터로 store 초기화
-  useEffect(() => {
-    initializeFromUrl(categoryType, categoryCode);
-  }, [categoryType, categoryCode, initializeFromUrl]);
-
-  // URL 쿼리에서 카테고리 필터 생성 (store 필터가 없을 때 fallback)
-  const urlCategoryFilter =
-    categoryType && categoryCode ? { [categoryType]: categoryCode } : undefined;
-
-  // store의 필터와 URL 필터 병합 (store 우선)
-  const finalCategoryFilter = categoryFilter || urlCategoryFilter;
+  // 바텀시트 열림 상태 (로컬)
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
   const handleBack = () => {
     router.push(ROUTES.SEARCH);
   };
 
   const handleSearch = (newQuery: string) => {
-    router.push(`${ROUTES.SEARCH_RESULTS}?q=${encodeURIComponent(newQuery)}`);
+    setSearchQuery(newQuery);
   };
 
   const handleSortClick = () => {
-    // TODO: sort 바텀시트 열기
+    setIsSortOpen(true);
   };
 
   const handleFilterClick = () => {
-    openBottomSheet();
+    setIsFilterOpen(true);
   };
 
   return (
@@ -67,7 +60,7 @@ export function SearchResultsPage() {
         <div className='flex items-center gap-2'>
           <BackButton onBack={handleBack} />
           <SearchBar
-            defaultValue={query}
+            defaultValue={searchQuery}
             onSearch={handleSearch}
             placeholder='어떤 요리를 찾으세요?'
           />
@@ -79,9 +72,10 @@ export function SearchResultsPage() {
       {/* Main */}
       <ErrorBoundary FallbackComponent={RecipeListError}>
         <RecipeList
-          searchQuery={query}
-          categories={finalCategoryFilter}
-          cookingTimeRange={cookingTimeFilter}
+          searchQuery={searchQuery}
+          categories={toCategoryFilter(categoryFilters)}
+          cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
+          sortBy={sortBy}
         />
       </ErrorBoundary>
 
@@ -89,7 +83,22 @@ export function SearchResultsPage() {
       <BottomNavigation activeTab='search' />
 
       {/* Filter Bottom Sheet */}
-      <SearchFilterBottomSheet />
+      <FilterBottomSheet
+        open={isFilterOpen}
+        onOpenChange={setIsFilterOpen}
+        initialFilters={categoryFilters}
+        initialCookingTime={cookingTimeRange}
+        onApply={setFilters}
+        requireFilter={true}
+      />
+
+      {/* Sort Bottom Sheet */}
+      <SortBottomSheet
+        open={isSortOpen}
+        onOpenChange={setIsSortOpen}
+        initialSortBy={sortBy}
+        onApply={setSortBy}
+      />
     </div>
   );
 }

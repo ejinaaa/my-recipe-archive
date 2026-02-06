@@ -1,5 +1,10 @@
+import { Suspense } from 'react';
 import { FavoritesPage } from '@/views/favorites';
 
 export default function Page() {
-  return <FavoritesPage />;
+  return (
+    <Suspense>
+      <FavoritesPage />
+    </Suspense>
+  );
 }

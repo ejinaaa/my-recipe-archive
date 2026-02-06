@@ -9,8 +9,11 @@ import {
   SearchBar,
   SortButton,
   FilterButton,
-  FavoriteFilterBottomSheet,
-  useRecipeFilters,
+  FilterBottomSheet,
+  SortBottomSheet,
+  useUrlQueryParams,
+  toCategoryFilter,
+  toCookingTimeRange,
 } from '@/features/recipe-search';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api/hooks';
@@ -34,9 +37,23 @@ const favoritesEmptyState = (
 export function FavoritesPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [searchQuery, setSearchQuery] = useState('');
-  const { categoryFilter, cookingTimeFilter, openBottomSheet } =
-    useRecipeFilters();
+
+  // URL 쿼리 파라미터에서 상태 읽기/쓰기
+  const {
+    searchQuery,
+    sortBy,
+    categoryFilters,
+    cookingTimeRange,
+    setSearchQuery,
+    setSortBy,
+    setFilters,
+    resetFilters,
+  } = useUrlQueryParams();
+
+  // 바텀시트 열림 상태 (로컬)
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+
   const { data: currentProfile } = useCurrentProfile();
   const userId = currentProfile?.id;
 
@@ -49,6 +66,7 @@ export function FavoritesPage() {
   }, [queryClient]);
 
   const handleBack = () => {
+    // TODO: favorite 검색 페이지와 분리되면 favorites 메인으로 이동하도록 수정
     router.back();
   };
 
@@ -57,11 +75,11 @@ export function FavoritesPage() {
   };
 
   const handleSortClick = () => {
-    // TODO: sort 바텀시트 열기
+    setIsSortOpen(true);
   };
 
   const handleFilterClick = () => {
-    openBottomSheet();
+    setIsFilterOpen(true);
   };
 
   return (
@@ -84,8 +102,9 @@ export function FavoritesPage() {
       <ErrorBoundary FallbackComponent={RecipeListError}>
         <RecipeList
           searchQuery={searchQuery}
-          categories={categoryFilter}
-          cookingTimeRange={cookingTimeFilter}
+          categories={toCategoryFilter(categoryFilters)}
+          cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
+          sortBy={sortBy}
           favoritesByUserId={userId}
           emptyState={favoritesEmptyState}
         />
@@ -95,7 +114,23 @@ export function FavoritesPage() {
       <BottomNavigation activeTab='favorites' />
 
       {/* Filter Bottom Sheet */}
-      <FavoriteFilterBottomSheet />
+      <FilterBottomSheet
+        open={isFilterOpen}
+        onOpenChange={setIsFilterOpen}
+        initialFilters={categoryFilters}
+        initialCookingTime={cookingTimeRange}
+        onApply={setFilters}
+        onApplyEmpty={resetFilters}
+        requireFilter={false}
+      />
+
+      {/* Sort Bottom Sheet */}
+      <SortBottomSheet
+        open={isSortOpen}
+        onOpenChange={setIsSortOpen}
+        initialSortBy={sortBy}
+        onApply={setSortBy}
+      />
     </div>
   );
 }
