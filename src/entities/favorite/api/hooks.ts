@@ -85,20 +85,47 @@ export function useToggleFavorite(): UseMutationResult<
     mutationFn: ({ userId, recipeId }) =>
       toggleFavoriteAction(userId, recipeId),
     onMutate: async ({ userId, recipeId }) => {
-      // 이전 상태 취소
+      // 관련 쿼리 취소
       await queryClient.cancelQueries({
         queryKey: favoriteKeys.status(userId, recipeId),
       });
+      await queryClient.cancelQueries({
+        queryKey: favoriteKeys.statuses(),
+        exact: false,
+      });
 
-      // 이전 값 스냅샷
+      // 개별 상태 스냅샷
       const previousStatus = queryClient.getQueryData<boolean>(
         favoriteKeys.status(userId, recipeId)
       );
 
-      // Optimistic update
+      // batchStatuses 쿼리들 스냅샷
+      const previousBatchStatuses = queryClient.getQueriesData<
+        Record<string, boolean>
+      >({
+        queryKey: [...favoriteKeys.statuses(), userId, 'batch'],
+        exact: false,
+      });
+
+      // 개별 상태 optimistic update
       queryClient.setQueryData<boolean>(
         favoriteKeys.status(userId, recipeId),
         old => !old
+      );
+
+      // batchStatuses 쿼리들도 optimistic update
+      queryClient.setQueriesData<Record<string, boolean>>(
+        {
+          queryKey: [...favoriteKeys.statuses(), userId, 'batch'],
+          exact: false,
+        },
+        old => {
+          if (!old || !(recipeId in old)) return old;
+          return {
+            ...old,
+            [recipeId]: !old[recipeId],
+          };
+        }
       );
 
       // 레시피의 favorite_count도 optimistic update
@@ -110,21 +137,32 @@ export function useToggleFavorite(): UseMutationResult<
         };
       });
 
-      return { previousStatus };
+      return { previousStatus, previousBatchStatuses };
     },
     onError: (err, { userId, recipeId }, context) => {
-      // 롤백
+      // 개별 상태 롤백
       if (context?.previousStatus !== undefined) {
         queryClient.setQueryData(
           favoriteKeys.status(userId, recipeId),
           context.previousStatus
         );
       }
+
+      // batchStatuses 롤백
+      if (context?.previousBatchStatuses) {
+        context.previousBatchStatuses.forEach(([queryKey, data]) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
     },
     onSettled: (_, __, { userId, recipeId }) => {
       // 관련 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: favoriteKeys.status(userId, recipeId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: favoriteKeys.statuses(),
+        exact: false,
       });
       queryClient.invalidateQueries({
         queryKey: favoriteKeys.list(userId),

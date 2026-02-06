@@ -1,9 +1,15 @@
 'use client';
 
+import { useMemo, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
 import { useInfiniteRecipes } from '@/entities/recipe/api/hooks';
+import { useCurrentProfile } from '@/entities/user/api/hooks';
+import {
+  useFavoriteStatuses,
+  useToggleFavorite,
+} from '@/entities/favorite/api/hooks';
 import type {
   CategoryFilter,
   CookingTimeRange,
@@ -29,11 +35,41 @@ export function RecipeList({
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
     useInfiniteRecipes({ searchQuery, categories, cookingTimeRange, sortBy });
 
-  const recipes = data?.pages.flatMap(page => page.recipes) ?? [];
+  const recipes = useMemo(
+    () => data?.pages.flatMap(page => page.recipes) ?? [],
+    [data?.pages],
+  );
+
+  // 현재 사용자 프로필 조회
+  const { data: currentProfile } = useCurrentProfile();
+  const userId = currentProfile?.id;
+
+  // 레시피 ID 목록 추출
+  const recipeIds = useMemo(() => recipes.map(recipe => recipe.id), [recipes]);
+
+  // 즐겨찾기 상태 조회
+  const { data: favoriteStatuses } = useFavoriteStatuses(userId, recipeIds);
+
+  useEffect(() => {
+    console.log('즐겨찾기: ', favoriteStatuses);
+  }, [favoriteStatuses]);
+
+  // 즐겨찾기 토글 mutation
+  const toggleFavorite = useToggleFavorite();
 
   const handleRecipeClick = (recipeId: string) => {
     router.push(ROUTES.RECIPES.DETAIL(recipeId));
   };
+
+  // 즐겨찾기 토글 핸들러
+  const handleToggleFavorite = useCallback(
+    (recipeId: string) => {
+      if (!userId) return;
+      console.log('레시피 id: ', recipeId);
+      toggleFavorite.mutate({ userId, recipeId });
+    },
+    [userId, toggleFavorite],
+  );
 
   return (
     <InfiniteScrollList
@@ -73,6 +109,8 @@ export function RecipeList({
         <RecipeCard
           key={recipe.id}
           recipe={recipe}
+          isFavorite={favoriteStatuses?.[recipe.id] ?? false}
+          onToggleFavorite={() => handleToggleFavorite(recipe.id)}
           onClick={() => handleRecipeClick(recipe.id)}
           className='w-full max-w-none'
         />
