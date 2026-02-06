@@ -29,7 +29,7 @@ const SORT_OPTIONS_VALUES: RecipeSortBy[] = [
 export function useUrlQueryParams() {
   const [params, setParams] = useQueryStates(
     {
-      q: parseAsString.withDefault(''),
+      q: parseAsString,
       sort: parseAsStringEnum<RecipeSortBy>(SORT_OPTIONS_VALUES),
       situation: parseAsString,
       cuisine: parseAsString,

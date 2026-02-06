@@ -91,19 +91,25 @@ export function FavoritesPage() {
         <div className='flex items-center gap-2'>
           <BackButton onBack={handleBack} />
           <SearchBar
-            defaultValue={searchQuery}
+            defaultValue={searchQuery ?? undefined}
             onSearch={handleSearch}
             placeholder='어떤 요리를 찾으세요?'
           />
-          <SortButton onClick={handleSortClick} isActive={isSortActive(sortBy)} />
-          <FilterButton onClick={handleFilterClick} isActive={isFilterActive(categoryFilters, cookingTimeRange)} />
+          <SortButton
+            onClick={handleSortClick}
+            isActive={isSortActive(sortBy)}
+          />
+          <FilterButton
+            onClick={handleFilterClick}
+            isActive={isFilterActive(categoryFilters, cookingTimeRange)}
+          />
         </div>
       </header>
 
       {/* Main */}
       <ErrorBoundary FallbackComponent={RecipeListError}>
         <RecipeList
-          searchQuery={searchQuery}
+          searchQuery={searchQuery ?? undefined}
           categories={toCategoryFilter(categoryFilters)}
           cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
           sortBy={sortBy ?? undefined}
