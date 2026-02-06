@@ -9,38 +9,14 @@ import {
   FilterButton,
   FilterBottomSheet,
   useFilterStore,
+  useRecipeFilters,
 } from '@/features/recipe-search';
 import type { CategoryType } from '@/entities/category/model/types';
-import type { CategoryFilter } from '@/entities/recipe/api/server';
 import { BackButton } from '@/shared/ui/back-button';
 import { ROUTES } from '@/shared/config';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
-
-/**
- * store의 CategoryFilters를 API의 CategoryFilter로 변환
- * 배열의 첫 번째 값만 사용
- */
-function toCategoryFilter(filters: {
-  situation: string[];
-  cuisine: string[];
-  dishType: string[];
-}): CategoryFilter | undefined {
-  const result: CategoryFilter = {};
-
-  if (filters.situation.length > 0) {
-    result.situation = filters.situation[0];
-  }
-  if (filters.cuisine.length > 0) {
-    result.cuisine = filters.cuisine[0];
-  }
-  if (filters.dishType.length > 0) {
-    result.dishType = filters.dishType[0];
-  }
-
-  return Object.keys(result).length > 0 ? result : undefined;
-}
 
 export function SearchResultsPage() {
   const router = useRouter();
@@ -52,29 +28,23 @@ export function SearchResultsPage() {
   const categoryCode = searchParams.get('code') || '';
 
   // Filter store
-  const { categoryFilters, cookingTimeRange, openBottomSheet, initializeFromUrl } =
-    useFilterStore();
+  const { initializeFromUrl } = useFilterStore();
+  const { categoryFilter, cookingTimeFilter, openBottomSheet } =
+    useRecipeFilters();
 
   // URL 파라미터로 store 초기화
   useEffect(() => {
     initializeFromUrl(categoryType, categoryCode);
   }, [categoryType, categoryCode, initializeFromUrl]);
 
-  // URL 쿼리에서 카테고리 필터 생성
-  const urlCategoryFilter: CategoryFilter | undefined =
+  // URL 쿼리에서 카테고리 필터 생성 (store 필터가 없을 때 fallback)
+  const urlCategoryFilter =
     categoryType && categoryCode
       ? { [categoryType]: categoryCode }
       : undefined;
 
   // store의 필터와 URL 필터 병합 (store 우선)
-  const storeCategoryFilter = toCategoryFilter(categoryFilters);
-  const finalCategoryFilter = storeCategoryFilter || urlCategoryFilter;
-
-  // 조리시간 범위 (기본값이 아닌 경우에만 적용)
-  const finalCookingTimeRange =
-    cookingTimeRange.min !== 0 || cookingTimeRange.max !== 120
-      ? { min: cookingTimeRange.min, max: cookingTimeRange.max }
-      : undefined;
+  const finalCategoryFilter = categoryFilter || urlCategoryFilter;
 
   const handleBack = () => {
     router.push(ROUTES.SEARCH);
@@ -113,7 +83,7 @@ export function SearchResultsPage() {
         <RecipeList
           searchQuery={query}
           categories={finalCategoryFilter}
-          cookingTimeRange={finalCookingTimeRange}
+          cookingTimeRange={cookingTimeFilter}
         />
       </ErrorBoundary>
 

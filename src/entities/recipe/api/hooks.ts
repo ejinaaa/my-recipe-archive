@@ -77,6 +77,8 @@ export interface UseInfiniteRecipesParams {
   cookingTimeRange?: CookingTimeRange;
   tags?: string[];
   sortBy?: RecipeSortBy;
+  /** 해당 유저가 즐겨찾기한 레시피만 조회 */
+  favoritesByUserId?: string;
 }
 
 /**

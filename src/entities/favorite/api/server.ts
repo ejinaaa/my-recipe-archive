@@ -1,6 +1,5 @@
 import { createClient } from '@/shared/api/supabase/server';
 import type { Favorite, FavoriteDB } from '../model/types';
-import type { Recipe, RecipeDB } from '@/entities/recipe/model/types';
 
 /**
  * 즐겨찾기 추가
@@ -124,34 +123,5 @@ export async function getFavoriteStatuses(
   } catch (error) {
     console.error('[Favorite API] getFavoriteStatuses error:', error);
     return {};
-  }
-}
-
-/**
- * 사용자의 즐겨찾기 목록 조회 (레시피 정보 포함)
- */
-export async function getFavoriteRecipes(userId: string): Promise<Recipe[]> {
-  try {
-    const supabase = await createClient();
-
-    const { data, error } = await supabase
-      .from('favorites')
-      .select('recipe:recipes(*)')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('[Favorite API] Failed to get favorite recipes:', error);
-      throw new Error('즐겨찾기 목록을 불러오는데 실패했습니다.');
-    }
-
-    const { toRecipe } = await import('@/entities/recipe/model/types');
-    return (data || [])
-      .map(item => item.recipe as unknown as RecipeDB)
-      .filter(Boolean)
-      .map(toRecipe);
-  } catch (error) {
-    console.error('[Favorite API] getFavoriteRecipes error:', error);
-    throw error;
   }
 }

@@ -13,7 +13,6 @@ import {
   toggleFavoriteAction,
   isFavoritedAction,
   getFavoriteStatusesAction,
-  getFavoriteRecipesAction,
 } from './actions';
 
 /**
@@ -27,7 +26,12 @@ export const favoriteKeys = {
   status: (userId: string, recipeId: string) =>
     [...favoriteKeys.statuses(), userId, recipeId] as const,
   batchStatuses: (userId: string, recipeIds: string[]) =>
-    [...favoriteKeys.statuses(), userId, 'batch', recipeIds.sort().join(',')] as const,
+    [
+      ...favoriteKeys.statuses(),
+      userId,
+      'batch',
+      recipeIds.sort().join(','),
+    ] as const,
 };
 
 /**
@@ -35,7 +39,7 @@ export const favoriteKeys = {
  */
 export function useIsFavorited(
   userId: string | undefined,
-  recipeId: string
+  recipeId: string,
 ): UseQueryResult<boolean, Error> {
   return useQuery({
     queryKey: favoriteKeys.status(userId || '', recipeId),
@@ -49,25 +53,12 @@ export function useIsFavorited(
  */
 export function useFavoriteStatuses(
   userId: string | undefined,
-  recipeIds: string[]
+  recipeIds: string[],
 ): UseQueryResult<Record<string, boolean>, Error> {
   return useQuery({
     queryKey: favoriteKeys.batchStatuses(userId || '', recipeIds),
     queryFn: () => getFavoriteStatusesAction(userId!, recipeIds),
     enabled: !!userId && recipeIds.length > 0,
-  });
-}
-
-/**
- * Hook to get user's favorite recipes
- */
-export function useFavoriteRecipes(
-  userId: string | undefined
-): UseQueryResult<Recipe[], Error> {
-  return useQuery({
-    queryKey: favoriteKeys.list(userId || ''),
-    queryFn: () => getFavoriteRecipesAction(userId!),
-    enabled: !!userId,
   });
 }
 
@@ -96,7 +87,7 @@ export function useToggleFavorite(): UseMutationResult<
 
       // 개별 상태 스냅샷
       const previousStatus = queryClient.getQueryData<boolean>(
-        favoriteKeys.status(userId, recipeId)
+        favoriteKeys.status(userId, recipeId),
       );
 
       // batchStatuses 쿼리들 스냅샷
@@ -110,7 +101,7 @@ export function useToggleFavorite(): UseMutationResult<
       // 개별 상태 optimistic update
       queryClient.setQueryData<boolean>(
         favoriteKeys.status(userId, recipeId),
-        old => !old
+        old => !old,
       );
 
       // batchStatuses 쿼리들도 optimistic update
@@ -125,7 +116,7 @@ export function useToggleFavorite(): UseMutationResult<
             ...old,
             [recipeId]: !old[recipeId],
           };
-        }
+        },
       );
 
       // 레시피의 favorite_count도 optimistic update
@@ -144,7 +135,7 @@ export function useToggleFavorite(): UseMutationResult<
       if (context?.previousStatus !== undefined) {
         queryClient.setQueryData(
           favoriteKeys.status(userId, recipeId),
-          context.previousStatus
+          context.previousStatus,
         );
       }
 
@@ -157,9 +148,6 @@ export function useToggleFavorite(): UseMutationResult<
     },
     onSettled: (_, __, { userId, recipeId }) => {
       // 관련 쿼리 무효화
-      queryClient.invalidateQueries({
-        queryKey: favoriteKeys.status(userId, recipeId),
-      });
       queryClient.invalidateQueries({
         queryKey: favoriteKeys.statuses(),
         exact: false,

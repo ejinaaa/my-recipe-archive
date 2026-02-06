@@ -4,8 +4,6 @@ import type {
   RecipeDB,
   RecipeInsert,
   RecipeUpdate,
-  toRecipe,
-  toRecipeDB,
 } from '../model/types';
 
 /** 정렬 옵션 */
@@ -39,6 +37,8 @@ export interface GetRecipesParams {
   tags?: string[];
   /** 정렬 기준 */
   sortBy?: RecipeSortBy;
+  /** 해당 유저가 즐겨찾기한 레시피만 조회 */
+  favoritesByUserId?: string;
 }
 
 export interface PaginatedRecipes {
@@ -51,7 +51,7 @@ export interface PaginatedRecipes {
  * Get recipes with pagination support
  */
 export async function getRecipesPaginated(
-  params: GetRecipesParams = {}
+  params: GetRecipesParams = {},
 ): Promise<PaginatedRecipes> {
   try {
     const {
@@ -64,10 +64,37 @@ export async function getRecipesPaginated(
       cookingTimeRange,
       tags,
       sortBy = 'latest',
+      favoritesByUserId,
     } = params;
     const supabase = await createClient();
 
+    // 즐겨찾기 필터가 있으면 먼저 즐겨찾기한 recipe_id 목록 조회
+    let favoriteRecipeIds: string[] | undefined;
+    if (favoritesByUserId) {
+      const { data: favorites, error: favError } = await supabase
+        .from('favorites')
+        .select('recipe_id')
+        .eq('user_id', favoritesByUserId);
+
+      if (favError) {
+        console.error('[Recipe API] Failed to fetch favorites:', favError);
+        throw new Error('즐겨찾기 목록을 불러오는데 실패했습니다.');
+      }
+
+      favoriteRecipeIds = favorites?.map(f => f.recipe_id) || [];
+
+      // 즐겨찾기가 없으면 빈 결과 반환
+      if (favoriteRecipeIds.length === 0) {
+        return { recipes: [], total: 0, hasMore: false };
+      }
+    }
+
     let query = supabase.from('recipes').select('*', { count: 'exact' });
+
+    // 즐겨찾기 필터
+    if (favoriteRecipeIds) {
+      query = query.in('id', favoriteRecipeIds);
+    }
 
     // 유저 ID 필터
     if (userId) {
@@ -82,7 +109,7 @@ export async function getRecipesPaginated(
     // 텍스트 검색 (제목, 설명, 태그)
     if (searchQuery?.trim()) {
       query = query.or(
-        `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`
+        `title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`,
       );
     }
 
@@ -110,26 +137,34 @@ export async function getRecipesPaginated(
       query = query.contains('tags', tags);
     }
 
-    // 정렬
+    // 정렬 (보조 정렬로 id 사용하여 동일한 값에서도 순서 보장)
     switch (sortBy) {
       case 'oldest':
-        query = query.order('created_at', { ascending: true });
+        query = query
+          .order('created_at', { ascending: true })
+          .order('id', { ascending: true });
         break;
       case 'popular':
-        query = query.order('view_count', { ascending: false });
+        query = query
+          .order('view_count', { ascending: false })
+          .order('id', { ascending: false });
         break;
       case 'favorites':
-        query = query.order('favorite_count', { ascending: false });
+        query = query
+          .order('favorite_count', { ascending: false })
+          .order('id', { ascending: false });
         break;
       case 'latest':
       default:
-        query = query.order('created_at', { ascending: false });
+        query = query
+          .order('created_at', { ascending: false })
+          .order('id', { ascending: false });
         break;
     }
 
     const { data, error, count } = await query.range(
       offset,
-      offset + limit - 1
+      offset + limit - 1,
     );
 
     if (error) {
@@ -223,7 +258,7 @@ export async function createRecipe(data: RecipeInsert): Promise<Recipe> {
  */
 export async function updateRecipe(
   id: string,
-  data: RecipeUpdate
+  data: RecipeUpdate,
 ): Promise<Recipe> {
   try {
     const supabase = await createClient();
@@ -275,7 +310,7 @@ export async function deleteRecipe(id: string): Promise<void> {
  */
 export async function incrementViewCount(
   recipeId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   try {
     const supabase = await createClient();

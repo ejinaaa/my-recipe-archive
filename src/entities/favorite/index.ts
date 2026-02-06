@@ -8,7 +8,6 @@ export {
   removeFavorite,
   isFavorited,
   getFavoriteStatuses,
-  getFavoriteRecipes,
 } from './api/server';
 
 // Server Actions
@@ -18,7 +17,6 @@ export {
   toggleFavoriteAction,
   isFavoritedAction,
   getFavoriteStatusesAction,
-  getFavoriteRecipesAction,
 } from './api/actions';
 
 // Hooks
@@ -26,6 +24,5 @@ export {
   favoriteKeys,
   useIsFavorited,
   useFavoriteStatuses,
-  useFavoriteRecipes,
   useToggleFavorite,
 } from './api/hooks';

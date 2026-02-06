@@ -2,13 +2,11 @@
 
 import { revalidatePath } from 'next/cache';
 import type { Favorite } from '../model/types';
-import type { Recipe } from '@/entities/recipe/model/types';
 import {
   addFavorite,
   removeFavorite,
   isFavorited,
   getFavoriteStatuses,
-  getFavoriteRecipes,
 } from './server';
 
 /**
@@ -86,13 +84,4 @@ export async function getFavoriteStatusesAction(
   recipeIds: string[]
 ): Promise<Record<string, boolean>> {
   return getFavoriteStatuses(userId, recipeIds);
-}
-
-/**
- * Server Action: 즐겨찾기 레시피 목록 조회
- */
-export async function getFavoriteRecipesAction(
-  userId: string
-): Promise<Recipe[]> {
-  return getFavoriteRecipes(userId);
 }
