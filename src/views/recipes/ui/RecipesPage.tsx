@@ -5,17 +5,14 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Search, User } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { FilterBottomSheet } from '@/features/recipe-search';
-import { Button } from '@/shared/ui/button';
+import { ROUTES } from '@/shared/config';
+import { LinkButton } from '@/shared/ui/link-button';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
-
-  const handleSearchClick = () => {
-    // TODO: 검색 버튼 클릭 시 동작 구현
-  };
 
   return (
     <div className='min-h-screen pb-20 bg-background'>
@@ -46,17 +43,17 @@ export function RecipesPage() {
           </div>
 
           {/* 오른쪽: 검색 버튼 */}
-          <Button
+          <LinkButton
+            href={ROUTES.SEARCH}
             variant='solid'
             colorScheme='primary'
             size='sm'
             transparent
             className='size-10 p-0'
-            onClick={handleSearchClick}
             aria-label='검색'
           >
             <Search />
-          </Button>
+          </LinkButton>
         </div>
       </header>
 
