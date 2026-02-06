@@ -4,6 +4,7 @@ import type { LucideIcon } from 'lucide-react';
 import { Home, Search, Heart, Plus } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { ROUTES } from '@/shared/config';
+import { useNavigationStore } from '@/shared/model';
 import { LinkButton } from '@/shared/ui/link-button';
 
 type NavTab = 'home' | 'search' | 'favorites' | 'register';
@@ -20,10 +21,22 @@ export function BottomNavigation({
 }: {
   activeTab?: NavTab;
 }) {
+  const { lastSearchUrl, lastFavoritesUrl } = useNavigationStore();
+
   const tabs: Tab[] = [
     { id: 'home', icon: Home, label: '홈', href: ROUTES.RECIPES.LIST },
-    { id: 'search', icon: Search, label: '검색', href: ROUTES.SEARCH },
-    { id: 'favorites', icon: Heart, label: '즐겨찾기', href: ROUTES.FAVORITES },
+    {
+      id: 'search',
+      icon: Search,
+      label: '검색',
+      href: lastSearchUrl ?? ROUTES.SEARCH,
+    },
+    {
+      id: 'favorites',
+      icon: Heart,
+      label: '즐겨찾기',
+      href: lastFavoritesUrl ?? ROUTES.FAVORITES,
+    },
     { id: 'register', icon: Plus, label: '등록하기', href: ROUTES.RECIPES.NEW },
   ];
 

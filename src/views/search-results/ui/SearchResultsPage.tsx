@@ -17,12 +17,18 @@ import {
 } from '@/features/recipe-search';
 import { BackButton } from '@/shared/ui/back-button';
 import { ROUTES } from '@/shared/config';
+import { useSaveUrlOnUnmount } from '@/shared/lib';
+import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function SearchResultsPage() {
   const router = useRouter();
+  const setLastSearchUrl = useNavigationStore(s => s.setLastSearchUrl);
+
+  // 언마운트 시 현재 URL을 전역 상태에 저장 (네비게이션 복귀용)
+  useSaveUrlOnUnmount(setLastSearchUrl);
 
   // URL 쿼리 파라미터에서 상태 읽기/쓰기
   const {
