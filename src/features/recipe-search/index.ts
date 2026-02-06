@@ -1,7 +1,8 @@
 export { SearchBar } from './ui/SearchBar';
 export { SortButton } from './ui/SortButton';
 export { FilterButton } from './ui/FilterButton';
-export { FilterBottomSheet } from './ui/FilterBottomSheet';
+export { SearchFilterBottomSheet } from './ui/SearchFilterBottomSheet';
+export { FavoriteFilterBottomSheet } from './ui/FavoriteFilterBottomSheet';
 export { SortBottomSheet } from './ui/SortBottomSheet';
 export { CategoryFilterSection } from './ui/CategoryFilterSection';
 export { CookingTimeFilterSection } from './ui/CookingTimeFilterSection';

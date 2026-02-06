@@ -92,7 +92,8 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         colorScheme: 'neutral',
-        className: 'border-neutral-base text-text-primary focus-visible:ring-neutral-base',
+        className:
+          'border-neutral-base text-text-primary focus-visible:ring-neutral-base',
       },
       // Ghost + Primary
       {
@@ -119,11 +120,12 @@ const buttonVariants = cva(
       size: 'md',
       transparent: false,
     },
-  }
+  },
 );
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
 }
@@ -139,7 +141,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       asChild = false,
       ...props
     },
-    ref
+    ref,
   ) => {
     const Comp = asChild ? Slot : 'button';
     return (
@@ -151,13 +153,13 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             size,
             transparent,
             className,
-          })
+          }),
         )}
         ref={ref}
         {...props}
       />
     );
-  }
+  },
 );
 Button.displayName = 'Button';
 

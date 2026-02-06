@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FilterBottomSheet } from './FilterBottomSheet';
+import { SearchFilterBottomSheet } from './SearchFilterBottomSheet';
 import { useFilterStore } from '../model/store';
 import { Button } from '@/shared/ui/button';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -13,8 +13,8 @@ const queryClient = new QueryClient({
 });
 
 const meta = {
-  title: 'features/recipe-search/FilterBottomSheet',
-  component: FilterBottomSheet,
+  title: 'features/recipe-search/SearchFilterBottomSheet',
+  component: SearchFilterBottomSheet,
   tags: ['autodocs'],
   decorators: [
     Story => (
@@ -25,7 +25,7 @@ const meta = {
       </QueryClientProvider>
     ),
   ],
-} satisfies Meta<typeof FilterBottomSheet>;
+} satisfies Meta<typeof SearchFilterBottomSheet>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -40,7 +40,7 @@ export const Default: Story = {
     return (
       <div className='p-4'>
         <Button onClick={openBottomSheet}>필터 열기</Button>
-        <FilterBottomSheet />
+        <SearchFilterBottomSheet />
       </div>
     );
   },
@@ -59,7 +59,7 @@ export const Open: Story = {
     return (
       <div className='p-4'>
         <Button onClick={openBottomSheet}>필터 열기</Button>
-        <FilterBottomSheet />
+        <SearchFilterBottomSheet />
       </div>
     );
   },

@@ -7,7 +7,7 @@ import {
   SearchBar,
   SortButton,
   FilterButton,
-  FilterBottomSheet,
+  SearchFilterBottomSheet,
   useFilterStore,
   useRecipeFilters,
 } from '@/features/recipe-search';
@@ -39,9 +39,7 @@ export function SearchResultsPage() {
 
   // URL 쿼리에서 카테고리 필터 생성 (store 필터가 없을 때 fallback)
   const urlCategoryFilter =
-    categoryType && categoryCode
-      ? { [categoryType]: categoryCode }
-      : undefined;
+    categoryType && categoryCode ? { [categoryType]: categoryCode } : undefined;
 
   // store의 필터와 URL 필터 병합 (store 우선)
   const finalCategoryFilter = categoryFilter || urlCategoryFilter;
@@ -91,7 +89,7 @@ export function SearchResultsPage() {
       <BottomNavigation activeTab='search' />
 
       {/* Filter Bottom Sheet */}
-      <FilterBottomSheet />
+      <SearchFilterBottomSheet />
     </div>
   );
 }

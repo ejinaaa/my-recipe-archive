@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Search, User } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
-import { FilterBottomSheet } from '@/features/recipe-search';
+import { SearchFilterBottomSheet } from '@/features/recipe-search';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
@@ -64,7 +64,7 @@ export function RecipesPage() {
       <BottomNavigation activeTab='search' />
 
       {/* 필터 바텀시트 */}
-      <FilterBottomSheet />
+      <SearchFilterBottomSheet />
     </div>
   );
 }

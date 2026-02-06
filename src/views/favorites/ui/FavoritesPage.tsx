@@ -9,24 +9,23 @@ import {
   SearchBar,
   SortButton,
   FilterButton,
-  FilterBottomSheet,
+  FavoriteFilterBottomSheet,
   useRecipeFilters,
 } from '@/features/recipe-search';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api/hooks';
 import { BackButton } from '@/shared/ui/back-button';
-import { ROUTES } from '@/shared/config';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 const favoritesEmptyState = (
-  <div className="flex flex-col items-center justify-center py-20 px-3">
-    <Heart className="size-12 text-text-secondary mb-4" />
-    <p className="text-body-1 text-text-secondary text-center">
+  <div className='flex flex-col items-center justify-center py-20 px-3'>
+    <Heart className='size-12 text-text-secondary mb-4' />
+    <p className='text-body-1 text-text-secondary text-center'>
       아직 즐겨찾기한 레시피가 없어요
     </p>
-    <p className="text-body-2 text-text-secondary text-center mt-1">
+    <p className='text-body-2 text-text-secondary text-center mt-1'>
       마음에 드는 레시피를 찾아 저장해 보세요
     </p>
   </div>
@@ -50,7 +49,7 @@ export function FavoritesPage() {
   }, [queryClient]);
 
   const handleBack = () => {
-    router.push(ROUTES.HOME);
+    router.back();
   };
 
   const handleSearch = (query: string) => {
@@ -66,15 +65,15 @@ export function FavoritesPage() {
   };
 
   return (
-    <div className="min-h-screen pb-20 bg-background">
+    <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-background px-4 py-3">
-        <div className="flex items-center gap-2">
+      <header className='sticky top-0 z-10 bg-background px-4 py-3'>
+        <div className='flex items-center gap-2'>
           <BackButton onBack={handleBack} />
           <SearchBar
             defaultValue={searchQuery}
             onSearch={handleSearch}
-            placeholder="저장한 요리 중 뭘 찾으세요?"
+            placeholder='어떤 요리를 찾으세요?'
           />
           <SortButton onClick={handleSortClick} />
           <FilterButton onClick={handleFilterClick} />
@@ -93,10 +92,10 @@ export function FavoritesPage() {
       </ErrorBoundary>
 
       {/* Bottom Navigation */}
-      <BottomNavigation activeTab="favorites" />
+      <BottomNavigation activeTab='favorites' />
 
       {/* Filter Bottom Sheet */}
-      <FilterBottomSheet />
+      <FavoriteFilterBottomSheet />
     </div>
   );
 }
