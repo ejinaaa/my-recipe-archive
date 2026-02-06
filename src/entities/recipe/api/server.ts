@@ -7,7 +7,12 @@ import type {
 } from '../model/types';
 
 /** 정렬 옵션 */
-export type RecipeSortBy = 'latest' | 'oldest' | 'popular' | 'favorites';
+export type RecipeSortBy =
+  | 'latest'
+  | 'oldest'
+  | 'popular'
+  | 'unpopular'
+  | 'favorites';
 
 /** 카테고리 필터 */
 export interface CategoryFilter {
@@ -148,6 +153,11 @@ export async function getRecipesPaginated(
         query = query
           .order('view_count', { ascending: false })
           .order('id', { ascending: false });
+        break;
+      case 'unpopular':
+        query = query
+          .order('view_count', { ascending: true })
+          .order('id', { ascending: true });
         break;
       case 'favorites':
         query = query
