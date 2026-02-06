@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import {
@@ -9,6 +10,7 @@ import {
   FilterBottomSheet,
   useFilterStore,
 } from '@/features/recipe-search';
+import type { CategoryType } from '@/entities/category/model/types';
 import type { CategoryFilter } from '@/entities/recipe/api/server';
 import { BackButton } from '@/shared/ui/back-button';
 import { ROUTES } from '@/shared/config';
@@ -46,16 +48,17 @@ export function SearchResultsPage() {
 
   // URL 쿼리 파라미터
   const query = searchParams.get('q') || '';
-  const categoryType = searchParams.get('type') as
-    | 'situation'
-    | 'cuisine'
-    | 'dishType'
-    | null;
+  const categoryType = searchParams.get('type') as CategoryType | null;
   const categoryCode = searchParams.get('code') || '';
 
   // Filter store
-  const { categoryFilters, cookingTimeRange, openBottomSheet } =
+  const { categoryFilters, cookingTimeRange, openBottomSheet, initializeFromUrl } =
     useFilterStore();
+
+  // URL 파라미터로 store 초기화
+  useEffect(() => {
+    initializeFromUrl(categoryType, categoryCode);
+  }, [categoryType, categoryCode, initializeFromUrl]);
 
   // URL 쿼리에서 카테고리 필터 생성
   const urlCategoryFilter: CategoryFilter | undefined =

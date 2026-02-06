@@ -55,6 +55,11 @@ interface FilterActions {
   ) => void;
   /** 필터 초기화 */
   resetFilters: () => void;
+  /** URL 파라미터로 필터 초기화 */
+  initializeFromUrl: (
+    categoryType: 'situation' | 'cuisine' | 'dishType' | null,
+    categoryCode: string,
+  ) => void;
 }
 
 type FilterStore = FilterState & FilterActions;
@@ -79,6 +84,18 @@ export const useFilterStore = create<FilterStore>(set => ({
       categoryFilters: initialFilters,
       cookingTimeRange: initialCookingTimeRange,
     }),
+  initializeFromUrl: (categoryType, categoryCode) => {
+    if (categoryType && categoryCode) {
+      set({
+        categoryFilters: {
+          ...initialFilters,
+          [categoryType]: [categoryCode],
+        },
+      });
+    } else {
+      set({ categoryFilters: initialFilters });
+    }
+  },
 }));
 
 /**

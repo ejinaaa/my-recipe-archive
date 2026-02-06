@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import {
   InputGroup,
@@ -21,6 +21,11 @@ export function SearchBar({
   placeholder = '어떤 요리를 찾으세요?',
 }: SearchBarProps) {
   const [inputValue, setInputValue] = useState(defaultValue);
+
+  // defaultValue 변경 시 inputValue 동기화
+  useEffect(() => {
+    setInputValue(defaultValue);
+  }, [defaultValue]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && inputValue) {
