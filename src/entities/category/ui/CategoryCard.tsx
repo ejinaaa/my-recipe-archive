@@ -45,7 +45,7 @@ export function CategoryCard({
             onError={() => setImageError(true)}
           />
           {/* 이미지 오버레이 */}
-          <div className='absolute inset-0 bg-black/20' />
+          <div className='absolute inset-0 bg-black/5' />
         </>
       ) : (
         /* Placeholder UI with icon */
