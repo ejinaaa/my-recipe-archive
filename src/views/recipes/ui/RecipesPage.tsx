@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import Image from 'next/image';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Search, User } from 'lucide-react';
@@ -7,7 +8,7 @@ import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList } from '@/widgets/recipe-list';
+import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function RecipesPage() {
@@ -57,7 +58,9 @@ export function RecipesPage() {
       </header>
 
       <ErrorBoundary FallbackComponent={RecipeListError}>
-        <RecipeList />
+        <Suspense fallback={<RecipeListSkeleton />}>
+          <RecipeList />
+        </Suspense>
       </ErrorBoundary>
 
       <BottomNavigation activeTab='search' />

@@ -8,7 +8,7 @@ import {
   type UseMutationResult,
 } from '@tanstack/react-query';
 import type { Recipe } from '@/entities/recipe/model/types';
-import { recipeKeys } from '@/entities/recipe/api/hooks';
+import { recipeKeys } from '@/entities/recipe/api';
 import {
   toggleFavoriteAction,
   isFavoritedAction,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,12 +18,12 @@ import {
   isFilterActive,
 } from '@/features/recipe-search';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
-import { recipeKeys } from '@/entities/recipe/api/hooks';
+import { recipeKeys } from '@/entities/recipe/api';
 import { BackButton } from '@/shared/ui/back-button';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList } from '@/widgets/recipe-list';
+import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 const favoritesEmptyState = (
@@ -114,14 +114,16 @@ export function FavoritesPage() {
 
       {/* Main */}
       <ErrorBoundary FallbackComponent={RecipeListError}>
-        <RecipeList
-          searchQuery={searchQuery ?? undefined}
-          categories={toCategoryFilter(categoryFilters)}
-          cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
-          sortBy={sortBy ?? undefined}
-          favoritesByUserId={userId}
-          emptyState={favoritesEmptyState}
-        />
+        <Suspense fallback={<RecipeListSkeleton />}>
+          <RecipeList
+            searchQuery={searchQuery ?? undefined}
+            categories={toCategoryFilter(categoryFilters)}
+            cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
+            sortBy={sortBy ?? undefined}
+            favoritesByUserId={userId}
+            emptyState={favoritesEmptyState}
+          />
+        </Suspense>
       </ErrorBoundary>
 
       {/* Bottom Navigation */}

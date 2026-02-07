@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import {
@@ -20,7 +20,7 @@ import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList } from '@/widgets/recipe-list';
+import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
 
 export function SearchResultsPage() {
@@ -85,12 +85,14 @@ export function SearchResultsPage() {
 
       {/* Main */}
       <ErrorBoundary FallbackComponent={RecipeListError}>
-        <RecipeList
-          searchQuery={searchQuery ?? undefined}
-          categories={toCategoryFilter(categoryFilters)}
-          cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
-          sortBy={sortBy ?? undefined}
-        />
+        <Suspense fallback={<RecipeListSkeleton />}>
+          <RecipeList
+            searchQuery={searchQuery ?? undefined}
+            categories={toCategoryFilter(categoryFilters)}
+            cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
+            sortBy={sortBy ?? undefined}
+          />
+        </Suspense>
       </ErrorBoundary>
 
       {/* Bottom Navigation */}

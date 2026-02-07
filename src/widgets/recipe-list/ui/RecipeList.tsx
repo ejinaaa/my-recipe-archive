@@ -4,7 +4,7 @@ import { useMemo, useCallback, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
-import { useInfiniteRecipes } from '@/entities/recipe/api/hooks';
+import { useSuspenseInfiniteRecipes } from '@/entities/recipe/api/hooks';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import {
   useFavoriteStatuses,
@@ -50,8 +50,8 @@ export function RecipeList({
 }: RecipeListProps) {
   const router = useRouter();
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isError } =
-    useInfiniteRecipes({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useSuspenseInfiniteRecipes({
       searchQuery,
       categories,
       cookingTimeRange,
@@ -60,8 +60,8 @@ export function RecipeList({
     });
 
   const recipes = useMemo(
-    () => data?.pages.flatMap(page => page.recipes) ?? [],
-    [data?.pages]
+    () => data.pages.flatMap(page => page.recipes),
+    [data.pages]
   );
 
   // 현재 사용자 프로필 조회
@@ -95,7 +95,6 @@ export function RecipeList({
       fetchNextPage={fetchNextPage}
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
-      isError={isError}
       isEmpty={recipes.length === 0}
       containerClassName="grid grid-cols-2 gap-2 px-3"
       emptyState={emptyState}

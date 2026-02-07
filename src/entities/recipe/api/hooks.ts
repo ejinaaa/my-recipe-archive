@@ -4,6 +4,7 @@ import {
   useQuery,
   useSuspenseQuery,
   useInfiniteQuery,
+  useSuspenseInfiniteQuery,
   useMutation,
   useQueryClient,
   type UseQueryResult,
@@ -13,29 +14,13 @@ import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
   getRecipesAction,
   getRecipeAction,
-  getRecipesPaginatedAction,
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,
   incrementViewCountAction,
 } from './actions';
-import type {
-  GetRecipesParams,
-  RecipeSortBy,
-  CategoryFilter,
-  CookingTimeRange,
-} from './server';
-
-/**
- * Query keys factory for recipes
- */
-export const recipeKeys = {
-  all: ['recipes'] as const,
-  lists: () => [...recipeKeys.all, 'list'] as const,
-  list: (userId?: string) => [...recipeKeys.lists(), { userId }] as const,
-  details: () => [...recipeKeys.all, 'detail'] as const,
-  detail: (id: string) => [...recipeKeys.details(), id] as const,
-};
+import { fetchRecipesPaginated } from './client';
+import { recipeKeys, type InfiniteRecipesParams } from './keys';
 
 /**
  * Hook to fetch all recipes, optionally filtered by user ID
@@ -68,31 +53,13 @@ export function useSuspenseRecipe(id: string) {
   });
 }
 
-/** 레시피 목록 조회 파라미터 */
-export interface UseInfiniteRecipesParams {
-  userId?: string;
-  searchQuery?: string;
-  isPublic?: boolean;
-  categories?: CategoryFilter;
-  cookingTimeRange?: CookingTimeRange;
-  tags?: string[];
-  sortBy?: RecipeSortBy;
-  /** 해당 유저가 즐겨찾기한 레시피만 조회 */
-  favoritesByUserId?: string;
-}
-
 /**
  * Hook to fetch recipes with infinite scroll
  */
-export function useInfiniteRecipes(params?: UseInfiniteRecipesParams) {
+export function useInfiniteRecipes(params?: InfiniteRecipesParams) {
   return useInfiniteQuery({
-    queryKey: [...recipeKeys.lists(), 'infinite', params],
-    queryFn: ({ pageParam = 0 }) =>
-      getRecipesPaginatedAction({
-        ...params,
-        limit: 6,
-        offset: pageParam,
-      } as GetRecipesParams),
+    queryKey: recipeKeys.infinite(params),
+    queryFn: ({ pageParam = 0 }) => fetchRecipesPaginated(params, pageParam),
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage.hasMore) return undefined;
       const loadedCount = allPages.reduce(
@@ -104,6 +71,26 @@ export function useInfiniteRecipes(params?: UseInfiniteRecipesParams) {
     initialPageParam: 0,
     // 검색어 변경 시 기존 데이터 유지 (로딩 UI 없음)
     placeholderData: previousData => previousData,
+  });
+}
+
+/**
+ * Suspense를 지원하는 무한 스크롤 레시피 목록 조회 hook
+ * 초기 로딩 시 Suspense boundary로 throw됨
+ */
+export function useSuspenseInfiniteRecipes(params?: InfiniteRecipesParams) {
+  return useSuspenseInfiniteQuery({
+    queryKey: recipeKeys.infinite(params),
+    queryFn: ({ pageParam = 0 }) => fetchRecipesPaginated(params, pageParam),
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage.hasMore) return undefined;
+      const loadedCount = allPages.reduce(
+        (sum, page) => sum + page.recipes.length,
+        0
+      );
+      return loadedCount;
+    },
+    initialPageParam: 0,
   });
 }
 

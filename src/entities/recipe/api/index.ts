@@ -1,37 +1,18 @@
-// Server-side API
-export {
-  getRecipes,
-  getRecipe,
-  getRecipesPaginated,
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-  incrementViewCount,
-} from './server';
-
-// Server Actions
-export {
-  getRecipesAction,
-  getRecipeAction,
-  getRecipesPaginatedAction,
-  createRecipeAction,
-  updateRecipeAction,
-  deleteRecipeAction,
-  incrementViewCountAction,
-} from './actions';
-
 // Client-side React Query hooks
 export {
   useRecipes,
   useRecipe,
   useSuspenseRecipe,
   useInfiniteRecipes,
+  useSuspenseInfiniteRecipes,
   useCreateRecipe,
   useUpdateRecipe,
   useDeleteRecipe,
   useIncrementViewCount,
-  recipeKeys,
 } from './hooks';
+
+// Query keys
+export { recipeKeys } from './keys';
 
 // Re-export types for convenience
 export type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
@@ -42,4 +23,4 @@ export type {
   CategoryFilter,
   CookingTimeRange,
 } from './server';
-export type { UseInfiniteRecipesParams } from './hooks';
+export type { InfiniteRecipesParams } from './keys';
