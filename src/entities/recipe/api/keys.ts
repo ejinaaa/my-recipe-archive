@@ -26,6 +26,9 @@ export const recipeKeys = {
   list: (userId?: string) => [...recipeKeys.lists(), { userId }] as const,
   infinite: (params?: InfiniteRecipesParams) =>
     [...recipeKeys.lists(), 'infinite', params] as const,
+  sections: () => [...recipeKeys.all, 'sections'] as const,
+  section: (sortBy: RecipeSortBy) =>
+    [...recipeKeys.sections(), sortBy] as const,
   details: () => [...recipeKeys.all, 'detail'] as const,
   detail: (id: string) => [...recipeKeys.details(), id] as const,
 };

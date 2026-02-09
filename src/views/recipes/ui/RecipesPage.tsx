@@ -1,19 +1,33 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useCallback } from 'react';
 import Image from 'next/image';
-import { ErrorBoundary } from 'react-error-boundary';
+import { useRouter } from 'next/navigation';
 import { Search, User } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
 import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
+import { RecipeSectionSkeleton } from '@/widgets/recipe-section';
+import { CategorySectionSkeleton } from '@/widgets/category-section';
+import { SilentErrorBoundary } from './sections/SilentErrorBoundary';
+import { MostCookedSection } from './sections/MostCookedSection';
+import { TryMoreSection } from './sections/TryMoreSection';
+import { RecentRecipesSection } from './sections/RecentRecipesSection';
+import { AllRecipesSection } from './sections/AllRecipesSection';
+import { CategorySection } from '@/widgets/category-section';
 
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
+  const router = useRouter();
+
+  const handleRecipeClick = useCallback(
+    (recipeId: string) => {
+      router.push(ROUTES.RECIPES.DETAIL(recipeId));
+    },
+    [router],
+  );
 
   return (
     <div className='min-h-screen pb-20 bg-background'>
@@ -34,7 +48,7 @@ export function RecipesPage() {
               )}
             </div>
             <div>
-              <p className='text-heading-3 text-text-primary'>
+              <p className='text-heading-2 text-text-primary'>
                 안녕, {profile?.nickname || '요리사'}님
               </p>
               <p className='text-body-2 text-text-secondary'>
@@ -58,11 +72,47 @@ export function RecipesPage() {
         </div>
       </PageHeader>
 
-      <ErrorBoundary FallbackComponent={RecipeListError}>
-        <Suspense fallback={<RecipeListSkeleton />}>
-          <RecipeList />
-        </Suspense>
-      </ErrorBoundary>
+      <div className='flex flex-col gap-6 mt-2'>
+        {/* 많이 해본 요리 */}
+        <SilentErrorBoundary>
+          <Suspense fallback={<RecipeSectionSkeleton />}>
+            <MostCookedSection
+              userId={profile?.id}
+              onRecipeClick={handleRecipeClick}
+            />
+          </Suspense>
+        </SilentErrorBoundary>
+
+        {/* 카테고리로 찾기 */}
+        <SilentErrorBoundary>
+          <Suspense fallback={<CategorySectionSkeleton />}>
+            <CategorySection />
+          </Suspense>
+        </SilentErrorBoundary>
+
+        {/* 더 도전해볼 요리 */}
+        <SilentErrorBoundary>
+          <Suspense fallback={<RecipeSectionSkeleton />}>
+            <TryMoreSection
+              userId={profile?.id}
+              onRecipeClick={handleRecipeClick}
+            />
+          </Suspense>
+        </SilentErrorBoundary>
+
+        {/* 최근 추가한 레시피 */}
+        <SilentErrorBoundary>
+          <Suspense fallback={<RecipeSectionSkeleton />}>
+            <RecentRecipesSection
+              userId={profile?.id}
+              onRecipeClick={handleRecipeClick}
+            />
+          </Suspense>
+        </SilentErrorBoundary>
+      </div>
+
+      {/* 전체 레시피 */}
+      <AllRecipesSection />
 
       <BottomNavigation activeTab='home' />
     </div>

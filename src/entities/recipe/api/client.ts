@@ -1,7 +1,7 @@
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
 import { RECIPE_PAGE_SIZE } from '../model/constants';
 import type { Recipe } from '../model/types';
-import type { PaginatedRecipes } from './server';
+import type { PaginatedRecipes, RecipeSortBy } from './server';
 import type { InfiniteRecipesParams } from './keys';
 
 /** InfiniteRecipesParams를 URL 쿼리 스트링으로 변환 */
@@ -81,6 +81,27 @@ export const fetchRecipesPaginated = async (
   }
 
   return res.json();
+};
+
+/** 홈 섹션용 레시피 조회 (상위 N개) */
+export const fetchRecipesSection = async (
+  sortBy: RecipeSortBy,
+  limit: number = 6
+): Promise<Recipe[]> => {
+  const searchParams = new URLSearchParams();
+  searchParams.set('sortBy', sortBy);
+  searchParams.set('limit', String(limit));
+  searchParams.set('offset', '0');
+
+  const baseUrl = getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/recipes?${searchParams}`);
+
+  if (!res.ok) {
+    throw new Error('레시피를 불러오는데 실패했습니다.');
+  }
+
+  const data: PaginatedRecipes = await res.json();
+  return data.recipes;
 };
 
 /** API Route를 통해 단일 레시피 조회 */

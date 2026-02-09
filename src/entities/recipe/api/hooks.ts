@@ -17,8 +17,14 @@ import {
   deleteRecipeAction,
   incrementViewCountAction,
 } from './actions';
-import { fetchRecipe, fetchRecipesPaginated, fetchRecipes } from './client';
+import {
+  fetchRecipe,
+  fetchRecipesPaginated,
+  fetchRecipes,
+  fetchRecipesSection,
+} from './client';
 import { recipeKeys, type InfiniteRecipesParams } from './keys';
+import type { RecipeSortBy } from './server';
 
 /**
  * Hook to fetch all recipes, optionally filtered by user ID
@@ -91,6 +97,20 @@ export function useSuspenseInfiniteRecipes(params?: InfiniteRecipesParams) {
       return loadedCount;
     },
     initialPageParam: 0,
+  });
+}
+
+/**
+ * 홈 섹션용 레시피 조회 hook (Suspense)
+ * 정렬 기준별 상위 N개 레시피를 조회
+ */
+export function useSuspenseRecipeSection(
+  sortBy: RecipeSortBy,
+  limit: number = 6
+) {
+  return useSuspenseQuery({
+    queryKey: recipeKeys.section(sortBy),
+    queryFn: () => fetchRecipesSection(sortBy, limit),
   });
 }
 
