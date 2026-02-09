@@ -22,7 +22,11 @@ export interface RecipeCardHeroProps {
  */
 export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
   const { id, title, description, thumbnail_url, cooking_time } = recipe;
-  const { hasValidImage, hasError: imageError, handleError: handleImageError } = useImageError(thumbnail_url);
+  const {
+    hasValidImage,
+    hasError: imageError,
+    handleError: handleImageError,
+  } = useImageError(thumbnail_url);
 
   return (
     <Link
@@ -53,7 +57,7 @@ export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
       </div>
 
       {/* 좌측→우측 그라데이션 오버레이 */}
-      <div className='absolute inset-0 bg-gradient-to-r from-surface from-40% via-surface/60 via80% to-transparent' />
+      <div className='absolute inset-0 bg-gradient-to-br from-surface from-30% via-surface/60 via-60% to-transparent' />
 
       {/* 조리시간 배지 */}
       {cooking_time && (
