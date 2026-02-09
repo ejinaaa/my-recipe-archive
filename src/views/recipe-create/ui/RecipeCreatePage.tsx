@@ -1,8 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
 import { ROUTES } from '@/shared/config';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { useCreateRecipe } from '@/entities/recipe/api/hooks';
@@ -22,10 +20,6 @@ export function RecipeCreatePage() {
   const { data: profile } = useCurrentProfile();
   const { data: categoryGroups } = useSuspenseCategoryGroups();
   const createRecipe = useCreateRecipe();
-
-  const handleBack = () => {
-    router.back();
-  };
 
   const handleSubmit = async (formData: RecipeFormData) => {
     if (!profile?.id) {
@@ -62,21 +56,9 @@ export function RecipeCreatePage() {
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
       <header className='sticky top-0 z-10 bg-background px-4 pt-4 pb-3'>
-        <div className='relative flex items-center justify-center'>
-          <Button
-            variant='solid'
-            colorScheme='neutral'
-            size='sm'
-            className='absolute left-0 size-10 p-0'
-            onClick={handleBack}
-            aria-label='뒤로가기'
-          >
-            <ChevronLeft className='size-5' />
-          </Button>
-          <h1 className='text-heading-2 text-text-primary'>
-            오늘은 어떤 요리를 기록할까요?
-          </h1>
-        </div>
+        <h1 className='text-heading-2 text-text-primary text-center'>
+          오늘은 어떤 요리를 기록할까요?
+        </h1>
       </header>
 
       {/* Form */}

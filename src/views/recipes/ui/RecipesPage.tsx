@@ -63,7 +63,7 @@ export function RecipesPage() {
         </Suspense>
       </ErrorBoundary>
 
-      <BottomNavigation activeTab='search' />
+      <BottomNavigation activeTab='home' />
     </div>
   );
 }

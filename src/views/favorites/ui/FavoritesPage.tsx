@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Heart } from 'lucide-react';
@@ -19,7 +18,6 @@ import {
 } from '@/features/recipe-search';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api';
-import { BackButton } from '@/shared/ui/back-button';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
@@ -39,7 +37,6 @@ const favoritesEmptyState = (
 );
 
 export function FavoritesPage() {
-  const router = useRouter();
   const queryClient = useQueryClient();
   const setLastFavoritesUrl = useNavigationStore(s => s.setLastFavoritesUrl);
 
@@ -73,11 +70,6 @@ export function FavoritesPage() {
     });
   }, [queryClient]);
 
-  const handleBack = () => {
-    // TODO: favorite 검색 페이지와 분리되면 favorites 메인으로 이동하도록 수정
-    router.back();
-  };
-
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
@@ -95,7 +87,6 @@ export function FavoritesPage() {
       {/* Header */}
       <header className='sticky top-0 z-10 bg-background px-4 py-3'>
         <div className='flex items-center gap-2'>
-          <BackButton onBack={handleBack} />
           <SearchBar
             defaultValue={searchQuery ?? undefined}
             onSearch={handleSearch}
