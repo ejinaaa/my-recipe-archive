@@ -7,6 +7,7 @@ import { Search, User } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
+import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
@@ -16,7 +17,7 @@ export function RecipesPage() {
 
   return (
     <div className='min-h-screen pb-20 bg-background'>
-      <header className='sticky top-0 z-10 bg-background px-4 pt-4 pb-3'>
+      <PageHeader>
         <div className='flex items-center justify-between'>
           {/* 왼쪽: 프로필 + 인사말 */}
           <div className='flex items-center gap-3'>
@@ -55,7 +56,7 @@ export function RecipesPage() {
             <Search />
           </LinkButton>
         </div>
-      </header>
+      </PageHeader>
 
       <ErrorBoundary FallbackComponent={RecipeListError}>
         <Suspense fallback={<RecipeListSkeleton />}>

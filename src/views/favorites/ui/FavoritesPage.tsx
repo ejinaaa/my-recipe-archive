@@ -20,6 +20,7 @@ import {
 
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api';
+import { PageHeader } from '@/shared/ui/page-header';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
@@ -90,7 +91,7 @@ export function FavoritesPage() {
   return (
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
-      <header className='sticky top-0 z-10 bg-background px-4 py-3'>
+      <PageHeader className='py-3'>
         <div className='flex items-center gap-2'>
           <SearchBar
             defaultValue={searchQuery ?? undefined}
@@ -106,7 +107,7 @@ export function FavoritesPage() {
             isActive={isFilterActive(categoryFilters, cookingTimeRange)}
           />
         </div>
-      </header>
+      </PageHeader>
 
       {/* Active Filter Badges */}
       <ActiveFilterBadges

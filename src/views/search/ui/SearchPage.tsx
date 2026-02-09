@@ -6,6 +6,7 @@ import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import type { CategoryType } from '@/entities/category/model/types';
 import { SearchBar } from '@/features/recipe-search';
 import { ROUTES } from '@/shared/config';
+import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { CuisineBadgeSection } from './CuisineBadgeSection';
 import { CategoryCardSection } from './CategoryCardSection';
@@ -34,12 +35,12 @@ export function SearchPage() {
   return (
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
-      <header className='px-4 pt-4 pb-6'>
+      <PageHeader sticky={false} className='pb-6'>
         <SearchBar
           onSearch={handleSearch}
           placeholder='어떤 요리를 찾으세요?'
         />
-      </header>
+      </PageHeader>
 
       {/* Main */}
       <main className='space-y-6 pb-6'>

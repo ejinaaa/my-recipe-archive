@@ -17,6 +17,7 @@ import {
   isFilterActive,
 } from '@/features/recipe-search';
 import { BackButton } from '@/shared/ui/back-button';
+import { PageHeader } from '@/shared/ui/page-header';
 import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
@@ -69,7 +70,7 @@ export function SearchResultsPage() {
   return (
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
-      <header className='sticky top-0 z-10 bg-background px-4 py-3'>
+      <PageHeader className='py-3'>
         <div className='flex items-center gap-2'>
           <BackButton onBack={handleBack} />
           <SearchBar
@@ -86,7 +87,7 @@ export function SearchResultsPage() {
             isActive={isFilterActive(categoryFilters, cookingTimeRange)}
           />
         </div>
-      </header>
+      </PageHeader>
 
       {/* Active Filter Badges */}
       <ActiveFilterBadges

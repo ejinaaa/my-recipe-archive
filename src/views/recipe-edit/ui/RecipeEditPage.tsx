@@ -19,6 +19,7 @@ import {
   convertRecipeToFormData,
   type RecipeFormData,
 } from '@/features/recipe-create';
+import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 
 interface RecipeEditPageProps {
@@ -75,7 +76,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
   return (
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
-      <header className='sticky top-0 z-10 bg-background px-4 pt-4 pb-3'>
+      <PageHeader>
         <div className='relative flex items-center justify-center'>
           <Button
             variant='solid'
@@ -91,7 +92,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
             레시피를 다듬어볼까요?
           </h1>
         </div>
-      </header>
+      </PageHeader>
 
       {/* Form */}
       <main className='px-4 pt-6'>

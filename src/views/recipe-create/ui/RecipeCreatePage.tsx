@@ -13,6 +13,7 @@ import {
   RecipeCreateForm,
   type RecipeFormData,
 } from '@/features/recipe-create';
+import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 
 export function RecipeCreatePage() {
@@ -55,11 +56,11 @@ export function RecipeCreatePage() {
   return (
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
-      <header className='sticky top-0 z-10 bg-background px-4 pt-4 pb-3'>
+      <PageHeader>
         <h1 className='text-heading-2 text-text-primary text-center'>
           오늘은 어떤 요리를 기록할까요?
         </h1>
-      </header>
+      </PageHeader>
 
       {/* Form */}
       <main className='px-4 pt-6'>
