@@ -11,7 +11,12 @@ export interface RecipeCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Recipe data */
   recipe: Pick<
     Recipe,
-    'id' | 'title' | 'description' | 'thumbnail_url' | 'cooking_time' | 'servings'
+    | 'id'
+    | 'title'
+    | 'description'
+    | 'thumbnail_url'
+    | 'cooking_time'
+    | 'servings'
   >;
   /** Whether the recipe is favorited */
   isFavorite?: boolean;
@@ -34,7 +39,11 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
     const { title, description, thumbnail_url, cooking_time, servings } =
       recipe;
 
-    const { hasValidImage, hasError: imageError, handleError: handleImageError } = useImageError(thumbnail_url);
+    const {
+      hasValidImage,
+      hasError: imageError,
+      handleError: handleImageError,
+    } = useImageError(thumbnail_url);
 
     return (
       <div
@@ -114,7 +123,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
 
             {/* Title and Description */}
             <div className='flex flex-col gap-1'>
-              <h3 className='text-body-1 text-white line-clamp-2'>{title}</h3>
+              <h3 className='text-body-1 text-white'>{title}</h3>
               {description && (
                 <p className='text-caption text-white/90 line-clamp-1'>
                   {description}
