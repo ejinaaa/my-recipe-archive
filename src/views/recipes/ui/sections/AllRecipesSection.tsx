@@ -15,7 +15,7 @@ export function AllRecipesSection() {
   return (
     <section className='mt-8'>
       <div className='flex items-center justify-between px-4 mb-3'>
-        <h2 className='text-heading-3 text-text-primary'>나의 모든 레시피</h2>
+        <h2 className='text-heading-2 text-text-primary'>나의 모든 레시피</h2>
         <LinkButton
           href='/search/results'
           variant='ghost'

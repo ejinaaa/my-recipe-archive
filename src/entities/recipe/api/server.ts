@@ -336,6 +336,45 @@ export async function deleteRecipe(id: string): Promise<void> {
 }
 
 /**
+ * 오늘의 추천 레시피 (날짜 기반 결정적 랜덤)
+ * 같은 날에는 항상 동일한 레시피를 반환
+ */
+export async function getRandomRecipe(): Promise<Recipe | null> {
+  try {
+    const supabase = await createClient();
+
+    // 전체 레시피 수 조회
+    const { count } = await supabase
+      .from('recipes')
+      .select('*', { count: 'exact', head: true });
+
+    if (!count || count === 0) return null;
+
+    // 날짜 기반 결정적 offset
+    const today = new Date().toISOString().slice(0, 10);
+    const seed = Array.from(today).reduce(
+      (acc, ch) => acc * 31 + ch.charCodeAt(0),
+      0,
+    );
+    const offset = Math.abs(seed) % count;
+
+    const { data, error } = await supabase
+      .from('recipes')
+      .select('*')
+      .order('created_at', { ascending: true })
+      .range(offset, offset);
+
+    if (error || !data?.[0]) return null;
+
+    const { toRecipe } = await import('../model/types');
+    return toRecipe(data[0] as RecipeDB);
+  } catch (error) {
+    console.error('[Recipe API] getRandomRecipe error:', error);
+    return null;
+  }
+}
+
+/**
  * Increment view count for a recipe
  * Uses RPC function to handle deduplication (1 view per user per day)
  */

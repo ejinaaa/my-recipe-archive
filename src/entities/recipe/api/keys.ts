@@ -29,6 +29,7 @@ export const recipeKeys = {
   sections: () => [...recipeKeys.all, 'sections'] as const,
   section: (sortBy: RecipeSortBy) =>
     [...recipeKeys.sections(), sortBy] as const,
+  random: () => [...recipeKeys.all, 'random'] as const,
   details: () => [...recipeKeys.all, 'detail'] as const,
   detail: (id: string) => [...recipeKeys.details(), id] as const,
 };

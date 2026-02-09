@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Clock, ImageOff } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
@@ -36,7 +37,7 @@ export function RecipeCardCompact({
   return (
     <div
       className={cn(
-        'relative h-[120px] w-[160px] flex-shrink-0 overflow-hidden rounded-2xl cursor-pointer',
+        'relative h-[120px] w-[160px] flex-shrink-0 overflow-hidden rounded-3xl cursor-pointer',
         'transition-transform duration-200',
         className,
       )}
@@ -45,9 +46,11 @@ export function RecipeCardCompact({
       {/* 배경 이미지 */}
       <div className='absolute inset-0'>
         {thumbnail_url && !imageError ? (
-          <img
+          <Image
             src={thumbnail_url}
             alt={title}
+            width={160}
+            height={120}
             className='h-full w-full object-cover'
             onError={() => setImageError(true)}
           />

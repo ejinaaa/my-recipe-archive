@@ -22,6 +22,7 @@ import {
   fetchRecipesPaginated,
   fetchRecipes,
   fetchRecipesSection,
+  fetchRandomRecipe,
 } from './client';
 import { recipeKeys, type InfiniteRecipesParams } from './keys';
 import type { RecipeSortBy } from './server';
@@ -111,6 +112,16 @@ export function useSuspenseRecipeSection(
   return useSuspenseQuery({
     queryKey: recipeKeys.section(sortBy),
     queryFn: () => fetchRecipesSection(sortBy, limit),
+  });
+}
+
+/**
+ * 오늘의 추천 레시피 조회 hook (Suspense)
+ */
+export function useSuspenseRandomRecipe() {
+  return useSuspenseQuery({
+    queryKey: recipeKeys.random(),
+    queryFn: fetchRandomRecipe,
   });
 }
 

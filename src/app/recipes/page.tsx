@@ -5,7 +5,7 @@ import {
 } from '@/shared/lib/prefetch';
 import { getCurrentProfile } from '@/entities/user/api/server';
 import { profileKeys } from '@/entities/user/api/keys';
-import { getRecipesPaginated } from '@/entities/recipe/api/server';
+import { getRecipesPaginated, getRandomRecipe } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { getCategoryGroups } from '@/entities/category/api/server';
 import { categoryKeys } from '@/entities/category/api/keys';
@@ -21,6 +21,11 @@ export default async function Page() {
     queryClient.prefetchQuery({
       queryKey: profileKeys.current(),
       queryFn: getCurrentProfile,
+    }),
+    // 오늘의 추천 레시피
+    queryClient.prefetchQuery({
+      queryKey: recipeKeys.random(),
+      queryFn: getRandomRecipe,
     }),
     // 많이 해본 요리 섹션
     queryClient.prefetchQuery({

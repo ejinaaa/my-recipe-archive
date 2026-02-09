@@ -104,6 +104,18 @@ export const fetchRecipesSection = async (
   return data.recipes;
 };
 
+/** 오늘의 추천 레시피 조회 */
+export const fetchRandomRecipe = async (): Promise<Recipe | null> => {
+  const baseUrl = getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/recipes/random`);
+
+  if (!res.ok) {
+    throw new Error('추천 레시피를 불러오는데 실패했습니다.');
+  }
+
+  return res.json();
+};
+
 /** API Route를 통해 단일 레시피 조회 */
 export const fetchRecipe = async (id: string): Promise<Recipe | null> => {
   const baseUrl = getBaseUrl();

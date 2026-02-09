@@ -16,7 +16,9 @@ import { MostCookedSection } from './sections/MostCookedSection';
 import { TryMoreSection } from './sections/TryMoreSection';
 import { RecentRecipesSection } from './sections/RecentRecipesSection';
 import { AllRecipesSection } from './sections/AllRecipesSection';
+import { TodayPickSection } from './sections/TodayPickSection';
 import { CategorySection } from '@/widgets/category-section';
+import { Skeleton } from '@/shared/ui/skeleton';
 
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
@@ -51,7 +53,7 @@ export function RecipesPage() {
               <p className='text-heading-2 text-text-primary'>
                 안녕, {profile?.nickname || '요리사'}님
               </p>
-              <p className='text-body-2 text-text-secondary'>
+              <p className='pt-0.5 text-body-2 text-text-secondary'>
                 오늘은 뭘 먹을까요?
               </p>
             </div>
@@ -73,6 +75,20 @@ export function RecipesPage() {
       </PageHeader>
 
       <div className='flex flex-col gap-6 mt-2'>
+        {/* 오늘의 추천 요리 */}
+        <SilentErrorBoundary>
+          <Suspense
+            fallback={
+              <div className='px-4'>
+                <Skeleton className='h-5 w-40 rounded-md mb-3' />
+                <Skeleton className='h-[200px] w-full rounded-2xl' />
+              </div>
+            }
+          >
+            <TodayPickSection />
+          </Suspense>
+        </SilentErrorBoundary>
+
         {/* 많이 해본 요리 */}
         <SilentErrorBoundary>
           <Suspense fallback={<RecipeSectionSkeleton />}>
