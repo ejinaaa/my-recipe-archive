@@ -32,7 +32,7 @@ export const NoFilters: Story = {};
 /** 정렬만 적용 */
 export const SortOnly: Story = {
   args: {
-    sortBy: 'popular',
+    sortBy: 'most_cooked',
     filterOrder: ['sort'],
   },
 };

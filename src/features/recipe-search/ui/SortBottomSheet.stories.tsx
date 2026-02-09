@@ -62,6 +62,6 @@ export const Default: Story = {
 export const Open: Story = {
   args: {
     open: true,
-    initialSortBy: 'popular',
+    initialSortBy: 'most_cooked',
   },
 };

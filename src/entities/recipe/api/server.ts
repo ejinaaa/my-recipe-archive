@@ -10,8 +10,10 @@ import type {
 export type RecipeSortBy =
   | 'latest'
   | 'oldest'
-  | 'popular'
-  | 'unpopular'
+  | 'most_cooked'
+  | 'least_cooked'
+  | 'most_viewed'
+  | 'least_viewed'
   | 'favorites';
 
 /** 카테고리 필터 */
@@ -149,12 +151,22 @@ export async function getRecipesPaginated(
           .order('created_at', { ascending: true })
           .order('id', { ascending: true });
         break;
-      case 'popular':
+      case 'most_cooked':
+        query = query
+          .order('cook_count', { ascending: false })
+          .order('id', { ascending: false });
+        break;
+      case 'least_cooked':
+        query = query
+          .order('cook_count', { ascending: true })
+          .order('id', { ascending: true });
+        break;
+      case 'most_viewed':
         query = query
           .order('view_count', { ascending: false })
           .order('id', { ascending: false });
         break;
-      case 'unpopular':
+      case 'least_viewed':
         query = query
           .order('view_count', { ascending: true })
           .order('id', { ascending: true });

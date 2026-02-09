@@ -18,8 +18,10 @@ import type { CategoryFilters, CookingTimeRange } from './store';
 const SORT_OPTIONS_VALUES: RecipeSortBy[] = [
   'latest',
   'oldest',
-  'popular',
-  'unpopular',
+  'most_cooked',
+  'least_cooked',
+  'most_viewed',
+  'least_viewed',
   'favorites',
 ];
 

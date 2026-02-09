@@ -95,6 +95,8 @@ export interface RecipeDB {
   view_count: number;
   /** Favorite count */
   favorite_count: number;
+  /** Cook count (총 요리 횟수, 트리거로 자동 갱신) */
+  cook_count: number;
   /** Tags for search */
   tags: string[];
   /** Creation timestamp */
@@ -134,6 +136,8 @@ export interface Recipe {
   view_count: number;
   /** Favorite count */
   favorite_count: number;
+  /** Cook count (총 요리 횟수) */
+  cook_count: number;
   /** Tags for search */
   tags: string[];
   /** Creation timestamp */
@@ -219,6 +223,7 @@ export function toRecipe(dbRecipe: RecipeDB): Recipe {
     is_public: dbRecipe.is_public ?? false,
     view_count: dbRecipe.view_count ?? 0,
     favorite_count: dbRecipe.favorite_count ?? 0,
+    cook_count: dbRecipe.cook_count ?? 0,
     tags: dbRecipe.tags || [],
     ...(dbRecipe.created_at && { created_at: new Date(dbRecipe.created_at) }),
     ...(dbRecipe.updated_at && { updated_at: new Date(dbRecipe.updated_at) }),

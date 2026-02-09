@@ -127,6 +127,7 @@ export function useCreateRecipe(): UseMutationResult<
           is_public: newRecipe.is_public ?? false,
           view_count: 0,
           favorite_count: 0,
+          cook_count: 0,
           tags: newRecipe.tags || [],
           created_at: new Date(),
           updated_at: new Date(),
