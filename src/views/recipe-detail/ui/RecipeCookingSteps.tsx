@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import type { CookingStep } from '@/entities/recipe/model/types';
 
 interface RecipeCookingStepsProps {
@@ -25,9 +26,11 @@ export function RecipeCookingSteps({ steps }: RecipeCookingStepsProps) {
             </div>
             <div className='flex-1'>
               {step.image_url && (
-                <img
+                <Image
                   src={step.image_url}
                   alt={`${step.step}단계`}
+                  width={400}
+                  height={300}
                   className='mb-3 rounded-xl w-full object-cover'
                 />
               )}

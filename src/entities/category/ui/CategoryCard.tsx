@@ -41,6 +41,7 @@ export function CategoryCard({
             src={category.image_url!}
             alt={category.name}
             fill
+            sizes='50vw'
             className='object-cover'
             onError={() => setImageError(true)}
           />

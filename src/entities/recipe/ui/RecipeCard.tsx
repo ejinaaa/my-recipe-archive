@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Image from 'next/image';
 import { Clock, ImageOff, UtensilsCrossed } from 'lucide-react';
 import { Badge } from '@/shared/ui/badge';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
@@ -52,10 +53,12 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
         {/* Background Image */}
         <div className='absolute inset-0'>
           {thumbnail_url && !imageError ? (
-            <img
+            <Image
               src={thumbnail_url}
               alt={title}
-              className='h-full w-full object-cover'
+              fill
+              sizes='(max-width: 768px) 50vw, 400px'
+              className='object-cover'
               onError={handleImageError}
             />
           ) : (
