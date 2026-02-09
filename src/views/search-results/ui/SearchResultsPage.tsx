@@ -23,7 +23,7 @@ import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
+import { ErrorFallback } from '@/shared/ui/error-fallback';
 
 export function SearchResultsPage() {
   const router = useRouter();
@@ -101,7 +101,7 @@ export function SearchResultsPage() {
       />
 
       {/* Main */}
-      <ErrorBoundary FallbackComponent={RecipeListError}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<RecipeListSkeleton />}>
           <RecipeList
             searchQuery={searchQuery ?? undefined}

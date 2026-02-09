@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ChevronRight } from 'lucide-react';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
+import { ErrorFallback } from '@/shared/ui/error-fallback';
 import { LinkButton } from '@/shared/ui/link-button';
 
 /**
@@ -27,7 +27,7 @@ export function AllRecipesSection() {
         </LinkButton>
       </div>
 
-      <ErrorBoundary FallbackComponent={RecipeListError}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<RecipeListSkeleton />}>
           <RecipeList />
         </Suspense>

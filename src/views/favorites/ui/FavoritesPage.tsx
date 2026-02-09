@@ -25,7 +25,7 @@ import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { RecipeListError } from '@/widgets/recipe-list/ui/RecipeListError';
+import { ErrorFallback } from '@/shared/ui/error-fallback';
 
 const favoritesEmptyState = (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
@@ -121,7 +121,7 @@ export function FavoritesPage() {
       />
 
       {/* Main */}
-      <ErrorBoundary FallbackComponent={RecipeListError}>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<RecipeListSkeleton />}>
           <RecipeList
             searchQuery={searchQuery ?? undefined}
