@@ -73,7 +73,7 @@ export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
       <div className='relative flex h-full w-[65%] flex-col justify-between p-4'>
         {/* 상단: 제목 + 설명 */}
         <div className='flex flex-col gap-1'>
-          <h3 className='text-heading-3 text-text-primary line-clamp-2'>
+          <h3 className='text-heading-3 text-text-primary'>
             오늘 {title} 요리 어때요?
           </h3>
           {description && (
