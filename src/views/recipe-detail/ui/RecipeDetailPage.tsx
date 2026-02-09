@@ -24,7 +24,10 @@ import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { ROUTES } from '@/shared/config';
-import { useSuspenseRecipe } from '@/entities/recipe/api/hooks';
+import {
+  useSuspenseRecipe,
+  useIncrementViewCount,
+} from '@/entities/recipe/api/hooks';
 import { RecipeIngredients } from './RecipeIngredients';
 import { RecipeCookingSteps } from './RecipeCookingSteps';
 
@@ -44,7 +47,16 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   const userId = profile?.id;
   const { data: cookCount } = useCookCount(userId, id);
   const addCookingLog = useAddCookingLog();
+  const incrementViewCount = useIncrementViewCount();
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // 페이지 진입 시 조회수 증가
+  useEffect(() => {
+    if (userId) {
+      incrementViewCount.mutate({ recipeId: id, userId });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, userId]);
 
   useEffect(() => {
     if (showSuccess) {
