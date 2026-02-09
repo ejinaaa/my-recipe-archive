@@ -181,7 +181,9 @@ export function RecipeCreateForm({
           <div className='flex flex-wrap gap-2'>
             {group.options.map(option => {
               const isSelected =
-                formData.categories[option.type]?.code === option.code;
+                formData.categories[option.type]?.some(
+                  c => c.code === option.code,
+                ) ?? false;
               const category: RecipeCategory = {
                 type: option.type,
                 code: option.code,

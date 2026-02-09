@@ -57,10 +57,10 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       return;
     }
 
-    // categories 객체를 배열로 변환
-    const categoryArray = Object.values(formData.categories).filter(
-      (cat): cat is RecipeCategory => cat !== undefined,
-    );
+    // categories 객체(타입별 배열)를 flat 배열로 변환
+    const categoryArray = Object.values(formData.categories)
+      .flat()
+      .filter((cat): cat is RecipeCategory => cat !== undefined);
 
     const updateData: RecipeUpdate = {
       title: formData.title,

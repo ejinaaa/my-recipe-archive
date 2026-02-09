@@ -83,8 +83,8 @@ export interface RecipeDB {
   cooking_time: number | null;
   /** Number of servings */
   servings: number | null;
-  /** Categories as JSON object (keyed by category type) */
-  categories: Partial<Record<CategoryType, RecipeCategory>>;
+  /** Categories as JSON object (keyed by category type, each value is an array) */
+  categories: Partial<Record<CategoryType, RecipeCategory[]>>;
   /** Ingredients as JSON array */
   ingredients: Ingredient[];
   /** Cooking steps as JSON array */
@@ -215,9 +215,9 @@ export function toRecipe(dbRecipe: RecipeDB): Recipe {
     ...(dbRecipe.servings && { servings: dbRecipe.servings }),
     categories: Array.isArray(dbRecipe.categories)
       ? dbRecipe.categories
-      : Object.values(dbRecipe.categories || {}).filter(
-          (cat): cat is RecipeCategory => cat !== undefined,
-        ),
+      : Object.values(dbRecipe.categories || {})
+          .flat()
+          .filter((cat): cat is RecipeCategory => cat !== undefined),
     ingredients: dbRecipe.ingredients || [],
     steps: dbRecipe.steps || [],
     is_public: dbRecipe.is_public ?? false,
@@ -251,10 +251,15 @@ export function toRecipeDB(
     result.cooking_time = recipe.cooking_time || null;
   if (recipe.servings !== undefined) result.servings = recipe.servings || null;
   if (recipe.categories !== undefined) {
-    result.categories = recipe.categories.reduce((acc, cat) => {
-      acc[cat.type] = cat;
-      return acc;
-    }, {} as Record<CategoryType, RecipeCategory>);
+    result.categories = recipe.categories.reduce(
+      (acc, cat) => {
+        const list = acc[cat.type] ?? [];
+        list.push(cat);
+        acc[cat.type] = list;
+        return acc;
+      },
+      {} as Record<CategoryType, RecipeCategory[]>,
+    );
   }
   if (recipe.ingredients !== undefined) result.ingredients = recipe.ingredients;
   if (recipe.steps !== undefined) result.steps = recipe.steps;

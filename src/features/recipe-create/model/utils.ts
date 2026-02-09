@@ -4,16 +4,19 @@ import type { RecipeFormData } from './hooks';
 
 /**
  * Recipe.categories 배열을 RecipeFormData.categories 객체로 변환
+ * 각 타입별로 배열로 그룹핑
  */
 export const convertCategoriesToFormData = (
   categories: RecipeCategory[],
-): Partial<Record<CategoryType, RecipeCategory>> => {
+): Partial<Record<CategoryType, RecipeCategory[]>> => {
   return categories.reduce(
     (acc, cat) => {
-      acc[cat.type] = cat;
+      const list = acc[cat.type] ?? [];
+      list.push(cat);
+      acc[cat.type] = list;
       return acc;
     },
-    {} as Partial<Record<CategoryType, RecipeCategory>>,
+    {} as Partial<Record<CategoryType, RecipeCategory[]>>,
   );
 };
 

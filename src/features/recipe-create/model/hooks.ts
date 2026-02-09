@@ -17,7 +17,7 @@ export interface RecipeFormData {
   thumbnail_url: string;
   cooking_time: number;
   servings: number;
-  categories: Partial<Record<CategoryType, RecipeCategory>>;
+  categories: Partial<Record<CategoryType, RecipeCategory[]>>;
   ingredients: Ingredient[];
   steps: CookingStep[];
 }
@@ -80,11 +80,29 @@ export function useRecipeForm({ onSubmit, initialData }: UseRecipeFormOptions) {
   const toggleCategory = useCallback((category: RecipeCategory) => {
     setFormData(prev => {
       const newCategories = { ...prev.categories };
-      if (newCategories[category.type]?.code === category.code) {
-        delete newCategories[category.type];
+      const current = newCategories[category.type] ?? [];
+
+      if (category.type === 'situation') {
+        // Multi-select: 토글 (있으면 제거, 없으면 추가)
+        const exists = current.some(c => c.code === category.code);
+        newCategories[category.type] = exists
+          ? current.filter(c => c.code !== category.code)
+          : [...current, category];
+        // 빈 배열이면 키 삭제
+        if (newCategories[category.type]?.length === 0) {
+          delete newCategories[category.type];
+        }
       } else {
-        newCategories[category.type] = category;
+        // Single-select: 같으면 해제, 다르면 교체
+        const isSelected =
+          current.length === 1 && current[0].code === category.code;
+        if (isSelected) {
+          delete newCategories[category.type];
+        } else {
+          newCategories[category.type] = [category];
+        }
       }
+
       return { ...prev, categories: newCategories };
     });
   }, []);
@@ -164,15 +182,11 @@ export function useRecipeForm({ onSubmit, initialData }: UseRecipeFormOptions) {
     // 조리 시간 필수 (기본값이 있으므로 항상 통과)
     if (!formData.cooking_time) return false;
 
-    // 카테고리 필수 (situation, cuisine, dishType 모두 선택)
-    const requiredCategories: Array<keyof typeof formData.categories> = [
-      'situation',
-      'cuisine',
-      'dishType',
-    ];
-    const hasAllCategories = requiredCategories.every(
-      type => formData.categories[type] !== undefined,
-    );
+    // 카테고리 필수 (situation 1개 이상, cuisine/dishType 정확히 1개)
+    const hasAllCategories =
+      (formData.categories.situation?.length ?? 0) >= 1 &&
+      (formData.categories.cuisine?.length ?? 0) === 1 &&
+      (formData.categories.dishType?.length ?? 0) === 1;
     if (!hasAllCategories) return false;
 
     // 재료 최소 1개 내용 필수

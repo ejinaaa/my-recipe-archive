@@ -120,15 +120,24 @@ export async function getRecipesPaginated(
       );
     }
 
-    // 카테고리 필터 (JSONB 필드)
+    // 카테고리 필터 (JSONB 배열 containment 쿼리)
     if (categories?.situation?.length) {
-      query = query.in('categories->situation->>code', categories.situation);
+      const situationFilter = categories.situation
+        .map(code => `categories->situation.cs.[{"code":"${code}"}]`)
+        .join(',');
+      query = query.or(situationFilter);
     }
     if (categories?.cuisine?.length) {
-      query = query.in('categories->cuisine->>code', categories.cuisine);
+      const cuisineFilter = categories.cuisine
+        .map(code => `categories->cuisine.cs.[{"code":"${code}"}]`)
+        .join(',');
+      query = query.or(cuisineFilter);
     }
     if (categories?.dishType?.length) {
-      query = query.in('categories->dishType->>code', categories.dishType);
+      const dishTypeFilter = categories.dishType
+        .map(code => `categories->dishType.cs.[{"code":"${code}"}]`)
+        .join(',');
+      query = query.or(dishTypeFilter);
     }
 
     // 조리 시간 범위 필터
