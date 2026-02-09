@@ -13,13 +13,12 @@ import {
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
   getRecipesAction,
-  getRecipeAction,
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,
   incrementViewCountAction,
 } from './actions';
-import { fetchRecipesPaginated } from './client';
+import { fetchRecipe, fetchRecipesPaginated } from './client';
 import { recipeKeys, type InfiniteRecipesParams } from './keys';
 
 /**
@@ -34,22 +33,24 @@ export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
 
 /**
  * Hook to fetch a single recipe by ID
+ * Route API를 통해 데이터 조회
  */
 export function useRecipe(id: string): UseQueryResult<Recipe | null, Error> {
   return useQuery({
     queryKey: recipeKeys.detail(id),
-    queryFn: () => getRecipeAction(id),
+    queryFn: () => fetchRecipe(id),
     enabled: !!id,
   });
 }
 
 /**
  * Suspense를 지원하는 단일 레시피 조회 hook
+ * Route API를 통해 데이터 조회
  */
 export function useSuspenseRecipe(id: string) {
   return useSuspenseQuery({
     queryKey: recipeKeys.detail(id),
-    queryFn: () => getRecipeAction(id),
+    queryFn: () => fetchRecipe(id),
   });
 }
 

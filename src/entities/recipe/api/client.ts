@@ -1,4 +1,5 @@
 import { RECIPE_PAGE_SIZE } from '../model/constants';
+import type { Recipe } from '../model/types';
 import type { PaginatedRecipes } from './server';
 import type { InfiniteRecipesParams } from './keys';
 
@@ -66,6 +67,22 @@ export const fetchRecipesPaginated = async (
 
   if (!res.ok) {
     throw new Error('레시피 목록을 불러오는데 실패했습니다.');
+  }
+
+  return res.json();
+};
+
+/** API Route를 통해 단일 레시피 조회 */
+export const fetchRecipe = async (id: string): Promise<Recipe | null> => {
+  const baseUrl = getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/recipes/${id}`);
+
+  if (res.status === 404) {
+    return null;
+  }
+
+  if (!res.ok) {
+    throw new Error('레시피를 불러오는데 실패했습니다.');
   }
 
   return res.json();
