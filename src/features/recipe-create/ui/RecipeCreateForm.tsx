@@ -18,6 +18,8 @@ import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
   COOKING_TIME_STEP,
+  SERVINGS_MAX,
+  TITLE_MAX_LENGTH,
 } from '@/entities/recipe/model/constants';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
 
@@ -110,12 +112,12 @@ export function RecipeCreateForm({
           placeholder='맛있는 요리 이름을 알려주세요'
           value={formData.title}
           onChange={e => updateField('title', e.target.value)}
-          maxLength={30}
+          maxLength={TITLE_MAX_LENGTH}
           disabled={isDisabled}
           size='sm'
         />
         <span className='text-caption text-text-secondary text-right'>
-          {formData.title.length}/30
+          {formData.title.length}/{TITLE_MAX_LENGTH}
         </span>
       </section>
 
@@ -145,7 +147,7 @@ export function RecipeCreateForm({
             updateField('servings', Array.isArray(value) ? value[0] : value)
           }
           min={1}
-          max={10}
+          max={SERVINGS_MAX}
           step={1}
           valueDisplay={`${formData.servings}인분`}
           disabled={isDisabled}
