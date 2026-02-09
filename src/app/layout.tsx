@@ -4,6 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { QueryProvider } from '@/shared/providers/query-provider';
 import { DebugLogoutButton } from '@/shared/ui/debug-logout-button';
+import { Toaster } from '@/shared/ui/sonner';
 import './globals.css';
 
 const defaultUrl = process.env.VERCEL_URL
@@ -39,6 +40,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <Toaster />
               <DebugLogoutButton />
             </ThemeProvider>
           </QueryProvider>
