@@ -6,6 +6,8 @@ import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import type { CategoryType } from '@/entities/category/model/types';
 import { SearchBar } from '@/features/recipe-search';
 import { ROUTES } from '@/shared/config';
+import { useSaveUrlOnUnmount } from '@/shared/lib';
+import { useNavigationStore } from '@/shared/model';
 import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { CuisineBadgeSection } from './CuisineBadgeSection';
@@ -13,7 +15,11 @@ import { CategoryCardSection } from './CategoryCardSection';
 
 export function SearchPage() {
   const router = useRouter();
+  const setLastSearchUrl = useNavigationStore(s => s.setLastSearchUrl);
   const { data: categoryGroups } = useSuspenseCategoryGroups();
+
+  // 언마운트 시 현재 URL을 전역 상태에 저장 (네비게이션 복귀용)
+  useSaveUrlOnUnmount(setLastSearchUrl);
 
   // 카테고리 그룹 분리
   const cuisineGroup = categoryGroups.find(g => g.type === 'cuisine');
