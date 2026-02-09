@@ -9,6 +9,7 @@ import {
   FilterButton,
   FilterBottomSheet,
   SortBottomSheet,
+  ActiveFilterBadges,
   useUrlQueryParams,
   toCategoryFilter,
   toCookingTimeRange,
@@ -39,6 +40,10 @@ export function SearchResultsPage() {
     setSearchQuery,
     setSortBy,
     setFilters,
+    resetSort,
+    removeCategoryFilter,
+    removeCookingTime,
+    filterOrder,
   } = useUrlQueryParams();
 
   // 바텀시트 열림 상태 (로컬)
@@ -83,6 +88,17 @@ export function SearchResultsPage() {
         </div>
       </header>
 
+      {/* Active Filter Badges */}
+      <ActiveFilterBadges
+        sortBy={sortBy}
+        categoryFilters={categoryFilters}
+        cookingTimeRange={cookingTimeRange}
+        filterOrder={filterOrder}
+        onRemoveSort={resetSort}
+        onRemoveCategoryFilter={removeCategoryFilter}
+        onRemoveCookingTime={removeCookingTime}
+      />
+
       {/* Main */}
       <ErrorBoundary FallbackComponent={RecipeListError}>
         <Suspense fallback={<RecipeListSkeleton />}>
@@ -105,7 +121,6 @@ export function SearchResultsPage() {
         initialFilters={categoryFilters}
         initialCookingTime={cookingTimeRange ?? undefined}
         onApply={setFilters}
-        requireFilter={true}
       />
 
       {/* Sort Bottom Sheet */}

@@ -1,13 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useCategoryGroups } from '@/entities/category/api/hooks';
+import { useState, useEffect, Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import type { CategoryType } from '@/entities/category/model/types';
+import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
 } from '@/entities/recipe/model/constants';
 import { Button } from '@/shared/ui/button';
+import { Skeleton } from '@/shared/ui/skeleton';
 import {
   Drawer,
   DrawerContent,
@@ -40,16 +43,95 @@ interface FilterBottomSheetProps {
   initialCookingTime?: CookingTimeRange;
   /** 필터 적용 핸들러 */
   onApply: (filters: CategoryFilters, cookingTime: CookingTimeRange) => void;
-  /** 조건 없이 보기 핸들러 (즐겨찾기 페이지용) */
-  onApplyEmpty?: () => void;
-  /** 필터 필수 여부 (검색 결과: true, 즐겨찾기: false) */
-  requireFilter?: boolean;
+}
+
+/**
+ * 카테고리 섹션 스켈레톤 (Suspense fallback)
+ */
+function CategorySectionsSkeleton() {
+  return (
+    <>
+      {CATEGORY_TYPE_ORDER.map(type => (
+        <section key={type} className='space-y-3'>
+          <h3 className='text-heading-3 text-text-primary'>
+            {CATEGORY_TYPE_LABELS[type]}
+          </h3>
+          <div className='flex flex-wrap gap-2'>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className='h-8 w-16 rounded-full' />
+            ))}
+          </div>
+        </section>
+      ))}
+    </>
+  );
+}
+
+/**
+ * 카테고리 섹션 에러 (ErrorBoundary fallback)
+ */
+function CategorySectionsError({
+  resetErrorBoundary,
+}: {
+  error: Error;
+  resetErrorBoundary: () => void;
+}) {
+  return (
+    <div className='flex flex-col items-center gap-3 rounded-lg bg-neutral-base p-6'>
+      <p className='text-body-2 text-text-secondary'>
+        카테고리를 불러오지 못했어요
+      </p>
+      <Button
+        variant='outline'
+        colorScheme='neutral'
+        size='sm'
+        onClick={resetErrorBoundary}
+      >
+        다시 시도
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * 카테고리 필터 섹션 (Suspense Query 사용)
+ */
+function CategorySections({
+  tempFilters,
+  onToggle,
+}: {
+  tempFilters: CategoryFilters;
+  onToggle: (type: CategoryType, code: string) => void;
+}) {
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
+
+  const sortedGroups = CATEGORY_TYPE_ORDER.map(type => {
+    const group = categoryGroups.find(g => g.type === type);
+    return {
+      type,
+      options: group?.options ?? [],
+    };
+  });
+
+  return (
+    <>
+      {sortedGroups.map(({ type, options }) => (
+        <CategoryFilterSection
+          key={type}
+          type={type}
+          options={options}
+          selectedCodes={tempFilters[type]}
+          onToggle={code => onToggle(type, code)}
+        />
+      ))}
+    </>
+  );
 }
 
 /**
  * 필터 바텀시트 (순수 UI 컴포넌트)
  *
- * SearchFilterBottomSheet와 FavoriteFilterBottomSheet를 통합한 컴포넌트.
+ * 카테고리 + 조리시간 필터를 설정하는 바텀시트.
  * URL/store 로직 없이 props만으로 동작.
  */
 export function FilterBottomSheet({
@@ -58,17 +140,7 @@ export function FilterBottomSheet({
   initialFilters: propInitialFilters = initialFilters,
   initialCookingTime: propInitialCookingTime = initialCookingTimeRange,
   onApply,
-  onApplyEmpty,
-  requireFilter = true,
 }: FilterBottomSheetProps) {
-  // 카테고리 데이터 조회
-  const {
-    data: categoryGroups,
-    isLoading,
-    isError,
-    refetch,
-  } = useCategoryGroups();
-
   // 로컬 임시 상태 (바텀시트 내 편집용)
   const [tempFilters, setTempFilters] = useState<CategoryFilters>(propInitialFilters);
   const [tempCookingTime, setTempCookingTime] = useState<[number, number]>([
@@ -84,15 +156,6 @@ export function FilterBottomSheet({
     }
   }, [open, propInitialFilters, propInitialCookingTime]);
 
-  // 카테고리 그룹을 정렬된 순서로 변환
-  const sortedGroups = CATEGORY_TYPE_ORDER.map(type => {
-    const group = categoryGroups?.find(g => g.type === type);
-    return {
-      type,
-      options: group?.options ?? [],
-    };
-  });
-
   const handleToggleCategory = (type: CategoryType, code: string) => {
     setTempFilters(prev => toggleCategoryFilter(prev, type, code));
   };
@@ -102,25 +165,12 @@ export function FilterBottomSheet({
     setTempCookingTime([COOKING_TIME_MIN, COOKING_TIME_MAX]);
   };
 
-  // 필터가 하나라도 변경되었는지 확인
-  const hasAnyFilter =
-    tempFilters.situation.length > 0 ||
-    tempFilters.cuisine.length > 0 ||
-    tempFilters.dishType.length > 0 ||
-    tempCookingTime[0] !== initialCookingTimeRange.min ||
-    tempCookingTime[1] !== initialCookingTimeRange.max;
-
   const handleApply = () => {
     const newCookingTimeRange: CookingTimeRange = {
       min: tempCookingTime[0],
       max: tempCookingTime[1],
     };
     onApply(tempFilters, newCookingTimeRange);
-    onOpenChange(false);
-  };
-
-  const handleApplyEmpty = () => {
-    onApplyEmpty?.();
     onOpenChange(false);
   };
 
@@ -143,18 +193,15 @@ export function FilterBottomSheet({
 
         {/* Content */}
         <div className='flex-1 overflow-y-auto px-4 pb-10 space-y-6'>
-          {sortedGroups.map(({ type, options }) => (
-            <CategoryFilterSection
-              key={type}
-              type={type}
-              options={options}
-              selectedCodes={tempFilters[type]}
-              onToggle={code => handleToggleCategory(type, code)}
-              isLoading={isLoading}
-              isError={isError}
-              onRetry={() => refetch()}
-            />
-          ))}
+          {/* 카테고리 섹션 (Suspense + ErrorBoundary) */}
+          <ErrorBoundary FallbackComponent={CategorySectionsError}>
+            <Suspense fallback={<CategorySectionsSkeleton />}>
+              <CategorySections
+                tempFilters={tempFilters}
+                onToggle={handleToggleCategory}
+              />
+            </Suspense>
+          </ErrorBoundary>
 
           {/* 조리시간 섹션 */}
           <CookingTimeFilterSection
@@ -164,27 +211,16 @@ export function FilterBottomSheet({
         </div>
 
         {/* Footer */}
-        <DrawerFooter className={onApplyEmpty ? 'flex flex-row gap-2' : ''}>
+        <DrawerFooter>
           <Button
             variant='solid'
             colorScheme='primary'
             size='lg'
-            className={onApplyEmpty ? 'flex-1' : 'w-full'}
+            className='w-full'
             onClick={handleApply}
-            disabled={requireFilter && !hasAnyFilter}
           >
             요리 보러가기
           </Button>
-          {onApplyEmpty && (
-            <Button
-              variant='solid'
-              colorScheme='secondary'
-              size='lg'
-              onClick={handleApplyEmpty}
-            >
-              조건 없이 보기
-            </Button>
-          )}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

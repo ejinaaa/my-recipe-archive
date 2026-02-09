@@ -10,12 +10,14 @@ import {
   FilterButton,
   FilterBottomSheet,
   SortBottomSheet,
+  ActiveFilterBadges,
   useUrlQueryParams,
   toCategoryFilter,
   toCookingTimeRange,
   isSortActive,
   isFilterActive,
 } from '@/features/recipe-search';
+
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
@@ -52,7 +54,10 @@ export function FavoritesPage() {
     setSearchQuery,
     setSortBy,
     setFilters,
-    resetFilters,
+    resetSort,
+    removeCategoryFilter,
+    removeCookingTime,
+    filterOrder,
   } = useUrlQueryParams();
 
   // 바텀시트 열림 상태 (로컬)
@@ -103,6 +108,17 @@ export function FavoritesPage() {
         </div>
       </header>
 
+      {/* Active Filter Badges */}
+      <ActiveFilterBadges
+        sortBy={sortBy}
+        categoryFilters={categoryFilters}
+        cookingTimeRange={cookingTimeRange}
+        filterOrder={filterOrder}
+        onRemoveSort={resetSort}
+        onRemoveCategoryFilter={removeCategoryFilter}
+        onRemoveCookingTime={removeCookingTime}
+      />
+
       {/* Main */}
       <ErrorBoundary FallbackComponent={RecipeListError}>
         <Suspense fallback={<RecipeListSkeleton />}>
@@ -127,8 +143,6 @@ export function FavoritesPage() {
         initialFilters={categoryFilters}
         initialCookingTime={cookingTimeRange ?? undefined}
         onApply={setFilters}
-        onApplyEmpty={resetFilters}
-        requireFilter={false}
       />
 
       {/* Sort Bottom Sheet */}
