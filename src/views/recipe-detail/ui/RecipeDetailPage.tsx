@@ -1,9 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
-import { Clock, ImageOff, Pencil, UtensilsCrossed } from 'lucide-react';
+import {
+  Check,
+  ChefHat,
+  Clock,
+  ImageOff,
+  Loader2,
+  Pencil,
+  UtensilsCrossed,
+} from 'lucide-react';
+import { useCurrentProfile } from '@/entities/user/api/hooks';
+import {
+  useCookCount,
+  useAddCookingLog,
+} from '@/entities/cooking-log/api/hooks';
 import { BackButton } from '@/shared/ui/back-button';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
@@ -25,6 +38,18 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   const router = useRouter();
   const { data: recipe } = useSuspenseRecipe(id);
   const [imageError, setImageError] = useState(false);
+  const { data: profile } = useCurrentProfile();
+  const userId = profile?.id;
+  const { data: cookCount } = useCookCount(userId, id);
+  const addCookingLog = useAddCookingLog();
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => setShowSuccess(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccess]);
 
   if (!recipe) {
     notFound();
@@ -108,6 +133,26 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
               {recipe.servings}인분
             </Badge>
           )}
+          {cookCount && cookCount > 0 ? (
+            <Badge
+              variant='solid'
+              colorScheme='secondary'
+              size='sm'
+              transparent
+            >
+              <ChefHat className='size-3' />
+              {cookCount}번 요리했어요
+            </Badge>
+          ) : (
+            <Badge
+              variant='solid'
+              colorScheme='secondary'
+              size='sm'
+              transparent
+            >
+              <ChefHat className='size-3' />첫 도전을 기다리는 중
+            </Badge>
+          )}
         </div>
 
         {/* Title */}
@@ -127,6 +172,47 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
 
         {/* Cooking Steps */}
         <RecipeCookingSteps steps={recipe.steps} />
+
+        {/* 요리 완료 버튼 */}
+        {userId && (
+          <div className='mt-14'>
+            {showSuccess ? (
+              <Button
+                variant='solid'
+                colorScheme='secondary'
+                className='w-full animate-in zoom-in-95 duration-300'
+              >
+                <Check className='size-5' />
+                오늘도 수고했어요!
+              </Button>
+            ) : (
+              <Button
+                variant='solid'
+                colorScheme='primary'
+                className='w-full'
+                disabled={addCookingLog.isPending}
+                onClick={() =>
+                  addCookingLog.mutate(
+                    { userId, recipeId: id },
+                    { onSuccess: () => setShowSuccess(true) },
+                  )
+                }
+              >
+                {addCookingLog.isPending ? (
+                  <>
+                    <Loader2 className='size-5 animate-spin' />
+                    기록하는 중...
+                  </>
+                ) : (
+                  <>
+                    <ChefHat className='size-5' />
+                    요리 완료!
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
