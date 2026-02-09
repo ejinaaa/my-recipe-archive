@@ -125,7 +125,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
             <div className='flex flex-col gap-1'>
               <h3 className='text-body-1 text-white'>{title}</h3>
               {description && (
-                <p className='text-caption text-white/90 line-clamp-1'>
+                <p className='text-caption text-white/90 line-clamp-3'>
                   {description}
                 </p>
               )}

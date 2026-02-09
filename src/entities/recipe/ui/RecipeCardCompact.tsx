@@ -32,7 +32,11 @@ export function RecipeCardCompact({
   className,
 }: RecipeCardCompactProps) {
   const { title, thumbnail_url, cooking_time } = recipe;
-  const { hasValidImage, hasError: imageError, handleError: handleImageError } = useImageError(thumbnail_url);
+  const {
+    hasValidImage,
+    hasError: imageError,
+    handleError: handleImageError,
+  } = useImageError(thumbnail_url);
 
   return (
     <div
@@ -94,7 +98,7 @@ export function RecipeCardCompact({
               </Badge>
             </div>
           )}
-          <h3 className='text-body-2 text-white line-clamp-1 font-medium'>
+          <h3 className='text-body-2 text-white line-clamp-2 font-medium'>
             {title}
           </h3>
         </div>
