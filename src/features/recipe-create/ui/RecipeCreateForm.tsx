@@ -74,7 +74,7 @@ export function RecipeCreateForm({
   const isDisabled = isSubmitting;
 
   return (
-    <div className={cn('flex flex-col gap-6 pb-6', className)}>
+    <div className={cn('flex flex-col gap-6', className)}>
       {/* 썸네일 이미지 영역 (플레이스홀더) */}
       <section className='flex flex-col items-center gap-2'>
         <div className='relative size-24 rounded-full bg-neutral-base flex items-center justify-center'>

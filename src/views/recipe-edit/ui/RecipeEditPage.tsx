@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
@@ -8,6 +9,7 @@ import { useCurrentProfile } from '@/entities/user/api/hooks';
 import {
   useSuspenseRecipe,
   useUpdateRecipe,
+  useDeleteRecipe,
 } from '@/entities/recipe/api/hooks';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import type {
@@ -21,6 +23,7 @@ import {
 } from '@/features/recipe-create';
 import { PageHeader } from '@/shared/ui/page-header';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
+import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
 
 interface RecipeEditPageProps {
   id: string;
@@ -32,9 +35,20 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
   const { data: recipe } = useSuspenseRecipe(id);
   const { data: categoryGroups } = useSuspenseCategoryGroups();
   const updateRecipe = useUpdateRecipe();
+  const deleteRecipe = useDeleteRecipe();
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleBack = () => {
     router.back();
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteRecipe.mutateAsync(id);
+      router.back();
+    } catch {
+      // 에러는 useDeleteRecipe의 onError에서 처리
+    }
   };
 
   const handleSubmit = async (formData: RecipeFormData) => {
@@ -95,14 +109,33 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       </PageHeader>
 
       {/* Form */}
-      <main className='px-4 pt-6'>
+      <main className='px-4 pt-6 pb-6'>
         <RecipeCreateForm
           categoryGroups={categoryGroups}
           onSubmit={handleSubmit}
           mode='edit'
           initialData={initialData}
         />
+
+        {/* 삭제 버튼 */}
+        <Button
+          variant='ghost'
+          colorScheme='neutral'
+          size='lg'
+          onClick={() => setDeleteOpen(true)}
+          className='w-full mt-3 text-destructive'
+        >
+          이 레시피를 삭제할게요
+        </Button>
       </main>
+
+      {/* 삭제 확인 Bottom Sheet */}
+      <DeleteRecipeConfirm
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        onConfirm={handleDelete}
+        isPending={deleteRecipe.isPending}
+      />
 
       <BottomNavigation activeTab='register' />
     </div>
