@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Utensils } from 'lucide-react';
+import { ImageOff, CookingPot } from 'lucide-react';
 import type { CategoryOption } from '../model/types';
 import { Badge } from '@/shared/ui/badge';
 import { cn } from '@/shared/lib/utils';
@@ -48,9 +48,12 @@ export function CategoryCard({
           <div className='absolute inset-0 bg-black/5' />
         </>
       ) : (
-        /* Placeholder UI with icon */
-        <div className='absolute inset-0 flex items-center justify-center'>
-          <Utensils className='size-8 text-text-secondary' />
+        <div className='absolute inset-0 flex items-center justify-center bg-neutral-base'>
+          {imageError ? (
+            <ImageOff className='size-8 text-text-secondary' />
+          ) : (
+            <CookingPot className='size-8 text-text-secondary' />
+          )}
         </div>
       )}
 
