@@ -31,7 +31,7 @@ export function ErrorFallback({
       </p>
       <div className='flex gap-2'>
         {onBack && (
-          <Button variant='outline' onClick={onBack}>
+          <Button variant='solid' colorScheme='neutral' onClick={onBack}>
             뒤로가기
           </Button>
         )}
