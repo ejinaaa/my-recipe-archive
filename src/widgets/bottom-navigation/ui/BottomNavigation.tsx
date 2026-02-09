@@ -21,24 +21,30 @@ export function BottomNavigation({
 }: {
   activeTab?: NavTab;
 }) {
-  const { lastSearchUrl, lastFavoritesUrl } = useNavigationStore();
+  const { lastSearchUrl, lastFavoritesUrl, setLastSearchUrl, setLastFavoritesUrl } =
+    useNavigationStore();
 
   const tabs: Tab[] = [
     { id: 'home', icon: Home, label: '홈', href: ROUTES.RECIPES.LIST },
-    {
-      id: 'search',
-      icon: Search,
-      label: '검색',
-      href: lastSearchUrl ?? ROUTES.SEARCH,
-    },
-    {
-      id: 'favorites',
-      icon: Heart,
-      label: '즐겨찾기',
-      href: lastFavoritesUrl ?? ROUTES.FAVORITES,
-    },
+    { id: 'search', icon: Search, label: '검색', href: ROUTES.SEARCH },
+    { id: 'favorites', icon: Heart, label: '즐겨찾기', href: ROUTES.FAVORITES },
     { id: 'register', icon: Plus, label: '등록하기', href: ROUTES.RECIPES.NEW },
   ];
+
+  /** 활성 탭이면 기본 경로, 아니면 저장된 URL 사용 */
+  const getHref = (id: NavTab, baseHref: string) => {
+    if (activeTab === id) return baseHref;
+    if (id === 'search') return lastSearchUrl ?? baseHref;
+    if (id === 'favorites') return lastFavoritesUrl ?? baseHref;
+    return baseHref;
+  };
+
+  /** 활성 탭 재클릭 시 저장된 URL 초기화 */
+  const handleClick = (id: NavTab) => {
+    if (activeTab !== id) return;
+    if (id === 'search') setLastSearchUrl(null);
+    if (id === 'favorites') setLastFavoritesUrl(null);
+  };
 
   return (
     <nav className='fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border'>
@@ -49,7 +55,8 @@ export function BottomNavigation({
           return (
             <LinkButton
               key={id}
-              href={href}
+              href={getHref(id, href)}
+              onClick={() => handleClick(id)}
               variant='ghost'
               colorScheme='neutral'
               className={cn(

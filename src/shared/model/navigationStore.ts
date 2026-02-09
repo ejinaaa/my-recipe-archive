@@ -6,8 +6,8 @@ interface NavigationState {
   lastFavoritesUrl: string | null;
 
   // 액션
-  setLastSearchUrl: (url: string) => void;
-  setLastFavoritesUrl: (url: string) => void;
+  setLastSearchUrl: (url: string | null) => void;
+  setLastFavoritesUrl: (url: string | null) => void;
 }
 
 /**
