@@ -67,6 +67,7 @@ export function RecipeCreatePage() {
         <RecipeCreateForm
           categoryGroups={categoryGroups}
           onSubmit={handleSubmit}
+          userId={profile?.id}
         />
       </main>
 

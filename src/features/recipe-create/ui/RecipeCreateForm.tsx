@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, Trash2, CookingPot, Camera } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
@@ -9,6 +9,8 @@ import { Slider } from '@/shared/ui/slider';
 import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/lib/utils';
 import { useRecipeForm, type RecipeFormData } from '../model/hooks';
+import { useThumbnailUpload } from '../model/useThumbnailUpload';
+import { ThumbnailUploader } from './ThumbnailUploader';
 import type { RecipeCategory } from '@/entities/recipe/model/types';
 import type { CategoryGroup } from '@/entities/category/model/types';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
@@ -42,6 +44,8 @@ interface RecipeCreateFormProps {
   mode?: RecipeFormMode;
   /** 수정 모드에서 사용할 초기 데이터 */
   initialData?: RecipeFormData;
+  /** 현재 사용자 ID (썸네일 업로드에 필요) */
+  userId?: string;
 }
 
 /**
@@ -53,6 +57,7 @@ export function RecipeCreateForm({
   className,
   mode = 'create',
   initialData,
+  userId,
 }: RecipeCreateFormProps) {
   const {
     formData,
@@ -69,24 +74,32 @@ export function RecipeCreateForm({
     handleSubmit,
   } = useRecipeForm({ onSubmit, initialData });
 
+  const {
+    isUploading,
+    error: uploadError,
+    handleFileSelect,
+    handleDelete,
+  } = useThumbnailUpload({
+    userId: userId ?? '',
+    currentUrl: formData.thumbnail_url,
+    onUrlChange: url => updateField('thumbnail_url', url),
+  });
+
   const buttonText = SUBMIT_BUTTON_TEXT[mode];
 
-  const isDisabled = isSubmitting;
+  const isDisabled = isSubmitting || isUploading;
 
   return (
     <div className={cn('flex flex-col gap-6', className)}>
-      {/* 썸네일 이미지 영역 (플레이스홀더) */}
-      <section className='flex flex-col items-center gap-2'>
-        <div className='relative size-24 rounded-full bg-neutral-base flex items-center justify-center'>
-          <CookingPot className='size-8 text-text-secondary/60' />
-          <div className='absolute -bottom-1 -right-1 size-8 rounded-full bg-white border border-neutral-base flex items-center justify-center'>
-            <Camera className='size-4 text-text-secondary' />
-          </div>
-        </div>
-        <span className='text-caption text-text-secondary'>
-          곧 이미지를 추가할 수 있어요
-        </span>
-      </section>
+      {/* 썸네일 이미지 */}
+      <ThumbnailUploader
+        thumbnailUrl={formData.thumbnail_url}
+        isUploading={isUploading}
+        error={uploadError}
+        disabled={isDisabled}
+        onFileSelect={handleFileSelect}
+        onDelete={handleDelete}
+      />
 
       {/* 제목 */}
       <section className='flex flex-col gap-2'>

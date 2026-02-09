@@ -115,6 +115,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
           onSubmit={handleSubmit}
           mode='edit'
           initialData={initialData}
+          userId={profile?.id}
         />
 
         {/* 삭제 버튼 */}
