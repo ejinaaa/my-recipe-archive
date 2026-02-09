@@ -17,6 +17,9 @@ export {
   incrementViewCountAction,
 } from './actions';
 
+// Lib
+export { parseSearchParams } from '../lib/parseSearchParams';
+
 // Re-export types
 export type {
   GetRecipesParams,
