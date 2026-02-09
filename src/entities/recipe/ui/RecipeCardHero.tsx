@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Clock, ImageOff } from 'lucide-react';
+import { ArrowRight, Clock, CookingPot, ImageOff } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import { Badge } from '@/shared/ui/badge';
 import { ROUTES } from '@/shared/config';
 import type { Recipe } from '../model/types';
@@ -22,7 +22,7 @@ export interface RecipeCardHeroProps {
  */
 export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
   const { id, title, description, thumbnail_url, cooking_time } = recipe;
-  const [imageError, setImageError] = useState(false);
+  const { hasValidImage, hasError: imageError, handleError: handleImageError } = useImageError(thumbnail_url);
 
   return (
     <Link
@@ -31,19 +31,23 @@ export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
     >
       {/* 배경 이미지 */}
       <div className='absolute inset-0'>
-        {thumbnail_url && !imageError ? (
+        {hasValidImage ? (
           <Image
-            src={thumbnail_url}
+            src={thumbnail_url!}
             alt={title}
             fill
             priority
             sizes='(max-width: 768px) 100vw, 768px'
             className='object-cover'
-            onError={() => setImageError(true)}
+            onError={handleImageError}
           />
-        ) : (
+        ) : imageError ? (
           <div className='flex h-full w-full items-center justify-center bg-neutral-base/30'>
             <ImageOff className='size-10 text-text-secondary' />
+          </div>
+        ) : (
+          <div className='flex h-full w-full items-center justify-center bg-neutral-base/30'>
+            <CookingPot className='size-10 text-text-secondary' />
           </div>
         )}
       </div>

@@ -1,47 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Utensils } from 'lucide-react';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
-import type { CategoryOption } from '@/entities/category/model/types';
-
-function CategoryChip({
-  category,
-  onClick,
-}: {
-  category: CategoryOption;
-  onClick: () => void;
-}) {
-  const [imageError, setImageError] = useState(false);
-  const hasImage = category.image_url && !imageError;
-
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className='flex items-center gap-2 pl-1 pr-4 py-0.5 rounded-full border border-neutral-300 bg-white shrink-0'
-    >
-      <div className='relative size-14 rounded-full overflow-hidden bg-neutral-100'>
-        {hasImage ? (
-          <Image
-            src={category.image_url!}
-            alt={category.name}
-            fill
-            className='object-cover'
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <div className='flex items-center justify-center size-full'>
-            <Utensils className='size-4 text-text-secondary' />
-          </div>
-        )}
-      </div>
-      <span className='text-body-1 text-text-primary'>{category.name}</span>
-    </button>
-  );
-}
+import { CategoryChip } from '@/entities/category/ui/CategoryChip';
 
 /**
  * 홈 카테고리 수평 스크롤 섹션

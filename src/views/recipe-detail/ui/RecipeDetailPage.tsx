@@ -7,11 +7,13 @@ import {
   Check,
   ChefHat,
   Clock,
+  CookingPot,
   ImageOff,
   Loader2,
   Pencil,
   UtensilsCrossed,
 } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import {
   useCookCount,
@@ -37,7 +39,7 @@ interface RecipeDetailPageProps {
 export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   const router = useRouter();
   const { data: recipe } = useSuspenseRecipe(id);
-  const [imageError, setImageError] = useState(false);
+  const { hasValidImage: hasThumbImage, hasError: thumbImageError, handleError: handleImageError } = useImageError(recipe?.thumbnail_url);
   const { data: profile } = useCurrentProfile();
   const userId = profile?.id;
   const { data: cookCount } = useCookCount(userId, id);
@@ -67,9 +69,6 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
     // TODO: 즐겨찾기 기능 구현 시 추가
   };
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
 
   return (
     <div className='relative min-h-screen bg-background'>
@@ -98,10 +97,10 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
 
       {/* Thumbnail Section - 350px 고정 */}
       <div className='relative w-full h-[350px] overflow-hidden rounded-b-3xl'>
-        {recipe.thumbnail_url && !imageError ? (
+        {hasThumbImage ? (
           <>
             <Image
-              src={recipe.thumbnail_url}
+              src={recipe.thumbnail_url!}
               alt={recipe.title}
               fill
               priority
@@ -110,9 +109,13 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
             />
             <div className='absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60' />
           </>
-        ) : (
+        ) : thumbImageError ? (
           <div className='flex h-full w-full items-center justify-center bg-neutral-active'>
             <ImageOff className='size-16 text-text-secondary' />
+          </div>
+        ) : (
+          <div className='flex h-full w-full items-center justify-center bg-neutral-active'>
+            <CookingPot className='size-16 text-text-secondary' />
           </div>
         )}
       </div>

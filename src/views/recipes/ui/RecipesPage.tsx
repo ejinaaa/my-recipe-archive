@@ -3,7 +3,8 @@
 import { Suspense, useCallback } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Search, User } from 'lucide-react';
+import { ImageOff, Search, User } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
@@ -23,6 +24,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
   const router = useRouter();
+  const { hasValidImage: hasProfileImage, hasError: profileImageError, handleError: handleProfileImageError } = useImageError(profile?.image_url);
 
   const handleRecipeClick = useCallback(
     (recipeId: string) => {
@@ -38,13 +40,16 @@ export function RecipesPage() {
           {/* 왼쪽: 프로필 + 인사말 */}
           <div className='flex items-center gap-3'>
             <div className='relative size-10 rounded-full bg-neutral-200 overflow-hidden'>
-              {profile?.image_url ? (
+              {hasProfileImage ? (
                 <Image
-                  src={profile.image_url}
+                  src={profile!.image_url!}
                   alt='프로필'
                   fill
                   className='object-cover'
+                  onError={handleProfileImageError}
                 />
+              ) : profileImageError ? (
+                <ImageOff className='size-5 text-text-secondary' />
               ) : (
                 <User className='size-full p-2 text-text-secondary' />
               )}

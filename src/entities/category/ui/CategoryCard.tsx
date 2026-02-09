@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
-import { ImageOff, CookingPot } from 'lucide-react';
+import { ImageOff } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import type { CategoryOption } from '../model/types';
 import { Badge } from '@/shared/ui/badge';
 import { cn } from '@/shared/lib/utils';
@@ -21,8 +21,8 @@ export function CategoryCard({
   onClick,
   className,
 }: CategoryCardProps) {
-  const [imageError, setImageError] = useState(false);
-  const hasImage = category.image_url && !imageError;
+  const { hasValidImage: hasImage, handleError: handleImageError } =
+    useImageError(category.image_url);
 
   return (
     <button
@@ -43,18 +43,14 @@ export function CategoryCard({
             fill
             sizes='50vw'
             className='object-cover'
-            onError={() => setImageError(true)}
+            onError={handleImageError}
           />
           {/* 이미지 오버레이 */}
           <div className='absolute inset-0 bg-black/5' />
         </>
       ) : (
         <div className='absolute inset-0 flex items-center justify-center bg-neutral-base'>
-          {imageError ? (
-            <ImageOff className='size-8 text-text-secondary' />
-          ) : (
-            <CookingPot className='size-8 text-text-secondary' />
-          )}
+          <ImageOff className='size-8 text-text-secondary' />
         </div>
       )}
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from 'next/image';
-import { Clock, ImageOff, UtensilsCrossed } from 'lucide-react';
+import { Clock, CookingPot, ImageOff, UtensilsCrossed } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import { Badge } from '@/shared/ui/badge';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { cn } from '@/shared/lib/utils';
@@ -33,11 +34,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
     const { title, description, thumbnail_url, cooking_time, servings } =
       recipe;
 
-    const [imageError, setImageError] = React.useState(false);
-
-    const handleImageError = () => {
-      setImageError(true);
-    };
+    const { hasValidImage, hasError: imageError, handleError: handleImageError } = useImageError(thumbnail_url);
 
     return (
       <div
@@ -52,18 +49,22 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
       >
         {/* Background Image */}
         <div className='absolute inset-0'>
-          {thumbnail_url && !imageError ? (
+          {hasValidImage ? (
             <Image
-              src={thumbnail_url}
+              src={thumbnail_url!}
               alt={title}
               fill
               sizes='(max-width: 768px) 50vw, 400px'
               className='object-cover'
               onError={handleImageError}
             />
-          ) : (
+          ) : imageError ? (
             <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
               <ImageOff className='size-12 text-text-secondary' />
+            </div>
+          ) : (
+            <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
+              <CookingPot className='size-12 text-text-secondary' />
             </div>
           )}
         </div>

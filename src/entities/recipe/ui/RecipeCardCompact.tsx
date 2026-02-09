@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import { Clock, ImageOff } from 'lucide-react';
+import { Clock, CookingPot, ImageOff } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import { Badge } from '@/shared/ui/badge';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { cn } from '@/shared/lib/utils';
@@ -32,7 +32,7 @@ export function RecipeCardCompact({
   className,
 }: RecipeCardCompactProps) {
   const { title, thumbnail_url, cooking_time } = recipe;
-  const [imageError, setImageError] = useState(false);
+  const { hasValidImage, hasError: imageError, handleError: handleImageError } = useImageError(thumbnail_url);
 
   return (
     <div
@@ -45,18 +45,22 @@ export function RecipeCardCompact({
     >
       {/* 배경 이미지 */}
       <div className='absolute inset-0'>
-        {thumbnail_url && !imageError ? (
+        {hasValidImage ? (
           <Image
-            src={thumbnail_url}
+            src={thumbnail_url!}
             alt={title}
             width={160}
             height={120}
             className='h-full w-full object-cover'
-            onError={() => setImageError(true)}
+            onError={handleImageError}
           />
-        ) : (
+        ) : imageError ? (
           <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
             <ImageOff className='size-10 text-text-secondary' />
+          </div>
+        ) : (
+          <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
+            <CookingPot className='size-10 text-text-secondary' />
           </div>
         )}
       </div>

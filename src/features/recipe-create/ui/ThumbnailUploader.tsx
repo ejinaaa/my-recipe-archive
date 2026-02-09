@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import { Camera, Trash2, Loader2, CookingPot, ImageOff } from 'lucide-react';
+import { useImageError } from '@/shared/lib/useImageError';
 import { cn } from '@/shared/lib/utils';
 
 interface ThumbnailUploaderProps {
@@ -32,12 +33,7 @@ export function ThumbnailUploader({
   onDelete,
 }: ThumbnailUploaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [imgError, setImgError] = useState(false);
-
-  // thumbnailUrl이 바뀌면 에러 상태 리셋
-  useEffect(() => {
-    setImgError(false);
-  }, [thumbnailUrl]);
+  const { hasError: imgError, handleError: handleImgError, hasValidImage } = useImageError(thumbnailUrl);
 
   const handleClick = () => {
     if (disabled || isUploading) return;
@@ -73,18 +69,18 @@ export function ThumbnailUploader({
           className={cn(
             'size-24 rounded-full overflow-hidden',
             'flex items-center justify-center',
-            thumbnailUrl && !imgError ? '' : 'bg-neutral-base',
+            hasValidImage ? '' : 'bg-neutral-base',
           )}
         >
-          {thumbnailUrl && !imgError ? (
+          {hasValidImage ? (
             <Image
               src={thumbnailUrl}
               alt='레시피 썸네일'
               fill
               className='object-cover rounded-full'
-              onError={() => setImgError(true)}
+              onError={handleImgError}
             />
-          ) : thumbnailUrl && imgError ? (
+          ) : thumbnailUrl ? (
             <ImageOff className='size-8 text-text-secondary/60' />
           ) : (
             <CookingPot className='size-8 text-text-secondary/60' />
