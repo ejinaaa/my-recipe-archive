@@ -16,9 +16,9 @@ export type RecipeSortBy =
 
 /** 카테고리 필터 */
 export interface CategoryFilter {
-  situation?: string;
-  cuisine?: string;
-  dishType?: string;
+  situation?: string[];
+  cuisine?: string[];
+  dishType?: string[];
 }
 
 /** 조리 시간 범위 필터 */
@@ -119,14 +119,14 @@ export async function getRecipesPaginated(
     }
 
     // 카테고리 필터 (JSONB 필드)
-    if (categories?.situation) {
-      query = query.eq('categories->situation->>code', categories.situation);
+    if (categories?.situation?.length) {
+      query = query.in('categories->situation->>code', categories.situation);
     }
-    if (categories?.cuisine) {
-      query = query.eq('categories->cuisine->>code', categories.cuisine);
+    if (categories?.cuisine?.length) {
+      query = query.in('categories->cuisine->>code', categories.cuisine);
     }
-    if (categories?.dishType) {
-      query = query.eq('categories->dishType->>code', categories.dishType);
+    if (categories?.dishType?.length) {
+      query = query.in('categories->dishType->>code', categories.dishType);
     }
 
     // 조리 시간 범위 필터

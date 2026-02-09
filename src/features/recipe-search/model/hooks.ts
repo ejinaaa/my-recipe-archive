@@ -7,7 +7,6 @@ import type { CategoryFilters, CookingTimeRange } from './store';
 
 /**
  * store의 CategoryFilters를 API의 CategoryFilter로 변환
- * 배열의 첫 번째 값만 사용 (단일 선택)
  */
 export const toCategoryFilter = (
   filters: CategoryFilters,
@@ -15,13 +14,13 @@ export const toCategoryFilter = (
   const result: CategoryFilter = {};
 
   if (filters.situation.length > 0) {
-    result.situation = filters.situation[0];
+    result.situation = filters.situation;
   }
   if (filters.cuisine.length > 0) {
-    result.cuisine = filters.cuisine[0];
+    result.cuisine = filters.cuisine;
   }
   if (filters.dishType.length > 0) {
-    result.dishType = filters.dishType[0];
+    result.dishType = filters.dishType;
   }
 
   return Object.keys(result).length > 0 ? result : undefined;

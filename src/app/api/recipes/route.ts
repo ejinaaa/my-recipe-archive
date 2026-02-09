@@ -17,12 +17,12 @@ export async function GET(request: NextRequest) {
   const sortBy = (searchParams.get('sortBy') as RecipeSortBy) || undefined;
   const favoritesByUserId = searchParams.get('favoritesByUserId') || undefined;
 
-  // 카테고리 필터 파싱
+  // 카테고리 필터 파싱 (콤마 구분 배열)
   const categories: CategoryFilter | undefined = (() => {
-    const situation = searchParams.get('categories.situation') || undefined;
-    const cuisine = searchParams.get('categories.cuisine') || undefined;
-    const dishType = searchParams.get('categories.dishType') || undefined;
-    if (!situation && !cuisine && !dishType) return undefined;
+    const situation = searchParams.get('categories.situation')?.split(',').filter(Boolean);
+    const cuisine = searchParams.get('categories.cuisine')?.split(',').filter(Boolean);
+    const dishType = searchParams.get('categories.dishType')?.split(',').filter(Boolean);
+    if (!situation?.length && !cuisine?.length && !dishType?.length) return undefined;
     return { situation, cuisine, dishType };
   })();
 

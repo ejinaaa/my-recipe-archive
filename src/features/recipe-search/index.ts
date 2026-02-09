@@ -6,9 +6,10 @@ export { FilterBottomSheet } from './ui/FilterBottomSheet';
 export { SortBottomSheet } from './ui/SortBottomSheet';
 export { CategoryFilterSection } from './ui/CategoryFilterSection';
 export { CookingTimeFilterSection } from './ui/CookingTimeFilterSection';
+export { ActiveFilterBadges } from './ui/ActiveFilterBadges';
 
 // URL State Hook
-export { useUrlQueryParams } from './model/useUrlQueryParams';
+export { useUrlQueryParams, type FilterOrderKey } from './model/useUrlQueryParams';
 
 // Utilities
 export {

@@ -22,14 +22,14 @@ export const buildRecipesSearchParams = (
   if (params?.favoritesByUserId) {
     searchParams.set('favoritesByUserId', params.favoritesByUserId);
   }
-  if (params?.categories?.situation) {
-    searchParams.set('categories.situation', params.categories.situation);
+  if (params?.categories?.situation?.length) {
+    searchParams.set('categories.situation', params.categories.situation.join(','));
   }
-  if (params?.categories?.cuisine) {
-    searchParams.set('categories.cuisine', params.categories.cuisine);
+  if (params?.categories?.cuisine?.length) {
+    searchParams.set('categories.cuisine', params.categories.cuisine.join(','));
   }
-  if (params?.categories?.dishType) {
-    searchParams.set('categories.dishType', params.categories.dishType);
+  if (params?.categories?.dishType?.length) {
+    searchParams.set('categories.dishType', params.categories.dishType.join(','));
   }
   if (params?.cookingTimeRange?.min !== undefined) {
     searchParams.set(

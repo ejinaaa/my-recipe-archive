@@ -70,7 +70,7 @@ export function SortBottomSheet({
                 selected={tempSortBy === option.value}
                 onClick={() => setTempSortBy(option.value)}
               >
-                {option.label}
+                {option.icon}{option.label}
               </Badge>
             ))}
           </div>

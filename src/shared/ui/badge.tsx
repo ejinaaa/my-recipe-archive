@@ -113,7 +113,8 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'secondary',
         transparent: true,
-        className: 'border-secondary-base/60 text-secondary-base backdrop-blur-sm',
+        className:
+          'border-secondary-base/60 text-secondary-base backdrop-blur-sm',
       },
       // Outline + Neutral
       {
@@ -126,7 +127,8 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'neutral',
         transparent: true,
-        className: 'border-neutral-active/60 text-text-primary backdrop-blur-sm',
+        className:
+          'border-neutral-active/60 text-text-primary backdrop-blur-sm',
       },
       // Outline + Surface
       {
@@ -235,7 +237,8 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'primary',
         transparent: true,
-        className: 'border-transparent bg-primary-base/60 text-white backdrop-blur-sm',
+        className:
+          'border-transparent bg-primary-base/60 text-white backdrop-blur-sm',
       },
       // Selected + Outline + Secondary + Transparent
       {
@@ -243,7 +246,8 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'secondary',
         transparent: true,
-        className: 'border-transparent bg-secondary-base/60 text-text-primary backdrop-blur-sm',
+        className:
+          'border-transparent bg-secondary-base/60 text-text-primary backdrop-blur-sm',
       },
       // Selected + Outline + Neutral + Transparent
       {
@@ -251,7 +255,8 @@ const badgeVariants = cva(
         variant: 'outline',
         colorScheme: 'neutral',
         transparent: true,
-        className: 'border-transparent bg-text-primary/60 text-white backdrop-blur-sm',
+        className:
+          'border-transparent bg-text-primary/60 text-white backdrop-blur-sm',
       },
       // Selected + Outline + Surface + Transparent
       {
@@ -269,7 +274,7 @@ const badgeVariants = cva(
       transparent: false,
       selected: false,
     },
-  }
+  },
 );
 
 type BadgeBaseProps = React.HTMLAttributes<HTMLDivElement> &
@@ -301,7 +306,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
       children,
       ...props
     },
-    ref
+    ref,
   ) => {
     const handleClose = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
@@ -320,7 +325,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
             transparent,
             selected,
             className,
-          })
+          }),
         )}
         ref={ref}
         {...props}
@@ -338,7 +343,7 @@ const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
         )}
       </div>
     );
-  }
+  },
 );
 Badge.displayName = 'Badge';
 
