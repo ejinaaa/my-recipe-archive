@@ -3,38 +3,11 @@
 import { revalidatePath } from 'next/cache';
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
-  getRecipes,
-  getRecipe,
-  getRecipesPaginated,
   createRecipe,
   updateRecipe,
   deleteRecipe,
   incrementViewCount,
 } from './server';
-import type { GetRecipesParams, PaginatedRecipes } from './server';
-
-/**
- * Server Action: Get all recipes
- */
-export async function getRecipesAction(userId?: string): Promise<Recipe[]> {
-  return getRecipes(userId);
-}
-
-/**
- * Server Action: Get a single recipe
- */
-export async function getRecipeAction(id: string): Promise<Recipe | null> {
-  return getRecipe(id);
-}
-
-/**
- * Server Action: Get recipes with pagination
- */
-export async function getRecipesPaginatedAction(
-  params: GetRecipesParams = {}
-): Promise<PaginatedRecipes> {
-  return getRecipesPaginated(params);
-}
 
 /**
  * Server Action: Create a new recipe

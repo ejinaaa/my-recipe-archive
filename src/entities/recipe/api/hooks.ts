@@ -12,13 +12,12 @@ import {
 } from '@tanstack/react-query';
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
-  getRecipesAction,
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,
   incrementViewCountAction,
 } from './actions';
-import { fetchRecipe, fetchRecipesPaginated } from './client';
+import { fetchRecipe, fetchRecipesPaginated, fetchRecipes } from './client';
 import { recipeKeys, type InfiniteRecipesParams } from './keys';
 
 /**
@@ -27,7 +26,7 @@ import { recipeKeys, type InfiniteRecipesParams } from './keys';
 export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
   return useQuery({
     queryKey: recipeKeys.list(userId),
-    queryFn: () => getRecipesAction(userId),
+    queryFn: () => fetchRecipes(userId),
   });
 }
 

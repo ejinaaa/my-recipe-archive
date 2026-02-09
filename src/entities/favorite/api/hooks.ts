@@ -9,30 +9,9 @@ import {
 } from '@tanstack/react-query';
 import type { Recipe } from '@/entities/recipe/model/types';
 import { recipeKeys } from '@/entities/recipe/api';
-import {
-  toggleFavoriteAction,
-  isFavoritedAction,
-  getFavoriteStatusesAction,
-} from './actions';
-
-/**
- * Query keys factory for favorites
- */
-export const favoriteKeys = {
-  all: ['favorites'] as const,
-  lists: () => [...favoriteKeys.all, 'list'] as const,
-  list: (userId: string) => [...favoriteKeys.lists(), userId] as const,
-  statuses: () => [...favoriteKeys.all, 'status'] as const,
-  status: (userId: string, recipeId: string) =>
-    [...favoriteKeys.statuses(), userId, recipeId] as const,
-  batchStatuses: (userId: string, recipeIds: string[]) =>
-    [
-      ...favoriteKeys.statuses(),
-      userId,
-      'batch',
-      recipeIds.sort().join(','),
-    ] as const,
-};
+import { toggleFavoriteAction } from './actions';
+import { fetchIsFavorited, fetchFavoriteStatuses } from './client';
+import { favoriteKeys } from './keys';
 
 /**
  * Hook to check if a recipe is favorited
@@ -43,7 +22,7 @@ export function useIsFavorited(
 ): UseQueryResult<boolean, Error> {
   return useQuery({
     queryKey: favoriteKeys.status(userId || '', recipeId),
-    queryFn: () => isFavoritedAction(userId!, recipeId),
+    queryFn: () => fetchIsFavorited(userId!, recipeId),
     enabled: !!userId && !!recipeId,
   });
 }
@@ -57,7 +36,7 @@ export function useFavoriteStatuses(
 ): UseQueryResult<Record<string, boolean>, Error> {
   return useQuery({
     queryKey: favoriteKeys.batchStatuses(userId || '', recipeIds),
-    queryFn: () => getFavoriteStatusesAction(userId!, recipeIds),
+    queryFn: () => fetchFavoriteStatuses(userId!, recipeIds),
     enabled: !!userId && recipeIds.length > 0,
   });
 }

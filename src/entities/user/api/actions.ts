@@ -2,37 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import type { Profile, ProfileInsert, ProfileUpdate } from '../model/types';
-import {
-  createProfile,
-  updateProfile,
-  deleteProfile,
-  getCurrentProfile,
-  getProfile,
-} from './server';
-
-/**
- * Server Action: Get profile by ID
- */
-export async function getProfileAction(id: string): Promise<Profile | null> {
-  try {
-    return await getProfile(id);
-  } catch (error) {
-    console.error('[Profile Actions] getProfileAction error:', error);
-    throw error;
-  }
-}
-
-/**
- * Server Action: Get current authenticated user's profile
- */
-export async function getCurrentProfileAction(): Promise<Profile | null> {
-  try {
-    return await getCurrentProfile();
-  } catch (error) {
-    console.error('[Profile Actions] getCurrentProfileAction error:', error);
-    throw error;
-  }
-}
+import { createProfile, updateProfile, deleteProfile } from './server';
 
 /**
  * Server Action: Create a new profile

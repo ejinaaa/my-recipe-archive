@@ -9,11 +9,11 @@ import {
   useSuspenseRecipe,
   useUpdateRecipe,
 } from '@/entities/recipe/api/hooks';
+import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import type {
   RecipeCategory,
   RecipeUpdate,
 } from '@/entities/recipe/model/types';
-import type { CategoryGroup } from '@/entities/category/model/types';
 import {
   RecipeCreateForm,
   convertRecipeToFormData,
@@ -23,13 +23,13 @@ import { BottomNavigation } from '@/widgets/bottom-navigation';
 
 interface RecipeEditPageProps {
   id: string;
-  categoryGroups: CategoryGroup[];
 }
 
-export function RecipeEditPage({ id, categoryGroups }: RecipeEditPageProps) {
+export function RecipeEditPage({ id }: RecipeEditPageProps) {
   const router = useRouter();
   const { data: profile } = useCurrentProfile();
   const { data: recipe } = useSuspenseRecipe(id);
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
   const updateRecipe = useUpdateRecipe();
 
   const handleBack = () => {

@@ -10,18 +10,21 @@ export {
   getFavoriteStatuses,
 } from './api/server';
 
-// Server Actions
+// Server Actions (mutation only)
 export {
   addFavoriteAction,
   removeFavoriteAction,
   toggleFavoriteAction,
-  isFavoritedAction,
-  getFavoriteStatusesAction,
 } from './api/actions';
+
+// Client fetch functions
+export { fetchIsFavorited, fetchFavoriteStatuses } from './api/client';
+
+// Query keys
+export { favoriteKeys } from './api/keys';
 
 // Hooks
 export {
-  favoriteKeys,
   useIsFavorited,
   useFavoriteStatuses,
   useToggleFavorite,

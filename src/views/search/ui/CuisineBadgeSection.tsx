@@ -5,15 +5,12 @@ import { useState } from 'react';
 import { Utensils } from 'lucide-react';
 import type { CategoryOption } from '@/entities/category/model/types';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
-import { Skeleton } from '@/shared/ui/skeleton';
 
 interface CuisineBadgeSectionProps {
   /** 장르별 카테고리 목록 */
   cuisines: CategoryOption[];
   /** 카테고리 선택 핸들러 */
   onSelect: (code: string) => void;
-  /** 로딩 상태 */
-  isLoading?: boolean;
 }
 
 function CuisineChip({
@@ -57,23 +54,7 @@ function CuisineChip({
 export function CuisineBadgeSection({
   cuisines,
   onSelect,
-  isLoading,
 }: CuisineBadgeSectionProps) {
-  if (isLoading) {
-    return (
-      <section className='px-4'>
-        <h2 className='text-heading-3 text-text-primary mb-3'>
-          {CATEGORY_TYPE_LABELS.cuisine}
-        </h2>
-        <div className='flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className='h-10 w-24 rounded-full shrink-0' />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className='px-4'>
       <h2 className='text-heading-3 text-text-primary mb-3'>

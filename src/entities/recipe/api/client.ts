@@ -1,17 +1,8 @@
+import { getBaseUrl } from '@/shared/api/getBaseUrl';
 import { RECIPE_PAGE_SIZE } from '../model/constants';
 import type { Recipe } from '../model/types';
 import type { PaginatedRecipes } from './server';
 import type { InfiniteRecipesParams } from './keys';
-
-/** 서버/클라이언트 환경에 따른 Base URL 반환 */
-const getBaseUrl = (): string => {
-  if (typeof window === 'undefined') {
-    // 서버: 절대 URL 필요
-    return process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-  }
-  // 클라이언트: 상대 URL
-  return '';
-};
 
 /** InfiniteRecipesParams를 URL 쿼리 스트링으로 변환 */
 export const buildRecipesSearchParams = (
@@ -56,7 +47,27 @@ export const buildRecipesSearchParams = (
   return searchParams;
 };
 
-/** API Route를 통해 레시피 목록 조회 */
+/** API Route를 통해 전체 레시피 목록 조회 */
+export const fetchRecipes = async (
+  userId?: string
+): Promise<Recipe[]> => {
+  const searchParams = new URLSearchParams();
+  searchParams.set('limit', '1000');
+  searchParams.set('offset', '0');
+  if (userId) searchParams.set('favoritesByUserId', userId);
+
+  const baseUrl = getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/recipes?${searchParams}`);
+
+  if (!res.ok) {
+    throw new Error('레시피 목록을 불러오는데 실패했습니다.');
+  }
+
+  const data: PaginatedRecipes = await res.json();
+  return data.recipes;
+};
+
+/** API Route를 통해 레시피 목록 조회 (페이지네이션) */
 export const fetchRecipesPaginated = async (
   params: InfiniteRecipesParams | undefined,
   offset: number

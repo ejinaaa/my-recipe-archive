@@ -7,12 +7,18 @@ export {
   deleteProfile,
 } from './server';
 
-// Server Actions
+// Server Actions (mutation only)
 export {
   createProfileAction,
   updateProfileAction,
   deleteProfileAction,
 } from './actions';
+
+// Client fetch functions
+export { fetchCurrentProfile, fetchProfile } from './client';
+
+// Query keys
+export { profileKeys } from './keys';
 
 // Client-side React Query hooks
 export {
@@ -21,7 +27,6 @@ export {
   useCreateProfile,
   useUpdateProfile,
   useDeleteProfile,
-  profileKeys,
 } from './hooks';
 
 // Re-export types for convenience

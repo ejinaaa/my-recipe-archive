@@ -9,11 +9,8 @@ export {
   incrementViewCount,
 } from './server';
 
-// Server Actions
+// Server Actions (mutation only)
 export {
-  getRecipesAction,
-  getRecipeAction,
-  getRecipesPaginatedAction,
   createRecipeAction,
   updateRecipeAction,
   deleteRecipeAction,

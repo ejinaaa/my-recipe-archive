@@ -9,22 +9,12 @@ import {
 } from '@tanstack/react-query';
 import type { Profile, ProfileInsert, ProfileUpdate } from '../model/types';
 import {
-  getProfileAction,
-  getCurrentProfileAction,
   createProfileAction,
   updateProfileAction,
   deleteProfileAction,
 } from './actions';
-
-/**
- * Query keys factory for profiles
- */
-export const profileKeys = {
-  all: ['profiles'] as const,
-  current: () => [...profileKeys.all, 'current'] as const,
-  details: () => [...profileKeys.all, 'detail'] as const,
-  detail: (id: string) => [...profileKeys.details(), id] as const,
-};
+import { fetchProfile, fetchCurrentProfile } from './client';
+import { profileKeys } from './keys';
 
 /**
  * Hook to fetch a profile by ID
@@ -32,7 +22,7 @@ export const profileKeys = {
 export function useProfile(id: string): UseQueryResult<Profile | null, Error> {
   return useQuery({
     queryKey: profileKeys.detail(id),
-    queryFn: () => getProfileAction(id),
+    queryFn: () => fetchProfile(id),
     enabled: !!id,
   });
 }
@@ -43,7 +33,7 @@ export function useProfile(id: string): UseQueryResult<Profile | null, Error> {
 export function useCurrentProfile(): UseQueryResult<Profile | null, Error> {
   return useQuery({
     queryKey: profileKeys.current(),
-    queryFn: getCurrentProfileAction,
+    queryFn: fetchCurrentProfile,
   });
 }
 

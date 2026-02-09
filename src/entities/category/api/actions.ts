@@ -5,59 +5,12 @@ import type {
   CategoryOption,
   CategoryOptionInsert,
   CategoryOptionUpdate,
-  CategoryType,
-  CategoryGroup,
 } from '../model/types';
 import {
-  getCategoryOptions,
-  getCategoryOption,
-  getCategoryGroups,
   createCategoryOption,
   updateCategoryOption,
   deleteCategoryOption,
 } from './server';
-
-/**
- * Server Action: Get category options
- * 선택적으로 타입으로 필터링 가능
- */
-export async function getCategoryOptionsAction(
-  type?: CategoryType
-): Promise<CategoryOption[]> {
-  try {
-    return await getCategoryOptions(type);
-  } catch (error) {
-    console.error('[Category Actions] getCategoryOptionsAction error:', error);
-    throw error;
-  }
-}
-
-/**
- * Server Action: Get single category option by ID
- */
-export async function getCategoryOptionAction(
-  id: number
-): Promise<CategoryOption | null> {
-  try {
-    return await getCategoryOption(id);
-  } catch (error) {
-    console.error('[Category Actions] getCategoryOptionAction error:', error);
-    throw error;
-  }
-}
-
-/**
- * Server Action: Get category groups
- * 카테고리를 타입별로 그룹화하여 조회
- */
-export async function getCategoryGroupsAction(): Promise<CategoryGroup[]> {
-  try {
-    return await getCategoryGroups();
-  } catch (error) {
-    console.error('[Category Actions] getCategoryGroupsAction error:', error);
-    throw error;
-  }
-}
 
 /**
  * Server Action: Create a new category option

@@ -2,12 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import type { Favorite } from '../model/types';
-import {
-  addFavorite,
-  removeFavorite,
-  isFavorited,
-  getFavoriteStatuses,
-} from './server';
+import { addFavorite, removeFavorite, isFavorited } from './server';
 
 /**
  * Server Action: 즐겨찾기 추가
@@ -66,22 +61,3 @@ export async function toggleFavoriteAction(
   }
 }
 
-/**
- * Server Action: 즐겨찾기 여부 확인
- */
-export async function isFavoritedAction(
-  userId: string,
-  recipeId: string
-): Promise<boolean> {
-  return isFavorited(userId, recipeId);
-}
-
-/**
- * Server Action: 여러 레시피의 즐겨찾기 여부 확인
- */
-export async function getFavoriteStatusesAction(
-  userId: string,
-  recipeIds: string[]
-): Promise<Record<string, boolean>> {
-  return getFavoriteStatuses(userId, recipeIds);
-}

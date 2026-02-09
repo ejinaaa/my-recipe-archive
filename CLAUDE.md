@@ -34,9 +34,12 @@ src/
 
 | 패턴 | 파일 위치 | 용도 |
 |------|----------|------|
-| Server API | `entities/{entity}/api/server.ts` | SSR, 초기 페이지 로드 |
-| Server Actions | `entities/{entity}/api/actions.ts` | mutation + 자동 revalidation |
-| React Query Hooks | `entities/{entity}/api/hooks.ts` | 클라이언트 필터링, 무한 스크롤 |
+| Server API | `entities/{entity}/api/server.ts` | SSR prefetch, Route API 내부 |
+| Route API | `app/api/**/route.ts` | 클라이언트 데이터 조회 |
+| Client Fetch | `entities/{entity}/api/client.ts` | Route API 호출 (hooks queryFn) |
+| Server Actions | `entities/{entity}/api/actions.ts` | mutation + revalidation (쓰기 전용) |
+| React Query Hooks | `entities/{entity}/api/hooks.ts` | 클라이언트 상태 관리 |
+| Query Keys | `entities/{entity}/api/keys.ts` | React Query 키 팩토리 |
 
 ## 디자인 시스템
 

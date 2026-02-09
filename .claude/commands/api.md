@@ -45,21 +45,63 @@ export type [Entity]Update = Partial<[Entity]Insert>;
 
 **server.ts** - 서버 컴포넌트용 CRUD:
 ```typescript
-import { createClient } from '@/shared/lib/supabase/server';
+import { createClient } from '@/shared/api/supabase/server';
 // get[Entity]s, get[Entity], create[Entity], update[Entity], delete[Entity]
 ```
 
-**actions.ts** - Server Actions + revalidation:
+**Route API** - 읽기 엔드포인트:
+```typescript
+// src/app/api/[entities]/route.ts
+import { get[Entity]s } from '@/entities/[entity]/api/server';
+
+export async function GET(request: NextRequest) {
+  const data = await get[Entity]s();
+  return Response.json(data);
+}
+
+// src/app/api/[entities]/[id]/route.ts
+export async function GET(request, { params }) {
+  const data = await get[Entity](id);
+  return Response.json(data);
+}
+```
+
+**client.ts** - Route API 호출 함수:
+```typescript
+import { getBaseUrl } from '@/shared/api/getBaseUrl';
+
+export const fetch[Entity]s = async (): Promise<[Entity][]> => {
+  const baseUrl = getBaseUrl();
+  const res = await fetch(`${baseUrl}/api/[entities]`);
+  if (!res.ok) throw new Error('...');
+  return res.json();
+};
+```
+
+**keys.ts** - Query keys factory:
+```typescript
+export const [entity]Keys = {
+  all: ['[entities]'] as const,
+  lists: () => [...[entity]Keys.all, 'list'] as const,
+  details: () => [...[entity]Keys.all, 'detail'] as const,
+  detail: (id: string) => [...[entity]Keys.details(), id] as const,
+};
+```
+
+**actions.ts** - Server Actions (mutation 전용):
 ```typescript
 'use server';
 import { revalidatePath } from 'next/cache';
-// [action]Action 함수들
+// create[Entity]Action, update[Entity]Action, delete[Entity]Action
+// 읽기 action은 생성하지 않음 (Route API 사용)
 ```
 
 **hooks.ts** - React Query hooks:
 ```typescript
 'use client';
-// queryKeys, use[Entity]s, use[Entity], usCreate[Entity], useUpdate[Entity], useDelete[Entity]
+import { fetchXxx } from './client';
+import { xxxKeys } from './keys';
+// queryFn에 client.ts 함수 사용
 // Optimistic Update 포함
 ```
 

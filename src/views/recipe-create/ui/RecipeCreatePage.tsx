@@ -6,24 +6,21 @@ import { Button } from '@/shared/ui/button';
 import { ROUTES } from '@/shared/config';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { useCreateRecipe } from '@/entities/recipe/api/hooks';
+import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import type {
   RecipeInsert,
   RecipeCategory,
 } from '@/entities/recipe/model/types';
-import type { CategoryGroup } from '@/entities/category/model/types';
 import {
   RecipeCreateForm,
   type RecipeFormData,
 } from '@/features/recipe-create';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 
-interface RecipeCreatePageProps {
-  categoryGroups: CategoryGroup[];
-}
-
-export function RecipeCreatePage({ categoryGroups }: RecipeCreatePageProps) {
+export function RecipeCreatePage() {
   const router = useRouter();
   const { data: profile } = useCurrentProfile();
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
   const createRecipe = useCreateRecipe();
 
   const handleBack = () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useCategoryGroups } from '@/entities/category/api/hooks';
+import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import type { CategoryType } from '@/entities/category/model/types';
 import { SearchBar } from '@/features/recipe-search';
@@ -12,12 +12,12 @@ import { CategoryCardSection } from './CategoryCardSection';
 
 export function SearchPage() {
   const router = useRouter();
-  const { data: categoryGroups, isLoading } = useCategoryGroups();
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
 
   // 카테고리 그룹 분리
-  const cuisineGroup = categoryGroups?.find(g => g.type === 'cuisine');
-  const situationGroup = categoryGroups?.find(g => g.type === 'situation');
-  const dishTypeGroup = categoryGroups?.find(g => g.type === 'dishType');
+  const cuisineGroup = categoryGroups.find(g => g.type === 'cuisine');
+  const situationGroup = categoryGroups.find(g => g.type === 'situation');
+  const dishTypeGroup = categoryGroups.find(g => g.type === 'dishType');
 
   const handleSearch = (query: string) => {
     router.push(`${ROUTES.SEARCH_RESULTS}?q=${encodeURIComponent(query)}`);
@@ -47,7 +47,6 @@ export function SearchPage() {
         <CuisineBadgeSection
           cuisines={cuisineGroup?.options ?? []}
           onSelect={handleCuisineSelect}
-          isLoading={isLoading}
         />
 
         {/* 상황별 섹션 */}
@@ -56,7 +55,6 @@ export function SearchPage() {
           type='situation'
           categories={situationGroup?.options ?? []}
           onSelect={handleCategorySelect}
-          isLoading={isLoading}
         />
 
         {/* 종류별 섹션 */}
@@ -65,7 +63,6 @@ export function SearchPage() {
           type='dishType'
           categories={dishTypeGroup?.options ?? []}
           onSelect={handleCategorySelect}
-          isLoading={isLoading}
         />
       </main>
 

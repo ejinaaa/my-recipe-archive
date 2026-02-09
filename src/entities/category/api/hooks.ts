@@ -2,6 +2,7 @@
 
 import {
   useQuery,
+  useSuspenseQuery,
   useMutation,
   useQueryClient,
   type UseQueryResult,
@@ -15,25 +16,16 @@ import type {
   CategoryGroup,
 } from '../model/types';
 import {
-  getCategoryOptionsAction,
-  getCategoryOptionAction,
-  getCategoryGroupsAction,
   createCategoryOptionAction,
   updateCategoryOptionAction,
   deleteCategoryOptionAction,
 } from './actions';
-
-/**
- * Query keys factory for category options
- */
-export const categoryKeys = {
-  all: ['categories'] as const,
-  lists: () => [...categoryKeys.all, 'list'] as const,
-  list: (type?: CategoryType) => [...categoryKeys.lists(), { type }] as const,
-  groups: () => [...categoryKeys.all, 'groups'] as const,
-  details: () => [...categoryKeys.all, 'detail'] as const,
-  detail: (id: number) => [...categoryKeys.details(), id] as const,
-};
+import {
+  fetchCategoryGroups,
+  fetchCategoryOptions,
+  fetchCategoryOption,
+} from './client';
+import { categoryKeys } from './keys';
 
 /**
  * Hook to fetch all category options, optionally filtered by type
@@ -43,7 +35,7 @@ export function useCategoryOptions(
 ): UseQueryResult<CategoryOption[], Error> {
   return useQuery({
     queryKey: categoryKeys.list(type),
-    queryFn: () => getCategoryOptionsAction(type),
+    queryFn: () => fetchCategoryOptions(type),
   });
 }
 
@@ -55,7 +47,7 @@ export function useCategoryOption(
 ): UseQueryResult<CategoryOption | null, Error> {
   return useQuery({
     queryKey: categoryKeys.detail(id),
-    queryFn: () => getCategoryOptionAction(id),
+    queryFn: () => fetchCategoryOption(id),
     enabled: !!id,
   });
 }
@@ -66,7 +58,18 @@ export function useCategoryOption(
 export function useCategoryGroups(): UseQueryResult<CategoryGroup[], Error> {
   return useQuery({
     queryKey: categoryKeys.groups(),
-    queryFn: getCategoryGroupsAction,
+    queryFn: fetchCategoryGroups,
+  });
+}
+
+/**
+ * Suspense를 지원하는 카테고리 그룹 조회 hook
+ * prefetch + HydrationBoundary와 함께 사용
+ */
+export function useSuspenseCategoryGroups() {
+  return useSuspenseQuery({
+    queryKey: categoryKeys.groups(),
+    queryFn: fetchCategoryGroups,
   });
 }
 
