@@ -55,6 +55,7 @@ export function useAddCookingLog(): UseMutationResult<
   return useMutation({
     mutationFn: ({ userId, recipeId }) =>
       addCookingLogAction(userId, recipeId),
+    meta: { suppressErrorToast: true },
     onMutate: async ({ userId, recipeId }) => {
       // 관련 쿼리 취소
       await queryClient.cancelQueries({

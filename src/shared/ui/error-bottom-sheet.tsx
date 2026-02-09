@@ -35,8 +35,12 @@ export function ErrorBottomSheet({
       <DrawerContent>
         <DrawerHeader className='flex flex-col items-center'>
           <AlertCircle className='size-10 text-text-secondary mb-2' />
-          <DrawerTitle>{title}</DrawerTitle>
-          <DrawerDescription>{description}</DrawerDescription>
+          <DrawerTitle className='text-heading-3 text-text-primary'>
+            {title}
+          </DrawerTitle>
+          <DrawerDescription className='text-body-2 text-text-secondary'>
+            {description}
+          </DrawerDescription>
         </DrawerHeader>
         <DrawerFooter>
           {onRetry && (

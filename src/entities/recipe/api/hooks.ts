@@ -138,6 +138,7 @@ export function useCreateRecipe(): UseMutationResult<
 
   return useMutation({
     mutationFn: createRecipeAction,
+    meta: { handleErrorManually: true },
     onMutate: async newRecipe => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: recipeKeys.lists() });
@@ -195,6 +196,7 @@ export function useUpdateRecipe(): UseMutationResult<
 
   return useMutation({
     mutationFn: ({ id, data }) => updateRecipeAction(id, data),
+    meta: { handleErrorManually: true },
     onMutate: async ({ id, data }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: recipeKeys.detail(id) });
@@ -233,6 +235,7 @@ export function useDeleteRecipe(): UseMutationResult<void, Error, string> {
 
   return useMutation({
     mutationFn: deleteRecipeAction,
+    meta: { handleErrorManually: true },
     onMutate: async id => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: recipeKeys.lists() });
@@ -275,6 +278,7 @@ export function useIncrementViewCount(): UseMutationResult<
   return useMutation({
     mutationFn: ({ recipeId, userId }) =>
       incrementViewCountAction(recipeId, userId),
+    meta: { suppressErrorToast: true },
     onSuccess: (_, { recipeId }) => {
       // Optimistically update view count
       queryClient.setQueryData<Recipe>(recipeKeys.detail(recipeId), old => {
