@@ -8,6 +8,7 @@ import { mockRecipes } from '@/entities/recipe/model/mock';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { profileKeys } from '@/entities/user/api/keys';
 import { mockProfile } from '@/entities/user/model/mock';
+import { ROUTES } from '@/shared/config';
 
 function createSuccessQueryClient() {
   const queryClient = new QueryClient({
@@ -71,7 +72,7 @@ const meta = {
   args: {
     title: '자주 만드는 요리들이에요',
     sortBy: 'most_cooked',
-    moreHref: '/search/results?sort=most_cooked',
+    moreHref: `${ROUTES.SEARCH_RESULTS}?sort=most_cooked`,
     onRecipeClick: () => {},
   },
 } satisfies Meta<typeof RecipeCarousel>;
@@ -120,7 +121,7 @@ export const FewRecipes: Story = {
   args: {
     title: '새로 추가한 요리에요',
     sortBy: 'latest',
-    moreHref: '/search/results?sort=latest',
+    moreHref: `${ROUTES.SEARCH_RESULTS}?sort=latest`,
   },
   decorators: [
     Story => {

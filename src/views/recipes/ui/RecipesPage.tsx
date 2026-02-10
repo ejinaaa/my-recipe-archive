@@ -82,7 +82,7 @@ export function RecipesPage() {
             <RecipeCarousel
               title='자주 만드는 요리들이에요'
               sortBy='most_cooked'
-              moreHref='/search/results?sort=most_cooked'
+              moreHref={`${ROUTES.SEARCH_RESULTS}?sort=most_cooked`}
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
             />
@@ -102,7 +102,7 @@ export function RecipesPage() {
             <RecipeCarousel
               title='이런 요리도 만들어봐요'
               sortBy='least_cooked'
-              moreHref='/search/results?sort=least_cooked'
+              moreHref={`${ROUTES.SEARCH_RESULTS}?sort=least_cooked`}
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
             />
@@ -115,7 +115,7 @@ export function RecipesPage() {
             <RecipeCarousel
               title='새로 추가한 요리에요'
               sortBy='latest'
-              moreHref='/search/results?sort=latest'
+              moreHref={`${ROUTES.SEARCH_RESULTS}?sort=latest`}
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
             />

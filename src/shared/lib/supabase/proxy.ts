@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { ROUTES } from '@/shared/config';
 import { hasEnvVars } from '@/shared/lib/utils';
 
 export async function updateSession(request: NextRequest) {
@@ -48,9 +49,9 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   if (
-    request.nextUrl.pathname !== '/' &&
+    request.nextUrl.pathname !== ROUTES.HOME &&
     !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
+    !request.nextUrl.pathname.startsWith(ROUTES.AUTH.LOGIN) &&
     !request.nextUrl.pathname.startsWith('/auth')
   ) {
     // no user, potentially respond by redirecting the user to the login page

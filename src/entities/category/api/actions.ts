@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { ROUTES } from '@/shared/config';
 import type {
   CategoryOption,
   CategoryOptionInsert,
@@ -23,7 +24,7 @@ export async function createCategoryOptionAction(
     const option = await createCategoryOption(data);
 
     // Revalidate pages that use categories
-    revalidatePath('/recipes');
+    revalidatePath(ROUTES.RECIPES.LIST);
     revalidatePath('/categories');
 
     return option;
@@ -48,7 +49,7 @@ export async function updateCategoryOptionAction(
     const option = await updateCategoryOption(id, data);
 
     // Revalidate pages that use categories
-    revalidatePath('/recipes');
+    revalidatePath(ROUTES.RECIPES.LIST);
     revalidatePath('/categories');
 
     return option;
@@ -70,7 +71,7 @@ export async function deleteCategoryOptionAction(id: number): Promise<void> {
     await deleteCategoryOption(id);
 
     // Revalidate pages that use categories
-    revalidatePath('/recipes');
+    revalidatePath(ROUTES.RECIPES.LIST);
     revalidatePath('/categories');
   } catch (error) {
     console.error(

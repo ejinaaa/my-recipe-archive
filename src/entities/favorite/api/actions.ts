@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { ROUTES } from '@/shared/config';
 import type { Favorite } from '../model/types';
 import { addFavorite, removeFavorite, isFavorited } from './server';
 
@@ -13,7 +14,7 @@ export async function addFavoriteAction(
 ): Promise<Favorite> {
   try {
     const favorite = await addFavorite(userId, recipeId);
-    revalidatePath(`/recipes/${recipeId}`);
+    revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
     return favorite;
   } catch (error) {
     console.error('[Favorite Actions] addFavoriteAction error:', error);
@@ -30,7 +31,7 @@ export async function removeFavoriteAction(
 ): Promise<void> {
   try {
     await removeFavorite(userId, recipeId);
-    revalidatePath(`/recipes/${recipeId}`);
+    revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
   } catch (error) {
     console.error('[Favorite Actions] removeFavoriteAction error:', error);
     throw error;
@@ -53,7 +54,7 @@ export async function toggleFavoriteAction(
       await addFavorite(userId, recipeId);
     }
 
-    revalidatePath(`/recipes/${recipeId}`);
+    revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
     return !favorited;
   } catch (error) {
     console.error('[Favorite Actions] toggleFavoriteAction error:', error);

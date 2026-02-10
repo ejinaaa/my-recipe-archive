@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { ROUTES } from '@/shared/config';
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
   createRecipe,
@@ -18,8 +19,8 @@ export async function createRecipeAction(data: RecipeInsert): Promise<Recipe> {
     const recipe = await createRecipe(data);
 
     // Revalidate related pages
-    revalidatePath('/recipes');
-    revalidatePath(`/recipes/${recipe.id}`);
+    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.RECIPES.DETAIL(recipe.id));
 
     return recipe;
   } catch (error) {
@@ -40,8 +41,8 @@ export async function updateRecipeAction(
     const recipe = await updateRecipe(id, data);
 
     // Revalidate related pages
-    revalidatePath('/recipes');
-    revalidatePath(`/recipes/${id}`);
+    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.RECIPES.DETAIL(id));
 
     return recipe;
   } catch (error) {
@@ -59,8 +60,8 @@ export async function deleteRecipeAction(id: string): Promise<void> {
     await deleteRecipe(id);
 
     // Revalidate related pages
-    revalidatePath('/recipes');
-    revalidatePath(`/recipes/${id}`);
+    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.RECIPES.DETAIL(id));
   } catch (error) {
     console.error('[Recipe Actions] deleteRecipeAction error:', error);
     throw error;

@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { ROUTES } from '@/shared/config';
 import type { CookingLog } from '../model/types';
 import { addCookingLog, deleteCookingLog } from './server';
 
@@ -13,7 +14,7 @@ export async function addCookingLogAction(
 ): Promise<CookingLog> {
   try {
     const log = await addCookingLog(userId, recipeId);
-    revalidatePath(`/recipes/${recipeId}`);
+    revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
     return log;
   } catch (error) {
     console.error('[CookingLog Actions] addCookingLogAction error:', error);
@@ -30,7 +31,7 @@ export async function deleteCookingLogAction(
 ): Promise<void> {
   try {
     await deleteCookingLog(logId);
-    revalidatePath(`/recipes/${recipeId}`);
+    revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
   } catch (error) {
     console.error('[CookingLog Actions] deleteCookingLogAction error:', error);
     throw error;

@@ -1,3 +1,5 @@
+import { ROUTES } from '@/shared/config';
+
 /**
  * API 에러 클래스 및 응답 핸들링 유틸리티
  */
@@ -23,7 +25,7 @@ export const handleApiResponse = async <T>(
   fallbackMessage: string,
 ): Promise<T> => {
   if (res.status === 401) {
-    if (typeof window !== 'undefined') window.location.href = '/login';
+    if (typeof window !== 'undefined') window.location.href = ROUTES.AUTH.LOGIN;
     throw new ApiError('로그인 후 다시 시도해주세요', 401);
   }
 

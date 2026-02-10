@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ChevronRight, Home, ExternalLink } from 'lucide-react';
+import { ROUTES } from '@/shared/config';
 import { LinkButton } from './link-button';
 
 const meta = {
@@ -49,7 +50,7 @@ export const Default: Story = {
     colorScheme: 'primary',
     size: 'md',
     transparent: false,
-    href: '/recipes',
+    href: ROUTES.RECIPES.LIST,
     children: 'Go to Recipes',
   },
 };
@@ -59,7 +60,7 @@ export const WithIconLeft: Story = {
     variant: 'solid',
     colorScheme: 'primary',
     size: 'md',
-    href: '/',
+    href: ROUTES.HOME,
     children: (
       <>
         <Home />
@@ -74,7 +75,7 @@ export const WithIconRight: Story = {
     variant: 'outline',
     colorScheme: 'primary',
     size: 'md',
-    href: '/recipes',
+    href: ROUTES.RECIPES.LIST,
     children: (
       <>
         View More

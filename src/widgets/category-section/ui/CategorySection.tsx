@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
+import { ROUTES } from '@/shared/config';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { Section, SectionHeader } from '@/shared/ui/section';
 
@@ -20,7 +21,7 @@ export function CategorySection() {
   if (categories.length === 0) return null;
 
   const handleCategoryClick = (code: string) => {
-    router.push(`/search/results?situation=${code}`);
+    router.push(`${ROUTES.SEARCH_RESULTS}?situation=${code}`);
   };
 
   return (
