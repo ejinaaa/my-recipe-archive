@@ -6,6 +6,7 @@ import {
   type RecipeSortBy,
 } from '@/entities/recipe/api/server';
 import { RECIPE_PAGE_SIZE } from '@/entities/recipe/model/constants';
+import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -50,10 +51,6 @@ export async function GET(request: NextRequest) {
 
     return Response.json(data);
   } catch (error) {
-    console.error('[API] GET /api/recipes error:', error);
-    return Response.json(
-      { error: '레시피 목록을 불러오는데 실패했습니다.' },
-      { status: 500 }
-    );
+    return handleRouteError(error, 'GET /api/recipes');
   }
 }

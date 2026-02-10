@@ -29,7 +29,7 @@ export async function getCategoryOptions(
 
     if (error) {
       console.error('[Category API] Failed to fetch category options:', error);
-      throw new Error('카테고리 목록을 불러오는데 실패했습니다.');
+      throw new Error('카테고리 정보를 가져오지 못했어요');
     }
 
     const { toCategoryOption } = await import('../model/types');
@@ -60,7 +60,7 @@ export async function getCategoryOption(
         return null;
       }
       console.error('[Category API] Failed to fetch category option:', error);
-      throw new Error('카테고리를 불러오는데 실패했습니다.');
+      throw new Error('카테고리 정보를 가져오지 못했어요');
     }
 
     const { toCategoryOption } = await import('../model/types');
@@ -102,7 +102,7 @@ export async function createCategoryOption(
 
     if (error) {
       console.error('[Category API] Failed to create category option:', error);
-      throw new Error('카테고리 생성에 실패했습니다.');
+      throw new Error('카테고리를 추가하지 못했어요');
     }
 
     const { toCategoryOption } = await import('../model/types');
@@ -132,7 +132,7 @@ export async function updateCategoryOption(
 
     if (error) {
       console.error('[Category API] Failed to update category option:', error);
-      throw new Error('카테고리 수정에 실패했습니다.');
+      throw new Error('카테고리를 수정하지 못했어요');
     }
 
     const { toCategoryOption } = await import('../model/types');
@@ -157,7 +157,7 @@ export async function deleteCategoryOption(id: number): Promise<void> {
 
     if (error) {
       console.error('[Category API] Failed to delete category option:', error);
-      throw new Error('카테고리 삭제에 실패했습니다.');
+      throw new Error('카테고리를 삭제하지 못했어요');
     }
   } catch (error) {
     console.error('[Category API] deleteCategoryOption error:', error);

@@ -24,7 +24,7 @@ export async function getProfile(id: string): Promise<Profile | null> {
         return null;
       }
       console.error('[Profile API] Failed to fetch profile:', error);
-      throw new Error('프로필을 불러오는데 실패했습니다.');
+      throw new Error('프로필 정보를 가져오지 못했어요');
     }
 
     const { toProfile } = await import('../model/types');
@@ -76,7 +76,7 @@ export async function createProfile(data: ProfileInsert): Promise<Profile> {
 
     if (error) {
       console.error('[Profile API] Failed to create profile:', error);
-      throw new Error('프로필 생성에 실패했습니다.');
+      throw new Error('프로필을 만들지 못했어요');
     }
 
     const { toProfile } = await import('../model/types');
@@ -106,7 +106,7 @@ export async function updateProfile(
 
     if (error) {
       console.error('[Profile API] Failed to update profile:', error);
-      throw new Error('프로필 수정에 실패했습니다.');
+      throw new Error('프로필을 수정하지 못했어요');
     }
 
     const { toProfile } = await import('../model/types');
@@ -128,7 +128,7 @@ export async function deleteProfile(id: string): Promise<void> {
 
     if (error) {
       console.error('[Profile API] Failed to delete profile:', error);
-      throw new Error('프로필 삭제에 실패했습니다.');
+      throw new Error('프로필을 삭제하지 못했어요');
     }
   } catch (error) {
     console.error('[Profile API] deleteProfile error:', error);

@@ -1,4 +1,5 @@
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
+import { handleApiResponse } from '@/shared/api/fetchWithError';
 
 /** API Route를 통해 즐겨찾기 상태 조회 */
 export const fetchIsFavorited = async (
@@ -9,11 +10,7 @@ export const fetchIsFavorited = async (
   const searchParams = new URLSearchParams({ userId, recipeId });
   const res = await fetch(`${baseUrl}/api/favorites/status?${searchParams}`);
 
-  if (!res.ok) {
-    throw new Error('즐겨찾기 상태를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<boolean>(res, '즐겨찾기 정보를 가져오지 못했어요');
 };
 
 /** API Route를 통해 다건 즐겨찾기 상태 조회 */
@@ -28,9 +25,5 @@ export const fetchFavoriteStatuses = async (
   });
   const res = await fetch(`${baseUrl}/api/favorites/statuses?${searchParams}`);
 
-  if (!res.ok) {
-    throw new Error('즐겨찾기 상태를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<Record<string, boolean>>(res, '즐겨찾기 정보를 가져오지 못했어요');
 };

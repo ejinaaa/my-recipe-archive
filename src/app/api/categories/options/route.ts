@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server';
 import { getCategoryOptions } from '@/entities/category/api/server';
 import type { CategoryType } from '@/entities/category/model/types';
+import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -10,10 +11,6 @@ export async function GET(request: NextRequest) {
     const data = await getCategoryOptions(type);
     return Response.json(data);
   } catch (error) {
-    console.error('[API] GET /api/categories/options error:', error);
-    return Response.json(
-      { error: '카테고리 목록을 불러오는데 실패했습니다.' },
-      { status: 500 }
-    );
+    return handleRouteError(error, 'GET /api/categories/options');
   }
 }

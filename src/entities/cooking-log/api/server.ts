@@ -18,7 +18,7 @@ export async function addCookingLog(
 
   if (error) {
     console.error('[CookingLog API] Failed to add cooking log:', error);
-    throw new Error('요리 기록 추가에 실패했습니다.');
+    throw new Error('요리 기록을 추가하지 못했어요');
   }
 
   const { toCookingLog } = await import('../model/types');
@@ -38,7 +38,7 @@ export async function deleteCookingLog(logId: string): Promise<void> {
 
   if (error) {
     console.error('[CookingLog API] Failed to delete cooking log:', error);
-    throw new Error('요리 기록 삭제에 실패했습니다.');
+    throw new Error('요리 기록을 삭제하지 못했어요');
   }
 }
 

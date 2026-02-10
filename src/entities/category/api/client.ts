@@ -1,4 +1,5 @@
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
+import { handleApiResponse } from '@/shared/api/fetchWithError';
 import type {
   CategoryOption,
   CategoryGroup,
@@ -18,11 +19,7 @@ export const fetchCategoryOptions = async (
     : `${baseUrl}/api/categories/options`;
   const res = await fetch(url);
 
-  if (!res.ok) {
-    throw new Error('카테고리 목록을 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<CategoryOption[]>(res, '카테고리 정보를 가져오지 못했어요');
 };
 
 /** API Route를 통해 단일 카테고리 옵션 조회 */
@@ -36,11 +33,7 @@ export const fetchCategoryOption = async (
     return null;
   }
 
-  if (!res.ok) {
-    throw new Error('카테고리를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<CategoryOption>(res, '카테고리 정보를 가져오지 못했어요');
 };
 
 /** API Route를 통해 카테고리 그룹 조회 */
@@ -48,9 +41,5 @@ export const fetchCategoryGroups = async (): Promise<CategoryGroup[]> => {
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/categories/groups`);
 
-  if (!res.ok) {
-    throw new Error('카테고리 그룹을 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<CategoryGroup[]>(res, '카테고리 그룹을 가져오지 못했어요');
 };

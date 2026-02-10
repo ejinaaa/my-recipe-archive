@@ -1,4 +1,5 @@
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
+import { handleApiResponse } from '@/shared/api/fetchWithError';
 import type { RecipeCookCount } from '../model/types';
 
 /**
@@ -12,11 +13,7 @@ export const fetchCookCount = async (
   const searchParams = new URLSearchParams({ userId, recipeId });
   const res = await fetch(`${baseUrl}/api/cooking-logs/count?${searchParams}`);
 
-  if (!res.ok) {
-    throw new Error('요리 횟수를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<number>(res, '요리 횟수를 가져오지 못했어요');
 };
 
 /**
@@ -31,9 +28,5 @@ export const fetchUserCookCounts = async (
     `${baseUrl}/api/cooking-logs/user-counts?${searchParams}`
   );
 
-  if (!res.ok) {
-    throw new Error('요리 횟수를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<RecipeCookCount[]>(res, '요리 횟수를 가져오지 못했어요');
 };

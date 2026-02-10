@@ -85,7 +85,7 @@ export async function getRecipesPaginated(
 
       if (favError) {
         console.error('[Recipe API] Failed to fetch favorites:', favError);
-        throw new Error('즐겨찾기 목록을 불러오는데 실패했습니다.');
+        throw new Error('즐겨찾기 목록을 가져오지 못했어요');
       }
 
       favoriteRecipeIds = favorites?.map(f => f.recipe_id) || [];
@@ -200,7 +200,7 @@ export async function getRecipesPaginated(
 
     if (error) {
       console.error('[Recipe API] Failed to fetch recipes:', error);
-      throw new Error('레시피 목록을 불러오는데 실패했습니다.');
+      throw new Error('레시피 목록을 가져오지 못했어요');
     }
 
     const { toRecipe } = await import('../model/types');
@@ -245,7 +245,7 @@ export async function getRecipe(id: string): Promise<Recipe | null> {
         return null;
       }
       console.error('[Recipe API] Failed to fetch recipe:', error);
-      throw new Error('레시피를 불러오는데 실패했습니다.');
+      throw new Error('레시피 정보를 가져오지 못했어요');
     }
 
     const { toRecipe } = await import('../model/types');
@@ -274,7 +274,7 @@ export async function createRecipe(data: RecipeInsert): Promise<Recipe> {
 
     if (error) {
       console.error('[Recipe API] Failed to create recipe:', error);
-      throw new Error('레시피 생성에 실패했습니다.');
+      throw new Error('레시피를 저장하지 못했어요');
     }
 
     return toRecipe(newRecipe as RecipeDB);
@@ -306,7 +306,7 @@ export async function updateRecipe(
 
     if (error) {
       console.error('[Recipe API] Failed to update recipe:', error);
-      throw new Error('레시피 수정에 실패했습니다.');
+      throw new Error('레시피를 수정하지 못했어요');
     }
 
     return toRecipe(updatedRecipe as RecipeDB);
@@ -327,7 +327,7 @@ export async function deleteRecipe(id: string): Promise<void> {
 
     if (error) {
       console.error('[Recipe API] Failed to delete recipe:', error);
-      throw new Error('레시피 삭제에 실패했습니다.');
+      throw new Error('레시피를 삭제하지 못했어요');
     }
   } catch (error) {
     console.error('[Recipe API] deleteRecipe error:', error);

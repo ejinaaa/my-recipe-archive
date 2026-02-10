@@ -20,10 +20,10 @@ export async function addFavorite(
     if (error) {
       // 이미 존재하는 경우 (unique constraint)
       if (error.code === '23505') {
-        throw new Error('이미 즐겨찾기에 추가된 레시피입니다.');
+        throw new Error('이미 추가된 항목이에요');
       }
       console.error('[Favorite API] Failed to add favorite:', error);
-      throw new Error('즐겨찾기 추가에 실패했습니다.');
+      throw new Error('즐겨찾기에 추가하지 못했어요');
     }
 
     const { toFavorite } = await import('../model/types');
@@ -52,7 +52,7 @@ export async function removeFavorite(
 
     if (error) {
       console.error('[Favorite API] Failed to remove favorite:', error);
-      throw new Error('즐겨찾기 삭제에 실패했습니다.');
+      throw new Error('즐겨찾기에서 삭제하지 못했어요');
     }
   } catch (error) {
     console.error('[Favorite API] removeFavorite error:', error);

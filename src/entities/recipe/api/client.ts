@@ -1,4 +1,5 @@
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
+import { handleApiResponse } from '@/shared/api/fetchWithError';
 import { RECIPE_PAGE_SIZE } from '../model/constants';
 import type { Recipe } from '../model/types';
 import type { PaginatedRecipes, RecipeSortBy } from './server';
@@ -58,12 +59,7 @@ export const fetchRecipes = async (
 
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/recipes?${searchParams}`);
-
-  if (!res.ok) {
-    throw new Error('레시피 목록을 불러오는데 실패했습니다.');
-  }
-
-  const data: PaginatedRecipes = await res.json();
+  const data = await handleApiResponse<PaginatedRecipes>(res, '레시피 목록을 가져오지 못했어요');
   return data.recipes;
 };
 
@@ -75,12 +71,7 @@ export const fetchRecipesPaginated = async (
   const searchParams = buildRecipesSearchParams(params, offset);
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/recipes?${searchParams.toString()}`);
-
-  if (!res.ok) {
-    throw new Error('레시피 목록을 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<PaginatedRecipes>(res, '레시피 목록을 가져오지 못했어요');
 };
 
 /** 홈 섹션용 레시피 조회 (상위 N개) */
@@ -95,12 +86,7 @@ export const fetchRecipesSection = async (
 
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/recipes?${searchParams}`);
-
-  if (!res.ok) {
-    throw new Error('레시피를 불러오는데 실패했습니다.');
-  }
-
-  const data: PaginatedRecipes = await res.json();
+  const data = await handleApiResponse<PaginatedRecipes>(res, '레시피 정보를 가져오지 못했어요');
   return data.recipes;
 };
 
@@ -108,12 +94,7 @@ export const fetchRecipesSection = async (
 export const fetchRandomRecipe = async (): Promise<Recipe | null> => {
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/recipes/random`);
-
-  if (!res.ok) {
-    throw new Error('추천 레시피를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<Recipe | null>(res, '추천 레시피를 가져오지 못했어요');
 };
 
 /** API Route를 통해 단일 레시피 조회 */
@@ -125,9 +106,5 @@ export const fetchRecipe = async (id: string): Promise<Recipe | null> => {
     return null;
   }
 
-  if (!res.ok) {
-    throw new Error('레시피를 불러오는데 실패했습니다.');
-  }
-
-  return res.json();
+  return handleApiResponse<Recipe>(res, '레시피 정보를 가져오지 못했어요');
 };

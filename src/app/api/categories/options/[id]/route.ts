@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getCategoryOption } from '@/entities/category/api/server';
+import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(
   request: NextRequest,
@@ -10,7 +11,7 @@ export async function GET(
 
   if (isNaN(numericId)) {
     return Response.json(
-      { error: '유효하지 않은 ID입니다.' },
+      { error: '유효하지 않은 요청이에요' },
       { status: 400 }
     );
   }
@@ -20,17 +21,13 @@ export async function GET(
 
     if (!data) {
       return Response.json(
-        { error: '카테고리를 찾을 수 없습니다.' },
+        { error: '카테고리를 찾을 수 없어요' },
         { status: 404 }
       );
     }
 
     return Response.json(data);
   } catch (error) {
-    console.error(`[API] GET /api/categories/options/${id} error:`, error);
-    return Response.json(
-      { error: '카테고리를 불러오는데 실패했습니다.' },
-      { status: 500 }
-    );
+    return handleRouteError(error, `GET /api/categories/options/${id}`);
   }
 }

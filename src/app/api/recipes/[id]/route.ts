@@ -1,4 +1,5 @@
 import { getRecipe } from '@/entities/recipe/api/server';
+import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(
   request: Request,
@@ -11,17 +12,13 @@ export async function GET(
 
     if (!recipe) {
       return Response.json(
-        { error: '레시피를 찾을 수 없습니다.' },
+        { error: '레시피를 찾을 수 없어요' },
         { status: 404 }
       );
     }
 
     return Response.json(recipe);
   } catch (error) {
-    console.error('[API] GET /api/recipes/[id] error:', error);
-    return Response.json(
-      { error: '레시피를 불러오는데 실패했습니다.' },
-      { status: 500 }
-    );
+    return handleRouteError(error, 'GET /api/recipes/[id]');
   }
 }
