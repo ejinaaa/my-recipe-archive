@@ -24,6 +24,7 @@ import {
 } from '@/features/recipe-create';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
@@ -130,6 +131,11 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
   const { data: profile } = useCurrentProfile();
   const updateRecipe = useUpdateRecipe();
   const deleteRecipe = useDeleteRecipe();
+  const [mutationError, setMutationError] = useState<{
+    retry: () => void;
+    title: string;
+    description: string;
+  } | null>(null);
 
   const handleBack = () => {
     router.back();
@@ -140,7 +146,11 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       await deleteRecipe.mutateAsync(id);
       router.back();
     } catch {
-      // 에러는 useDeleteRecipe의 onError에서 처리
+      setMutationError({
+        retry: () => handleDelete(),
+        title: '레시피를 삭제하지 못했어요',
+        description: '잠시 후 다시 시도해주세요',
+      });
     }
   };
 
@@ -170,7 +180,11 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       await updateRecipe.mutateAsync({ id, data: updateData });
       router.replace(ROUTES.RECIPES.DETAIL(id));
     } catch {
-      // 에러는 useUpdateRecipe의 onError에서 처리
+      setMutationError({
+        retry: () => handleSubmit(formData),
+        title: '레시피를 수정하지 못했어요',
+        description: '수정한 내용은 유지돼요. 다시 시도해주세요',
+      });
     }
   };
 
@@ -218,6 +232,19 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       </ErrorBoundary>
 
       <BottomNavigation activeTab='register' />
+
+      {/* Mutation 에러 Bottom Sheet */}
+      <ErrorBottomSheet
+        open={!!mutationError}
+        onOpenChange={open => !open && setMutationError(null)}
+        onRetry={() => {
+          mutationError?.retry();
+          setMutationError(null);
+        }}
+        onCancel={() => setMutationError(null)}
+        title={mutationError?.title}
+        description={mutationError?.description}
+      />
     </div>
   );
 }

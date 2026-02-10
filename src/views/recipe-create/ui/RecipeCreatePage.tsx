@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ROUTES } from '@/shared/config';
@@ -17,6 +17,7 @@ import {
 } from '@/features/recipe-create';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 
@@ -69,6 +70,9 @@ export function RecipeCreatePage() {
   const router = useRouter();
   const { data: profile } = useCurrentProfile();
   const createRecipe = useCreateRecipe();
+  const [mutationError, setMutationError] = useState<{
+    retry: () => void;
+  } | null>(null);
 
   const handleSubmit = async (formData: RecipeFormData) => {
     if (!profile?.id) {
@@ -97,7 +101,7 @@ export function RecipeCreatePage() {
       const newRecipe = await createRecipe.mutateAsync(insertData);
       router.replace(ROUTES.RECIPES.DETAIL(newRecipe.id));
     } catch {
-      // 에러는 useCreateRecipe의 onError에서 처리
+      setMutationError({ retry: () => handleSubmit(formData) });
     }
   };
 
@@ -130,6 +134,19 @@ export function RecipeCreatePage() {
       </ErrorBoundary>
 
       <BottomNavigation activeTab='register' />
+
+      {/* Mutation 에러 Bottom Sheet */}
+      <ErrorBottomSheet
+        open={!!mutationError}
+        onOpenChange={open => !open && setMutationError(null)}
+        onRetry={() => {
+          mutationError?.retry();
+          setMutationError(null);
+        }}
+        onCancel={() => setMutationError(null)}
+        title='레시피를 저장하지 못했어요'
+        description='작성한 내용은 유지돼요. 다시 시도해주세요'
+      />
     </div>
   );
 }

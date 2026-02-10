@@ -7,6 +7,7 @@ import { recipeKeys } from '@/entities/recipe/api/keys';
 import { categoryKeys } from '@/entities/category/api/keys';
 import { profileKeys } from '@/entities/user/api/keys';
 import { Skeleton } from '@/shared/ui/skeleton';
+import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
 import { RecipeEditPage } from './RecipeEditPage';
 
 const MOCK_RECIPE_ID = '1';
@@ -139,6 +140,64 @@ export const Error: Story = {
       return (
         <QueryClientProvider client={queryClient}>
           <Story />
+        </QueryClientProvider>
+      );
+    },
+  ],
+};
+
+/**
+ * Mutation 에러: 레시피 수정 실패 시 ErrorBottomSheet 표시
+ */
+export const UpdateMutationError: Story = {
+  args: {
+    id: MOCK_RECIPE_ID,
+  },
+  decorators: [
+    Story => {
+      const queryClient = createSuccessQueryClient();
+      return (
+        <QueryClientProvider client={queryClient}>
+          <Suspense fallback={<FormSkeleton />}>
+            <Story />
+          </Suspense>
+          <ErrorBottomSheet
+            open
+            onOpenChange={() => {}}
+            onRetry={() => {}}
+            onCancel={() => {}}
+            title='레시피를 수정하지 못했어요'
+            description='수정한 내용은 유지돼요. 다시 시도해주세요'
+          />
+        </QueryClientProvider>
+      );
+    },
+  ],
+};
+
+/**
+ * Mutation 에러: 레시피 삭제 실패 시 ErrorBottomSheet 표시
+ */
+export const DeleteMutationError: Story = {
+  args: {
+    id: MOCK_RECIPE_ID,
+  },
+  decorators: [
+    Story => {
+      const queryClient = createSuccessQueryClient();
+      return (
+        <QueryClientProvider client={queryClient}>
+          <Suspense fallback={<FormSkeleton />}>
+            <Story />
+          </Suspense>
+          <ErrorBottomSheet
+            open
+            onOpenChange={() => {}}
+            onRetry={() => {}}
+            onCancel={() => {}}
+            title='레시피를 삭제하지 못했어요'
+            description='잠시 후 다시 시도해주세요'
+          />
         </QueryClientProvider>
       );
     },
