@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Suspense } from 'react';
+import { http, delay, HttpResponse } from 'msw';
 import { NuqsTestingAdapter } from 'nuqs/adapters/testing';
 import { mockRecipes } from '@/entities/recipe/model/mock';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { profileKeys } from '@/entities/user/api/keys';
+import { mockProfile } from '@/entities/user/model/mock';
 import { RecipeListSkeleton } from '@/widgets/recipe-list';
 import { FavoritesPage } from './FavoritesPage';
 
@@ -25,10 +27,7 @@ function createSuccessQueryClient() {
   });
 
   // useCurrentProfile (FavoritesPage + RecipeList 내부)
-  queryClient.setQueryData(profileKeys.current(), {
-    id: MOCK_USER_ID,
-    nickname: '요리사',
-  });
+  queryClient.setQueryData(profileKeys.current(), mockProfile);
 
   // useSuspenseInfiniteRecipes 캐시 (RecipeList 내부)
   // favoritesByUserId가 포함된 키로 세팅
@@ -89,9 +88,91 @@ export const Default: Story = {
 };
 
 /**
+ * 빈 상태: 즐겨찾기한 레시피가 없을 때
+ */
+export const Empty: Story = {
+  decorators: [
+    Story => {
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: { retry: false, staleTime: Infinity },
+          mutations: { retry: false },
+        },
+      });
+
+      queryClient.setQueryData(profileKeys.current(), mockProfile);
+
+      queryClient.setQueryData(
+        recipeKeys.infinite({ favoritesByUserId: MOCK_USER_ID }),
+        {
+          pages: [{ recipes: [], hasMore: false }],
+          pageParams: [0],
+        },
+      );
+
+      return (
+        <NuqsTestingAdapter>
+          <QueryClientProvider client={queryClient}>
+            <Suspense fallback={<RecipeListSkeleton />}>
+              <Story />
+            </Suspense>
+          </QueryClientProvider>
+        </NuqsTestingAdapter>
+      );
+    },
+  ],
+};
+
+/**
+ * 로딩 상태: 쿼리가 pending 상태 → 내부 Suspense fallback 표시
+ */
+export const Loading: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/*', async () => {
+          await delay('infinite');
+        }),
+      ],
+    },
+  },
+  decorators: [
+    Story => {
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: { retry: false },
+        },
+      });
+
+      queryClient.setQueryData(profileKeys.current(), mockProfile);
+
+      return (
+        <NuqsTestingAdapter>
+          <QueryClientProvider client={queryClient}>
+            <Story />
+          </QueryClientProvider>
+        </NuqsTestingAdapter>
+      );
+    },
+  ],
+};
+
+/**
  * 에러 상태: QueryErrorFallback (Skeleton + ErrorBottomSheet) 표시
  */
 export const Error: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/*', () => {
+          return HttpResponse.json(
+            { error: 'Internal Server Error' },
+            { status: 500 },
+          );
+        }),
+      ],
+    },
+  },
   decorators: [
     Story => {
       const queryClient = createErrorQueryClient();

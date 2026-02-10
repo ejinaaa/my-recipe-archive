@@ -3,7 +3,7 @@ import { RecipeCard } from './RecipeCard';
 import { mockRecipes } from '../model/mock';
 
 const meta: Meta<typeof RecipeCard> = {
-  title: 'Feature/recipe/RecipeCard',
+  title: 'Entities/recipe/RecipeCard',
   component: RecipeCard,
   parameters: {
     layout: 'centered',
@@ -13,10 +13,13 @@ const meta: Meta<typeof RecipeCard> = {
     recipe: {
       control: 'select',
       options: mockRecipes.map(r => r.id),
-      mapping: mockRecipes.reduce((acc, recipe) => {
-        acc[recipe.id] = recipe;
-        return acc;
-      }, {} as Record<string, (typeof mockRecipes)[0]>),
+      mapping: mockRecipes.reduce(
+        (acc, recipe) => {
+          acc[recipe.id] = recipe;
+          return acc;
+        },
+        {} as Record<string, (typeof mockRecipes)[0]>,
+      ),
       description: 'Recipe data to display',
     },
     isFavorite: {

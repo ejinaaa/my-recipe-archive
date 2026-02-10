@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { http, delay, HttpResponse } from 'msw';
 import { Suspense } from 'react';
 import { mockCategoryGroups } from '@/entities/category/model/mock';
 import { categoryKeys } from '@/entities/category/api/keys';
@@ -67,9 +68,51 @@ export const Default: Story = {
 };
 
 /**
+ * 로딩 상태: 쿼리가 pending 상태 → 내부 Suspense fallback 표시
+ */
+export const Loading: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/*', async () => {
+          await delay('infinite');
+        }),
+      ],
+    },
+  },
+  decorators: [
+    Story => {
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: { retry: false },
+        },
+      });
+
+      return (
+        <QueryClientProvider client={queryClient}>
+          <Story />
+        </QueryClientProvider>
+      );
+    },
+  ],
+};
+
+/**
  * 에러 상태: QueryErrorFallback (Skeleton + ErrorBottomSheet) 표시
  */
 export const Error: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/*', () => {
+          return HttpResponse.json(
+            { error: 'Internal Server Error' },
+            { status: 500 },
+          );
+        }),
+      ],
+    },
+  },
   decorators: [
     Story => {
       const queryClient = createErrorQueryClient();

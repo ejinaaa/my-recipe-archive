@@ -1,7 +1,11 @@
 import type { Preview } from '@storybook/react';
+import { initialize, mswLoader } from 'msw-storybook-addon';
 import { ThemeProvider } from 'next-themes';
 import React from 'react';
+import { handlers } from '../src/shared/mocks/handlers';
 import '../src/app/globals.css';
+
+initialize();
 
 const preview: Preview = {
   parameters: {
@@ -27,7 +31,11 @@ const preview: Preview = {
     nextjs: {
       appDirectory: true,
     },
+    msw: {
+      handlers,
+    },
   },
+  loaders: [mswLoader],
   decorators: [
     Story => (
       <ThemeProvider

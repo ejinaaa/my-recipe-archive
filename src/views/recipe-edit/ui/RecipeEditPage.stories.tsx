@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { http, delay, HttpResponse } from 'msw';
 import { Suspense } from 'react';
 import { mockRecipes } from '@/entities/recipe/model/mock';
 import { mockCategoryGroups } from '@/entities/category/model/mock';
+import { mockProfile } from '@/entities/user/model/mock';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { categoryKeys } from '@/entities/category/api/keys';
 import { profileKeys } from '@/entities/user/api/keys';
@@ -65,10 +67,7 @@ function createSuccessQueryClient() {
   queryClient.setQueryData(categoryKeys.groups(), mockCategoryGroups);
 
   // useCurrentProfile 캐시 (RecipeEditPage 셸)
-  queryClient.setQueryData(profileKeys.current(), {
-    id: 'user-1',
-    nickname: '요리사',
-  });
+  queryClient.setQueryData(profileKeys.current(), mockProfile);
 
   return queryClient;
 }
@@ -86,10 +85,7 @@ function createErrorQueryClient() {
   });
 
   // 프로필은 캐시에 넣어줌 (useQuery이므로 에러 시에도 페이지 렌더링에 영향 없음)
-  queryClient.setQueryData(profileKeys.current(), {
-    id: 'user-1',
-    nickname: '요리사',
-  });
+  queryClient.setQueryData(profileKeys.current(), mockProfile);
 
   return queryClient;
 }
@@ -128,11 +124,58 @@ export const Default: Story = {
 };
 
 /**
+ * 로딩 상태: 쿼리가 pending 상태 → 내부 Suspense fallback 표시
+ */
+export const Loading: Story = {
+  args: {
+    id: MOCK_RECIPE_ID,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/*', async () => {
+          await delay('infinite');
+        }),
+      ],
+    },
+  },
+  decorators: [
+    Story => {
+      const queryClient = new QueryClient({
+        defaultOptions: {
+          queries: { retry: false },
+        },
+      });
+
+      queryClient.setQueryData(profileKeys.current(), mockProfile);
+
+      return (
+        <QueryClientProvider client={queryClient}>
+          <Story />
+        </QueryClientProvider>
+      );
+    },
+  ],
+};
+
+/**
  * 에러 상태: ErrorFallback (레시피/카테고리 조회 실패) 표시
  */
 export const Error: Story = {
   args: {
     id: MOCK_RECIPE_ID,
+  },
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/api/*', () => {
+          return HttpResponse.json(
+            { error: 'Internal Server Error' },
+            { status: 500 },
+          );
+        }),
+      ],
+    },
   },
   decorators: [
     Story => {
