@@ -17,7 +17,7 @@ interface InfiniteScrollListProps {
   /** 아이템이 비어있는지 여부 */
   isEmpty?: boolean;
   /** 빈 상태일 때 표시할 컴포넌트 */
-  emptyState?: ReactNode;
+  emptyComponent?: ReactNode;
   /** 로딩 중일 때 표시할 컴포넌트 */
   loadingComponent?: ReactNode;
   /** 에러 발생 시 표시할 컴포넌트 */
@@ -46,7 +46,7 @@ const DefaultEndComponent = () => (
 );
 
 // 기본 빈 상태 컴포넌트
-const DefaultEmptyState = () => (
+const DefaultEmptyComponent = () => (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
     <p className='text-body-1 text-text-secondary text-center'>
       아직 항목이 없어요
@@ -61,7 +61,7 @@ export function InfiniteScrollList({
   isError = false,
   children,
   isEmpty = false,
-  emptyState,
+  emptyComponent,
   loadingComponent,
   errorComponent,
   endComponent,
@@ -78,7 +78,7 @@ export function InfiniteScrollList({
           fetchNextPage();
         }
       },
-      { threshold }
+      { threshold },
     );
 
     const currentTarget = observerTarget.current;
@@ -99,7 +99,9 @@ export function InfiniteScrollList({
       {isError && errorComponent && <>{errorComponent}</>}
 
       {/* Empty State */}
-      {!isError && isEmpty && <>{emptyState || <DefaultEmptyState />}</>}
+      {!isError && isEmpty && (
+        <>{emptyComponent || <DefaultEmptyComponent />}</>
+      )}
 
       {/* Items Container */}
       {!isError && !isEmpty && (

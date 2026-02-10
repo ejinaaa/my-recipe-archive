@@ -3,9 +3,10 @@
 import { Suspense, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Search } from 'lucide-react';
+import { BookOpen, Search } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
+import { Button } from '@/shared/ui/button';
 import { LinkButton } from '@/shared/ui/link-button';
 import { PageHeader } from '@/shared/ui/page-header';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
@@ -28,6 +29,27 @@ export function RecipesPage() {
       router.push(ROUTES.RECIPES.DETAIL(recipeId));
     },
     [router],
+  );
+
+  const recipesEmptyFallback = (
+    <div className='flex flex-col items-center justify-center py-20 px-3'>
+      <BookOpen className='size-12 text-text-secondary mb-4' />
+      <p className='text-body-1 text-text-secondary text-center'>
+        아직 등록한 레시피가 없어요
+      </p>
+      <p className='text-body-2 text-text-secondary text-center mt-1'>
+        나만의 레시피를 추가해 보세요
+      </p>
+      <Button
+        variant='solid'
+        colorScheme='primary'
+        size='md'
+        className='mt-4'
+        onClick={() => router.push(ROUTES.RECIPES.NEW)}
+      >
+        레시피 추가하기
+      </Button>
+    </div>
   );
 
   return (
@@ -147,7 +169,7 @@ export function RecipesPage() {
             }
           >
             <SectionHeader title='나의 모든 레시피' size='lg' moreHref={ROUTES.SEARCH_RESULTS} />
-            <RecipeList />
+            <RecipeList emptyFallback={recipesEmptyFallback} />
           </Suspense>
         </ErrorBoundary>
       </Section>

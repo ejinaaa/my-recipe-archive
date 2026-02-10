@@ -26,10 +26,10 @@ interface RecipeListProps {
   /** 해당 유저가 즐겨찾기한 레시피만 조회 */
   favoritesByUserId?: string;
   /** 빈 상태 UI */
-  emptyState?: ReactNode;
+  emptyFallback?: ReactNode;
 }
 
-const defaultEmptyState = (
+const defaultEmptyFallback = (
   <div className='flex flex-col items-center justify-center py-20 px-4'>
     <p className='text-body-1 text-text-secondary text-center'>
       검색 결과를 찾지 못했어요
@@ -46,7 +46,7 @@ export function RecipeList({
   cookingTimeRange,
   sortBy,
   favoritesByUserId,
-  emptyState = defaultEmptyState,
+  emptyFallback = defaultEmptyFallback,
 }: RecipeListProps) {
   const router = useRouter();
 
@@ -97,7 +97,7 @@ export function RecipeList({
       isFetchingNextPage={isFetchingNextPage}
       isEmpty={recipes.length === 0}
       containerClassName='grid grid-cols-2 gap-2 px-4'
-      emptyState={emptyState}
+      emptyComponent={emptyFallback}
       loadingComponent={
         <div className='flex items-center justify-center py-8'>
           <Loader2 className='size-6 animate-spin text-text-secondary' />

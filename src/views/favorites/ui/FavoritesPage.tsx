@@ -29,7 +29,7 @@ import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { ROUTES } from '@/shared/config';
 
-const favoritesEmptyState = (
+const favoritesEmptyFallback = (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
     <Heart className='size-12 text-text-secondary mb-4' />
     <p className='text-body-1 text-text-secondary text-center'>
@@ -142,7 +142,7 @@ export function FavoritesPage() {
             cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
             sortBy={sortBy ?? undefined}
             favoritesByUserId={userId}
-            emptyState={favoritesEmptyState}
+            emptyFallback={favoritesEmptyFallback}
           />
         </Suspense>
       </ErrorBoundary>
