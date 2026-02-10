@@ -23,7 +23,7 @@ import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 
 export function SearchResultsPage() {
   const router = useRouter();
@@ -101,7 +101,17 @@ export function SearchResultsPage() {
       />
 
       {/* Main */}
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) => (
+          <QueryErrorFallback
+            skeleton={<RecipeListSkeleton />}
+            onRetry={resetErrorBoundary}
+            onHome={() => router.push(ROUTES.RECIPES.LIST)}
+            title='검색 결과를 가져오지 못했어요'
+            description='네트워크 상태를 확인하고 다시 시도해주세요'
+          />
+        )}
+      >
         <Suspense fallback={<RecipeListSkeleton />}>
           <RecipeList
             searchQuery={searchQuery ?? undefined}

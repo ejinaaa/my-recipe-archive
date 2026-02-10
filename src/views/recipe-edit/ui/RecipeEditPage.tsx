@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import { ErrorBoundary } from 'react-error-boundary';
 import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { ROUTES } from '@/shared/config';
@@ -22,21 +23,113 @@ import {
   type RecipeFormData,
 } from '@/features/recipe-create';
 import { PageHeader } from '@/shared/ui/page-header';
+import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
+
+/**
+ * 폼 영역 스켈레톤 (내부 Suspense용, header 제외)
+ */
+function FormSkeleton() {
+  return (
+    <main className='px-4 pt-6 flex flex-col gap-6'>
+      <div className='flex flex-col items-center gap-2'>
+        <Skeleton className='size-24 rounded-full' />
+        <Skeleton className='h-3 w-32' />
+      </div>
+      <div className='flex flex-col gap-2'>
+        <Skeleton className='h-4 w-20' />
+        <Skeleton className='h-12 w-full rounded-xl' />
+      </div>
+      <div className='flex flex-col gap-2'>
+        <Skeleton className='h-4 w-16' />
+        <Skeleton className='h-24 w-full rounded-xl' />
+      </div>
+      {[1, 2, 3].map(i => (
+        <div key={i} className='flex flex-col gap-3'>
+          <Skeleton className='h-4 w-24' />
+          <div className='flex flex-wrap gap-2'>
+            {[1, 2, 3, 4, 5].map(j => (
+              <Skeleton key={j} className='h-8 w-16 rounded-full' />
+            ))}
+          </div>
+        </div>
+      ))}
+    </main>
+  );
+}
 
 interface RecipeEditPageProps {
   id: string;
 }
 
+/**
+ * 레시피 + 카테고리 데이터가 필요한 편집 폼 콘텐츠
+ */
+function RecipeEditContent({
+  id,
+  onSubmit,
+  onDelete,
+  isDeletePending,
+  userId,
+}: {
+  id: string;
+  onSubmit: (formData: RecipeFormData) => Promise<void>;
+  onDelete: () => Promise<void>;
+  isDeletePending: boolean;
+  userId?: string;
+}) {
+  const { data: recipe } = useSuspenseRecipe(id);
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+
+  if (!recipe) {
+    return null;
+  }
+
+  const initialData = convertRecipeToFormData(recipe);
+
+  return (
+    <>
+      {/* Form */}
+      <main className='px-4 pt-6 pb-6'>
+        <RecipeCreateForm
+          categoryGroups={categoryGroups}
+          onSubmit={onSubmit}
+          mode='edit'
+          initialData={initialData}
+          userId={userId}
+        />
+
+        {/* 삭제 버튼 */}
+        <Button
+          variant='ghost'
+          colorScheme='neutral'
+          size='lg'
+          onClick={() => setDeleteOpen(true)}
+          className='w-full mt-3 text-destructive'
+        >
+          이 레시피를 삭제할게요
+        </Button>
+      </main>
+
+      {/* 삭제 확인 Bottom Sheet */}
+      <DeleteRecipeConfirm
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
+        onConfirm={onDelete}
+        isPending={isDeletePending}
+      />
+    </>
+  );
+}
+
 export function RecipeEditPage({ id }: RecipeEditPageProps) {
   const router = useRouter();
   const { data: profile } = useCurrentProfile();
-  const { data: recipe } = useSuspenseRecipe(id);
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
   const updateRecipe = useUpdateRecipe();
   const deleteRecipe = useDeleteRecipe();
-  const [deleteOpen, setDeleteOpen] = useState(false);
 
   const handleBack = () => {
     router.back();
@@ -52,7 +145,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
   };
 
   const handleSubmit = async (formData: RecipeFormData) => {
-    if (!profile?.id || !recipe) {
+    if (!profile?.id) {
       router.push(ROUTES.AUTH.LOGIN);
       return;
     }
@@ -81,12 +174,6 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
     }
   };
 
-  if (!recipe) {
-    return null;
-  }
-
-  const initialData = convertRecipeToFormData(recipe);
-
   return (
     <div className='min-h-screen pb-20 bg-background'>
       {/* Header */}
@@ -108,35 +195,27 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
         </div>
       </PageHeader>
 
-      {/* Form */}
-      <main className='px-4 pt-6 pb-6'>
-        <RecipeCreateForm
-          categoryGroups={categoryGroups}
-          onSubmit={handleSubmit}
-          mode='edit'
-          initialData={initialData}
-          userId={profile?.id}
-        />
-
-        {/* 삭제 버튼 */}
-        <Button
-          variant='ghost'
-          colorScheme='neutral'
-          size='lg'
-          onClick={() => setDeleteOpen(true)}
-          className='w-full mt-3 text-destructive'
-        >
-          이 레시피를 삭제할게요
-        </Button>
-      </main>
-
-      {/* 삭제 확인 Bottom Sheet */}
-      <DeleteRecipeConfirm
-        open={deleteOpen}
-        onOpenChange={setDeleteOpen}
-        onConfirm={handleDelete}
-        isPending={deleteRecipe.isPending}
-      />
+      {/* Content */}
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) => (
+          <ErrorFallback
+            onRetry={resetErrorBoundary}
+            onBack={() => router.push(ROUTES.RECIPES.LIST)}
+            title='필요한 정보를 가져오지 못했어요'
+            description='레시피 수정에 필요한 데이터를 준비하지 못했어요'
+          />
+        )}
+      >
+        <Suspense fallback={<FormSkeleton />}>
+          <RecipeEditContent
+            id={id}
+            onSubmit={handleSubmit}
+            onDelete={handleDelete}
+            isDeletePending={deleteRecipe.isPending}
+            userId={profile?.id}
+          />
+        </Suspense>
+      </ErrorBoundary>
 
       <BottomNavigation activeTab='register' />
     </div>

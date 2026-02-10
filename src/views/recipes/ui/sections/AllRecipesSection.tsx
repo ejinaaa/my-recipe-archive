@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ChevronRight } from 'lucide-react';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { LinkButton } from '@/shared/ui/link-button';
 
 /**
@@ -27,7 +27,16 @@ export function AllRecipesSection() {
         </LinkButton>
       </div>
 
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) => (
+          <QueryErrorFallback
+            skeleton={<RecipeListSkeleton />}
+            onRetry={resetErrorBoundary}
+            title='레시피 목록을 가져오지 못했어요'
+            description='네트워크 상태를 확인하고 다시 시도해주세요'
+          />
+        )}
+      >
         <Suspense fallback={<RecipeListSkeleton />}>
           <RecipeList />
         </Suspense>

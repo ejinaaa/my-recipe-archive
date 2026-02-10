@@ -1,6 +1,8 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import type { CategoryType } from '@/entities/category/model/types';
@@ -9,22 +11,68 @@ import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { PageHeader } from '@/shared/ui/page-header';
+import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
+import { SearchPageSkeleton } from './SearchPageSkeleton';
 import { CuisineBadgeSection } from './CuisineBadgeSection';
 import { CategoryCardSection } from './CategoryCardSection';
+
+/**
+ * 카테고리 데이터를 사용하는 검색 콘텐츠
+ */
+function SearchContent({
+  onSearch,
+  onCuisineSelect,
+  onCategorySelect,
+}: {
+  onSearch: (query: string) => void;
+  onCuisineSelect: (code: string) => void;
+  onCategorySelect: (type: CategoryType, code: string) => void;
+}) {
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
+
+  const cuisineGroup = categoryGroups.find(g => g.type === 'cuisine');
+  const situationGroup = categoryGroups.find(g => g.type === 'situation');
+  const dishTypeGroup = categoryGroups.find(g => g.type === 'dishType');
+
+  return (
+    <>
+      {/* Header */}
+      <PageHeader sticky={false} className='pb-6'>
+        <SearchBar
+          onSearch={onSearch}
+          placeholder='어떤 요리를 찾으세요?'
+        />
+      </PageHeader>
+
+      {/* Main */}
+      <main className='space-y-6 pb-6'>
+        <CuisineBadgeSection
+          cuisines={cuisineGroup?.options ?? []}
+          onSelect={onCuisineSelect}
+        />
+        <CategoryCardSection
+          title={CATEGORY_TYPE_LABELS.situation}
+          type='situation'
+          categories={situationGroup?.options ?? []}
+          onSelect={onCategorySelect}
+        />
+        <CategoryCardSection
+          title={CATEGORY_TYPE_LABELS.dishType}
+          type='dishType'
+          categories={dishTypeGroup?.options ?? []}
+          onSelect={onCategorySelect}
+        />
+      </main>
+    </>
+  );
+}
 
 export function SearchPage() {
   const router = useRouter();
   const setLastSearchUrl = useNavigationStore(s => s.setLastSearchUrl);
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
 
-  // 언마운트 시 현재 URL을 전역 상태에 저장 (네비게이션 복귀용)
   useSaveUrlOnUnmount(setLastSearchUrl);
-
-  // 카테고리 그룹 분리
-  const cuisineGroup = categoryGroups.find(g => g.type === 'cuisine');
-  const situationGroup = categoryGroups.find(g => g.type === 'situation');
-  const dishTypeGroup = categoryGroups.find(g => g.type === 'dishType');
 
   const handleSearch = (query: string) => {
     router.push(`${ROUTES.SEARCH_RESULTS}?q=${encodeURIComponent(query)}`);
@@ -40,40 +88,26 @@ export function SearchPage() {
 
   return (
     <div className='min-h-screen pb-20 bg-background'>
-      {/* Header */}
-      <PageHeader sticky={false} className='pb-6'>
-        <SearchBar
-          onSearch={handleSearch}
-          placeholder='어떤 요리를 찾으세요?'
-        />
-      </PageHeader>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) => (
+          <QueryErrorFallback
+            skeleton={<SearchPageSkeleton />}
+            onRetry={resetErrorBoundary}
+            onHome={() => router.push(ROUTES.RECIPES.LIST)}
+            title='카테고리 정보를 가져오지 못했어요'
+            description='네트워크 상태를 확인하고 다시 시도해주세요'
+          />
+        )}
+      >
+        <Suspense fallback={<SearchPageSkeleton />}>
+          <SearchContent
+            onSearch={handleSearch}
+            onCuisineSelect={handleCuisineSelect}
+            onCategorySelect={handleCategorySelect}
+          />
+        </Suspense>
+      </ErrorBoundary>
 
-      {/* Main */}
-      <main className='space-y-6 pb-6'>
-        {/* 장르별 섹션 */}
-        <CuisineBadgeSection
-          cuisines={cuisineGroup?.options ?? []}
-          onSelect={handleCuisineSelect}
-        />
-
-        {/* 상황별 섹션 */}
-        <CategoryCardSection
-          title={CATEGORY_TYPE_LABELS.situation}
-          type='situation'
-          categories={situationGroup?.options ?? []}
-          onSelect={handleCategorySelect}
-        />
-
-        {/* 종류별 섹션 */}
-        <CategoryCardSection
-          title={CATEGORY_TYPE_LABELS.dishType}
-          type='dishType'
-          categories={dishTypeGroup?.options ?? []}
-          onSelect={handleCategorySelect}
-        />
-      </main>
-
-      {/* Bottom Navigation */}
       <BottomNavigation activeTab='search' />
     </div>
   );

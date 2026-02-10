@@ -1,6 +1,8 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
+import { ErrorBoundary } from 'react-error-boundary';
 import { ROUTES } from '@/shared/config';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { useCreateRecipe } from '@/entities/recipe/api/hooks';
@@ -14,12 +16,58 @@ import {
   type RecipeFormData,
 } from '@/features/recipe-create';
 import { PageHeader } from '@/shared/ui/page-header';
+import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
+
+/**
+ * 폼 영역 스켈레톤
+ */
+function FormSkeleton() {
+  return (
+    <div className='px-4 pt-6 space-y-6'>
+      <Skeleton className='h-10 w-full rounded-lg' />
+      <Skeleton className='h-24 w-full rounded-lg' />
+      <Skeleton className='h-10 w-full rounded-lg' />
+      <Skeleton className='h-10 w-full rounded-lg' />
+      <div className='space-y-3'>
+        <Skeleton className='h-5 w-24 rounded-md' />
+        <div className='flex flex-wrap gap-2'>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className='h-8 w-16 rounded-full' />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 카테고리 데이터가 필요한 폼 콘텐츠
+ */
+function RecipeCreateContent({
+  onSubmit,
+  userId,
+}: {
+  onSubmit: (formData: RecipeFormData) => Promise<void>;
+  userId?: string;
+}) {
+  const { data: categoryGroups } = useSuspenseCategoryGroups();
+
+  return (
+    <main className='px-4 pt-6'>
+      <RecipeCreateForm
+        categoryGroups={categoryGroups}
+        onSubmit={onSubmit}
+        userId={userId}
+      />
+    </main>
+  );
+}
 
 export function RecipeCreatePage() {
   const router = useRouter();
   const { data: profile } = useCurrentProfile();
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
   const createRecipe = useCreateRecipe();
 
   const handleSubmit = async (formData: RecipeFormData) => {
@@ -63,13 +111,23 @@ export function RecipeCreatePage() {
       </PageHeader>
 
       {/* Form */}
-      <main className='px-4 pt-6'>
-        <RecipeCreateForm
-          categoryGroups={categoryGroups}
-          onSubmit={handleSubmit}
-          userId={profile?.id}
-        />
-      </main>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) => (
+          <ErrorFallback
+            onRetry={resetErrorBoundary}
+            onBack={() => router.push(ROUTES.RECIPES.LIST)}
+            title='카테고리 정보를 가져오지 못했어요'
+            description='레시피 작성에 필요한 카테고리를 준비하지 못했어요'
+          />
+        )}
+      >
+        <Suspense fallback={<FormSkeleton />}>
+          <RecipeCreateContent
+            onSubmit={handleSubmit}
+            userId={profile?.id}
+          />
+        </Suspense>
+      </ErrorBoundary>
 
       <BottomNavigation activeTab='register' />
     </div>

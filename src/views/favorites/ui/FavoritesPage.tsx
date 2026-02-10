@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
+import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Heart } from 'lucide-react';
@@ -25,7 +26,8 @@ import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { ErrorFallback } from '@/shared/ui/error-fallback';
+import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
+import { ROUTES } from '@/shared/config';
 
 const favoritesEmptyState = (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
@@ -40,6 +42,7 @@ const favoritesEmptyState = (
 );
 
 export function FavoritesPage() {
+  const router = useRouter();
   const queryClient = useQueryClient();
   const setLastFavoritesUrl = useNavigationStore(s => s.setLastFavoritesUrl);
 
@@ -121,7 +124,17 @@ export function FavoritesPage() {
       />
 
       {/* Main */}
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary }) => (
+          <QueryErrorFallback
+            skeleton={<RecipeListSkeleton />}
+            onRetry={resetErrorBoundary}
+            onHome={() => router.push(ROUTES.RECIPES.LIST)}
+            title='즐겨찾기 목록을 가져오지 못했어요'
+            description='네트워크 상태를 확인하고 다시 시도해주세요'
+          />
+        )}
+      >
         <Suspense fallback={<RecipeListSkeleton />}>
           <RecipeList
             searchQuery={searchQuery ?? undefined}

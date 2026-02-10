@@ -9,11 +9,13 @@ import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
 } from '@/entities/recipe/model/constants';
+import { AlertCircle } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Skeleton } from '@/shared/ui/skeleton';
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
@@ -68,28 +70,49 @@ function CategorySectionsSkeleton() {
 }
 
 /**
- * 카테고리 섹션 에러 (ErrorBoundary fallback)
+ * 필터 에러 UI (ErrorBoundary fallback)
+ * title을 제외한 전체 영역을 ErrorBottomSheet 스타일로 대체
  */
-function CategorySectionsError({
+function FilterErrorContent({
   resetErrorBoundary,
+  onClose,
 }: {
   error: Error;
   resetErrorBoundary: () => void;
+  onClose: () => void;
 }) {
   return (
-    <div className='flex flex-col items-center gap-3 rounded-lg bg-neutral-base p-6'>
-      <p className='text-body-2 text-text-secondary'>
-        카테고리를 불러오지 못했어요
-      </p>
-      <Button
-        variant='outline'
-        colorScheme='neutral'
-        size='sm'
-        onClick={resetErrorBoundary}
-      >
-        다시 시도
-      </Button>
-    </div>
+    <>
+      <div className='flex flex-1 flex-col items-center justify-center gap-2 px-4 py-10'>
+        <AlertCircle className='size-10 text-text-secondary mb-2' />
+        <p className='text-heading-3 text-text-primary'>
+          카테고리 정보를 가져오지 못했어요
+        </p>
+        <DrawerDescription className='text-body-2 text-text-secondary'>
+          네트워크 상태를 확인하고 다시 시도해주세요
+        </DrawerDescription>
+      </div>
+      <DrawerFooter>
+        <Button
+          variant='solid'
+          colorScheme='primary'
+          size='lg'
+          onClick={resetErrorBoundary}
+          className='w-full'
+        >
+          다시 시도
+        </Button>
+        <Button
+          variant='solid'
+          colorScheme='neutral'
+          size='lg'
+          onClick={onClose}
+          className='w-full'
+        >
+          닫기
+        </Button>
+      </DrawerFooter>
+    </>
   );
 }
 
@@ -177,51 +200,60 @@ export function FilterBottomSheet({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent>
-        {/* Header */}
+        {/* Header (title만 에러 시에도 유지) */}
         <DrawerHeader className='flex flex-col items-center'>
           <DrawerTitle>어떤 요리를 찾으세요?</DrawerTitle>
-          <Button
-            variant='ghost'
-            size='sm'
-            colorScheme='primary'
-            onClick={handleClearAll}
-            className='self-end text-body-2 text-primary-base mt-2'
-          >
-            모두 지우기
-          </Button>
         </DrawerHeader>
 
-        {/* Content */}
-        <div className='flex-1 overflow-y-auto px-4 pb-10 space-y-6'>
-          {/* 카테고리 섹션 (Suspense + ErrorBoundary) */}
-          <ErrorBoundary FallbackComponent={CategorySectionsError}>
+        {/* Content + Footer (에러 시 전체 대체) */}
+        <ErrorBoundary
+          fallbackRender={({ error, resetErrorBoundary }) => (
+            <FilterErrorContent
+              error={error}
+              resetErrorBoundary={resetErrorBoundary}
+              onClose={() => onOpenChange(false)}
+            />
+          )}
+        >
+          <div className='flex items-end px-4'>
+            <Button
+              variant='ghost'
+              size='sm'
+              colorScheme='primary'
+              onClick={handleClearAll}
+              className='ml-auto text-body-2 text-primary-base'
+            >
+              모두 지우기
+            </Button>
+          </div>
+          <div className='flex-1 overflow-y-auto px-4 pb-10 space-y-6'>
             <Suspense fallback={<CategorySectionsSkeleton />}>
               <CategorySections
                 tempFilters={tempFilters}
                 onToggle={handleToggleCategory}
               />
             </Suspense>
-          </ErrorBoundary>
 
-          {/* 조리시간 섹션 */}
-          <CookingTimeFilterSection
-            value={tempCookingTime}
-            onChange={setTempCookingTime}
-          />
-        </div>
+            {/* 조리시간 섹션 */}
+            <CookingTimeFilterSection
+              value={tempCookingTime}
+              onChange={setTempCookingTime}
+            />
+          </div>
 
-        {/* Footer */}
-        <DrawerFooter>
-          <Button
-            variant='solid'
-            colorScheme='primary'
-            size='lg'
-            className='w-full'
-            onClick={handleApply}
-          >
-            요리 보러가기
-          </Button>
-        </DrawerFooter>
+          {/* Footer */}
+          <DrawerFooter>
+            <Button
+              variant='solid'
+              colorScheme='primary'
+              size='lg'
+              className='w-full'
+              onClick={handleApply}
+            >
+              요리 보러가기
+            </Button>
+          </DrawerFooter>
+        </ErrorBoundary>
       </DrawerContent>
     </Drawer>
   );
