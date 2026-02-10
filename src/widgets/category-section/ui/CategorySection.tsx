@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
+import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
+import { Section, SectionHeader } from '@/shared/ui/section';
 
 /**
  * 홈 카테고리 수평 스크롤 섹션
@@ -22,26 +24,18 @@ export function CategorySection() {
   };
 
   return (
-    <section>
-      {/* 섹션 헤더 */}
-      <div className='px-4 mb-3'>
-        <h2 className='text-heading-3 text-text-primary'>
-          어떤 요리를 찾아볼까요?
-        </h2>
-      </div>
+    <Section>
+      <SectionHeader title='어떤 요리를 찾아볼까요?' />
 
-      {/* 수평 스크롤 카테고리 칩 */}
-      <div className='overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
-        <div className='flex gap-2 px-4'>
-          {categories.map(category => (
-            <CategoryChip
-              key={category.id}
-              category={category}
-              onClick={() => handleCategoryClick(category.code)}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
+      <HorizontalScroll className='gap-2 px-4'>
+        {categories.map(category => (
+          <CategoryChip
+            key={category.id}
+            category={category}
+            onClick={() => handleCategoryClick(category.code)}
+          />
+        ))}
+      </HorizontalScroll>
+    </Section>
   );
 }

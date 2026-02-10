@@ -2,6 +2,7 @@
 
 import { useSuspenseRandomRecipe } from '@/entities/recipe/api/hooks';
 import { RecipeCardHero } from '@/entities/recipe/ui/RecipeCardHero';
+import { Section } from '@/shared/ui/section';
 
 /**
  * 오늘의 추천 요리 섹션
@@ -13,8 +14,8 @@ export function TodayPickSection() {
   if (!recipe) return null;
 
   return (
-    <section className='px-4'>
+    <Section className='px-4'>
       <RecipeCardHero recipe={recipe} />
-    </section>
+    </Section>
   );
 }

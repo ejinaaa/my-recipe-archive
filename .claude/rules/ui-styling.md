@@ -56,3 +56,78 @@ import { Badge } from '@/shared/ui/badge';
 
 // ❌ 공통 컴포넌트가 있는데 직접 스타일링 금지
 ```
+
+## Section Compound 패턴
+
+섹션 UI는 `Section` + `SectionHeader`를 조합하여 구성한다.
+
+```typescript
+import { Section, SectionHeader } from '@/shared/ui/section';
+
+// ✅ 기본 섹션
+<Section>
+  <SectionHeader title='섹션 제목' />
+  {/* 콘텐츠 */}
+</Section>
+
+// ✅ 더보기 버튼이 있는 섹션
+<Section>
+  <SectionHeader title='섹션 제목' moreHref={ROUTES.SEARCH_RESULTS} />
+  {/* 콘텐츠 */}
+</Section>
+
+// ✅ 큰 제목 (text-heading-2)
+<SectionHeader title='섹션 제목' size='lg' />
+
+// ✅ Skeleton/로딩 시 — disabled로 더보기 버튼 비활성화
+<SectionHeader title='섹션 제목' moreHref={href} disabled />
+
+// ❌ 인라인 <section> + <h2> 직접 작성 금지
+```
+
+## 가로 스크롤
+
+가로 스크롤이 필요한 곳에서는 `HorizontalScroll`을 사용한다. Section 안팎 어디서든 사용 가능.
+
+```typescript
+import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
+
+// ✅ HorizontalScroll 사용
+<HorizontalScroll className='gap-3 px-4'>
+  {items.map(item => <Card key={item.id} />)}
+</HorizontalScroll>
+
+// ❌ overflow-x-auto + scrollbar 숨김 직접 작성 금지
+```
+
+## 폼 필드
+
+폼 필드 구성은 `Field` + `FieldLabel`을 조합하여 구성한다.
+
+```typescript
+import { Field, FieldLabel, FieldDescription, FieldError } from '@/shared/ui/field';
+
+// ✅ 기본 폼 필드
+<Field>
+  <FieldLabel>요리 소개</FieldLabel>
+  <Input placeholder='내용을 입력해주세요' />
+</Field>
+
+// ✅ 필수 필드
+<Field>
+  <FieldLabel required>요리 이름</FieldLabel>
+  <Input placeholder='맛있는 요리 이름을 알려주세요' />
+</Field>
+
+// ✅ gap 오버라이드 (기본 gap-2)
+<Field className='gap-3'>
+  <FieldLabel required>필요한 재료</FieldLabel>
+  {/* 콘텐츠 */}
+</Field>
+
+// ✅ 설명/에러 메시지
+<FieldDescription>최대 50자까지 입력할 수 있어요</FieldDescription>
+<FieldError>요리 이름을 입력해주세요</FieldError>
+
+// ❌ 인라인 <section> + <Label> + <span>*</span> 직접 작성 금지
+```

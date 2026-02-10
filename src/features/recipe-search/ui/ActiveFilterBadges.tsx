@@ -7,6 +7,7 @@ import type { CategoryType } from '@/entities/category/model/types';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
 import type { RecipeSortBy } from '@/entities/recipe/api/server';
 import { Badge } from '@/shared/ui/badge';
+import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import type { CategoryFilters, CookingTimeRange } from '../model/store';
 import { SORT_OPTIONS } from '../model/sortStore';
 import { isDefaultCookingTimeRange } from '../model/hooks';
@@ -142,8 +143,8 @@ function ActiveFilterBadgesContent({
   if (badges.length === 0) return null;
 
   return (
-    <div className='flex gap-1.5 overflow-x-auto px-4 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+    <HorizontalScroll className='gap-1.5 px-4 py-2'>
       {badges}
-    </div>
+    </HorizontalScroll>
   );
 }

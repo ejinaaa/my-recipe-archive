@@ -30,11 +30,11 @@ interface RecipeListProps {
 }
 
 const defaultEmptyState = (
-  <div className="flex flex-col items-center justify-center py-20 px-3">
-    <p className="text-body-1 text-text-secondary text-center">
+  <div className='flex flex-col items-center justify-center py-20 px-4'>
+    <p className='text-body-1 text-text-secondary text-center'>
       검색 결과를 찾지 못했어요
     </p>
-    <p className="text-body-2 text-text-secondary text-center mt-1">
+    <p className='text-body-2 text-text-secondary text-center mt-1'>
       다른 키워드로 검색해 보세요
     </p>
   </div>
@@ -61,7 +61,7 @@ export function RecipeList({
 
   const recipes = useMemo(
     () => data.pages.flatMap(page => page.recipes),
-    [data.pages]
+    [data.pages],
   );
 
   // 현재 사용자 프로필 조회
@@ -87,7 +87,7 @@ export function RecipeList({
       if (!userId) return;
       toggleFavorite.mutate({ userId, recipeId });
     },
-    [userId, toggleFavorite]
+    [userId, toggleFavorite],
   );
 
   return (
@@ -96,19 +96,19 @@ export function RecipeList({
       hasNextPage={hasNextPage}
       isFetchingNextPage={isFetchingNextPage}
       isEmpty={recipes.length === 0}
-      containerClassName="grid grid-cols-2 gap-2 px-3"
+      containerClassName='grid grid-cols-2 gap-2 px-4'
       emptyState={emptyState}
       loadingComponent={
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="size-6 animate-spin text-text-secondary" />
-          <span className="ml-2 text-body-2 text-text-secondary">
+        <div className='flex items-center justify-center py-8'>
+          <Loader2 className='size-6 animate-spin text-text-secondary' />
+          <span className='ml-2 text-body-2 text-text-secondary'>
             불러오는 중...
           </span>
         </div>
       }
       endComponent={
-        <div className="flex items-center justify-center py-8">
-          <p className="text-body-2 text-text-secondary">
+        <div className='flex items-center justify-center py-8'>
+          <p className='text-body-2 text-text-secondary'>
             모든 레시피를 둘러봤어요
           </p>
         </div>
@@ -121,7 +121,7 @@ export function RecipeList({
           isFavorite={favoriteStatuses?.[recipe.id] ?? false}
           onToggleFavorite={() => handleToggleFavorite(recipe.id)}
           onClick={() => handleRecipeClick(recipe.id)}
-          className="w-full max-w-none"
+          className='w-full max-w-none'
         />
       ))}
     </InfiniteScrollList>

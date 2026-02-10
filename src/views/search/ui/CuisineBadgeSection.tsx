@@ -3,6 +3,8 @@
 import type { CategoryOption } from '@/entities/category/model/types';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
+import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
+import { Section, SectionHeader } from '@/shared/ui/section';
 
 interface CuisineBadgeSectionProps {
   /** 장르별 카테고리 목록 */
@@ -16,11 +18,9 @@ export function CuisineBadgeSection({
   onSelect,
 }: CuisineBadgeSectionProps) {
   return (
-    <section className='px-4'>
-      <h2 className='text-heading-3 text-text-primary mb-3'>
-        {CATEGORY_TYPE_LABELS.cuisine}
-      </h2>
-      <div className='flex gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+    <Section>
+      <SectionHeader title={CATEGORY_TYPE_LABELS.cuisine} />
+      <HorizontalScroll className='gap-2 px-4'>
         {cuisines.map(cuisine => (
           <CategoryChip
             key={cuisine.id}
@@ -28,7 +28,7 @@ export function CuisineBadgeSection({
             onClick={() => onSelect(cuisine.code)}
           />
         ))}
-      </div>
-    </section>
+      </HorizontalScroll>
+    </Section>
   );
 }

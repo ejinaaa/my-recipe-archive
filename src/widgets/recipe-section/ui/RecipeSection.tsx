@@ -1,13 +1,13 @@
 'use client';
 
 import { useMemo, useCallback } from 'react';
-import { ChevronRight } from 'lucide-react';
 import { RecipeCardCompact } from '@/entities/recipe/ui/RecipeCardCompact';
 import {
   useFavoriteStatuses,
   useToggleFavorite,
 } from '@/entities/favorite/api/hooks';
-import { LinkButton } from '@/shared/ui/link-button';
+import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
+import { Section, SectionHeader } from '@/shared/ui/section';
 import type { Recipe } from '@/entities/recipe/model/types';
 
 interface RecipeSectionProps {
@@ -47,37 +47,20 @@ export function RecipeSection({
   );
 
   return (
-    <section>
-      {/* 섹션 헤더 */}
-      <div className='flex items-center justify-between px-4 mb-3'>
-        <h2 className='text-heading-3 text-text-primary'>{title}</h2>
-        {moreHref && (
-          <LinkButton
-            href={moreHref}
-            variant='ghost'
-            colorScheme='primary'
-            size='sm'
-            className='text-primary gap-0.5 px-1'
-          >
-            <ChevronRight className='size-4' />
-          </LinkButton>
-        )}
-      </div>
+    <Section>
+      <SectionHeader title={title} moreHref={moreHref} />
 
-      {/* 수평 스크롤 카드 목록 */}
-      <div className='overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
-        <div className='flex gap-3 px-4'>
-          {recipes.map(recipe => (
-            <RecipeCardCompact
-              key={recipe.id}
-              recipe={recipe}
-              isFavorite={favoriteStatuses?.[recipe.id] ?? false}
-              onToggleFavorite={() => handleToggleFavorite(recipe.id)}
-              onClick={() => onRecipeClick(recipe.id)}
-            />
-          ))}
-        </div>
-      </div>
-    </section>
+      <HorizontalScroll className='gap-3 px-4'>
+        {recipes.map(recipe => (
+          <RecipeCardCompact
+            key={recipe.id}
+            recipe={recipe}
+            isFavorite={favoriteStatuses?.[recipe.id] ?? false}
+            onToggleFavorite={() => handleToggleFavorite(recipe.id)}
+            onClick={() => onRecipeClick(recipe.id)}
+          />
+        ))}
+      </HorizontalScroll>
+    </Section>
   );
 }

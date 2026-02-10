@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { HorizontalScroll as HorizontalScrollContainer } from '@/shared/ui/horizontal-scroll';
 import { RecipeCardCompact } from './RecipeCardCompact';
 import { mockRecipes } from '../model/mock';
 
@@ -87,12 +88,12 @@ export const LongTitle: Story = {
 /** 수평 스크롤 레이아웃 */
 export const HorizontalScroll: Story = {
   render: args => (
-    <div className='overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden max-w-sm'>
-      <div className='flex gap-3'>
+    <div className='max-w-sm'>
+      <HorizontalScrollContainer className='gap-3'>
         {mockRecipes.slice(0, 6).map(recipe => (
           <RecipeCardCompact key={recipe.id} {...args} recipe={recipe} />
         ))}
-      </div>
+      </HorizontalScrollContainer>
     </div>
   ),
   parameters: {

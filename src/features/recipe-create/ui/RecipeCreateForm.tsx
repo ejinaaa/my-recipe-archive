@@ -6,7 +6,7 @@ import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
 import { Badge } from '@/shared/ui/badge';
 import { Slider } from '@/shared/ui/slider';
-import { Label } from '@/shared/ui/label';
+import { Field, FieldLabel } from '@/shared/ui/field';
 import { cn } from '@/shared/lib/utils';
 import { useRecipeForm, type RecipeFormData } from '../model/hooks';
 import { useThumbnailUpload } from '../model/useThumbnailUpload';
@@ -104,10 +104,8 @@ export function RecipeCreateForm({
       />
 
       {/* 제목 */}
-      <section className='flex flex-col gap-2'>
-        <Label className='text-body-2 text-text-primary font-medium'>
-          요리 이름 <span className='text-primary-base'>*</span>
-        </Label>
+      <Field>
+        <FieldLabel required>요리 이름</FieldLabel>
         <Input
           placeholder='맛있는 요리 이름을 알려주세요'
           value={formData.title}
@@ -119,13 +117,11 @@ export function RecipeCreateForm({
         <span className='text-caption text-text-secondary text-right'>
           {formData.title.length}/{TITLE_MAX_LENGTH}
         </span>
-      </section>
+      </Field>
 
       {/* 설명 */}
-      <section className='flex flex-col gap-2'>
-        <Label className='text-body-2 text-text-primary font-medium'>
-          요리 소개
-        </Label>
+      <Field>
+        <FieldLabel>요리 소개</FieldLabel>
         <Textarea
           placeholder='이 요리의 매력을 소개해 주세요'
           value={formData.description}
@@ -133,13 +129,11 @@ export function RecipeCreateForm({
           disabled={isDisabled}
           size='sm'
         />
-      </section>
+      </Field>
 
       {/* 인분 */}
-      <section className='flex flex-col gap-2'>
-        <Label className='text-body-2 text-text-primary font-medium'>
-          몇 인분 <span className='text-primary-base'>*</span>
-        </Label>
+      <Field>
+        <FieldLabel required>몇 인분</FieldLabel>
         <Slider
           size='sm'
           value={formData.servings}
@@ -152,13 +146,11 @@ export function RecipeCreateForm({
           valueDisplay={`${formData.servings}인분`}
           disabled={isDisabled}
         />
-      </section>
+      </Field>
 
       {/* 조리 시간 */}
-      <section className='flex flex-col gap-2'>
-        <Label className='text-body-2 text-text-primary font-medium'>
-          만드는 시간 <span className='text-primary-base'>*</span>
-        </Label>
+      <Field>
+        <FieldLabel required>만드는 시간</FieldLabel>
         <Slider
           size='sm'
           value={formData.cooking_time}
@@ -171,15 +163,14 @@ export function RecipeCreateForm({
           valueDisplay={formatCookingTime(formData.cooking_time)}
           disabled={isDisabled}
         />
-      </section>
+      </Field>
 
       {/* 카테고리 선택 */}
       {categoryGroups.map(group => (
-        <section key={group.type} className='flex flex-col gap-3'>
-          <Label className='text-body-2 text-text-primary font-medium'>
-            {CATEGORY_TYPE_LABELS[group.type]}{' '}
-            <span className='text-primary-base'>*</span>
-          </Label>
+        <Field key={group.type} className='gap-3'>
+          <FieldLabel required>
+            {CATEGORY_TYPE_LABELS[group.type]}
+          </FieldLabel>
           <div className='flex flex-wrap gap-2'>
             {group.options.map(option => {
               const isSelected =
@@ -210,14 +201,12 @@ export function RecipeCreateForm({
               );
             })}
           </div>
-        </section>
+        </Field>
       ))}
 
       {/* 재료 */}
-      <section className='flex flex-col gap-3'>
-        <Label className='text-body-2 text-text-primary font-medium'>
-          필요한 재료 <span className='text-primary-base'>*</span>
-        </Label>
+      <Field className='gap-3'>
+        <FieldLabel required>필요한 재료</FieldLabel>
         <div className='flex flex-col gap-3'>
           {formData.ingredients.map((ingredient, index) => (
             <div key={index} className='flex gap-2 items-center'>
@@ -275,13 +264,11 @@ export function RecipeCreateForm({
             </div>
           ))}
         </div>
-      </section>
+      </Field>
 
       {/* 조리 단계 */}
-      <section className='flex flex-col gap-3'>
-        <Label className='text-body-2 text-text-primary font-medium'>
-          만드는 순서 <span className='text-primary-base'>*</span>
-        </Label>
+      <Field className='gap-3'>
+        <FieldLabel required>만드는 순서</FieldLabel>
         <div className='flex flex-col gap-3'>
           {formData.steps.map((step, index) => (
             <div key={index} className='flex gap-2 items-start'>
@@ -321,7 +308,7 @@ export function RecipeCreateForm({
             </div>
           ))}
         </div>
-      </section>
+      </Field>
 
       {/* 제출 버튼 */}
       <Button

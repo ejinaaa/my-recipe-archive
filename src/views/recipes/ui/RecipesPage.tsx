@@ -1,30 +1,30 @@
 'use client';
 
 import { Suspense, useCallback } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { ImageOff, Search, User } from 'lucide-react';
-import { useImageError } from '@/shared/lib/useImageError';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Search } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
 import { PageHeader } from '@/shared/ui/page-header';
+import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
+import { Section, SectionHeader } from '@/shared/ui/section';
+import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
+import { CategorySection, CategorySectionSkeleton } from '@/widgets/category-section';
+import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { RecipeSectionSkeleton } from '@/widgets/recipe-section';
-import { CategorySectionSkeleton } from '@/widgets/category-section';
+import { ProfileGreeting } from './ProfileGreeting';
 import { SilentErrorBoundary } from './sections/SilentErrorBoundary';
 import { MostCookedSection } from './sections/MostCookedSection';
 import { TryMoreSection } from './sections/TryMoreSection';
 import { RecentRecipesSection } from './sections/RecentRecipesSection';
-import { AllRecipesSection } from './sections/AllRecipesSection';
 import { TodayPickSection } from './sections/TodayPickSection';
-import { CategorySection } from '@/widgets/category-section';
-import { Skeleton } from '@/shared/ui/skeleton';
 
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
   const router = useRouter();
-  const { hasValidImage: hasProfileImage, hasError: profileImageError, handleError: handleProfileImageError } = useImageError(profile?.image_url);
 
   const handleRecipeClick = useCallback(
     (recipeId: string) => {
@@ -37,34 +37,8 @@ export function RecipesPage() {
     <div className='min-h-screen pb-20 bg-background'>
       <PageHeader>
         <div className='flex items-center justify-between'>
-          {/* 왼쪽: 프로필 + 인사말 */}
-          <div className='flex items-center gap-3'>
-            <div className='relative size-10 rounded-full bg-neutral-200 overflow-hidden'>
-              {hasProfileImage ? (
-                <Image
-                  src={profile!.image_url!}
-                  alt='프로필'
-                  fill
-                  className='object-cover'
-                  onError={handleProfileImageError}
-                />
-              ) : profileImageError ? (
-                <ImageOff className='size-5 text-text-secondary' />
-              ) : (
-                <User className='size-full p-2 text-text-secondary' />
-              )}
-            </div>
-            <div>
-              <p className='text-heading-2 text-text-primary'>
-                안녕, {profile?.nickname || '요리사'}님
-              </p>
-              <p className='pt-0.5 text-body-2 text-text-secondary'>
-                오늘은 뭘 먹을까요?
-              </p>
-            </div>
-          </div>
+          <ProfileGreeting profile={profile} />
 
-          {/* 오른쪽: 검색 버튼 */}
           <LinkButton
             href={ROUTES.SEARCH}
             variant='solid'
@@ -85,8 +59,19 @@ export function RecipesPage() {
           <Suspense
             fallback={
               <div className='px-4'>
-                <Skeleton className='h-5 w-40 rounded-md mb-3' />
-                <Skeleton className='h-[200px] w-full rounded-2xl' />
+                <div className='relative w-full h-[200px] overflow-hidden rounded-3xl bg-neutral-base/30'>
+                  {/* 그라데이션 오버레이 */}
+                  <div className='absolute inset-0 bg-gradient-to-br from-surface from-30% via-surface/60 via-60% to-transparent' />
+
+                  {/* 콘텐츠 스켈레톤 */}
+                  <div className='relative flex h-full w-[65%] flex-col justify-between p-4'>
+                    <div className='flex flex-col gap-2'>
+                      <Skeleton className='h-5 w-40 rounded-md' />
+                      <Skeleton className='h-4 w-32 rounded-md' />
+                    </div>
+                    <Skeleton className='h-11 w-[150px] rounded-full' />
+                  </div>
+                </div>
               </div>
             }
           >
@@ -96,7 +81,7 @@ export function RecipesPage() {
 
         {/* 많이 해본 요리 */}
         <SilentErrorBoundary>
-          <Suspense fallback={<RecipeSectionSkeleton />}>
+          <Suspense fallback={<RecipeSectionSkeleton title='자주 만드는 요리들이에요' />}>
             <MostCookedSection
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
@@ -113,7 +98,7 @@ export function RecipesPage() {
 
         {/* 더 도전해볼 요리 */}
         <SilentErrorBoundary>
-          <Suspense fallback={<RecipeSectionSkeleton />}>
+          <Suspense fallback={<RecipeSectionSkeleton title='이런 요리도 만들어봐요' />}>
             <TryMoreSection
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
@@ -123,7 +108,7 @@ export function RecipesPage() {
 
         {/* 최근 추가한 레시피 */}
         <SilentErrorBoundary>
-          <Suspense fallback={<RecipeSectionSkeleton />}>
+          <Suspense fallback={<RecipeSectionSkeleton title='새로 추가한 요리에요' />}>
             <RecentRecipesSection
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
@@ -133,7 +118,33 @@ export function RecipesPage() {
       </div>
 
       {/* 전체 레시피 */}
-      <AllRecipesSection />
+      <Section className='mt-8'>
+        <ErrorBoundary
+          fallbackRender={({ resetErrorBoundary }) => (
+            <>
+              <SectionHeader title='나의 모든 레시피' size='lg' moreHref={ROUTES.SEARCH_RESULTS} disabled />
+              <QueryErrorFallback
+                skeleton={<RecipeListSkeleton />}
+                onRetry={resetErrorBoundary}
+                title='레시피 목록을 가져오지 못했어요'
+                description='네트워크 상태를 확인하고 다시 시도해주세요'
+              />
+            </>
+          )}
+        >
+          <Suspense
+            fallback={
+              <>
+                <SectionHeader title='나의 모든 레시피' size='lg' moreHref={ROUTES.SEARCH_RESULTS} disabled />
+                <RecipeListSkeleton />
+              </>
+            }
+          >
+            <SectionHeader title='나의 모든 레시피' size='lg' moreHref={ROUTES.SEARCH_RESULTS} />
+            <RecipeList />
+          </Suspense>
+        </ErrorBoundary>
+      </Section>
 
       <BottomNavigation activeTab='home' />
     </div>

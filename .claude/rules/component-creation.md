@@ -41,6 +41,14 @@ globs: '**/shared/ui/**/*.tsx,**/entities/**/ui/**/*.tsx,**/features/**/ui/**/*.
 - **최대 유연성**: 다양한 상황에서 사용 가능하도록
 - shadcn/ui 기반 + 프로젝트 디자인 시스템 적용
 
+#### shadcn/ui 커스터마이징 절차
+
+1. `pnpm dlx shadcn@latest add [name]` 설치
+2. 생성된 코드 확인 (기본 스타일, 구조 파악)
+3. 프로젝트 디자인 시스템 적용 (typography: `text-body-2` 등, color: `text-text-primary` 등)
+4. 필요시 커스텀 prop 추가 (예: `required`)
+5. 스토리 작성
+
 ### features/widgets
 
 - **Controlled Component**: 상태를 props로 제어

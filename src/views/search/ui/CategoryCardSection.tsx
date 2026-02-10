@@ -2,6 +2,7 @@
 
 import type { CategoryOption, CategoryType } from '@/entities/category/model/types';
 import { CategoryCard } from '@/entities/category/ui';
+import { Section, SectionHeader } from '@/shared/ui/section';
 
 interface CategoryCardSectionProps {
   /** 섹션 제목 */
@@ -21,9 +22,9 @@ export function CategoryCardSection({
   onSelect,
 }: CategoryCardSectionProps) {
   return (
-    <section className='px-4'>
-      <h2 className='text-heading-3 text-text-primary mb-3'>{title}</h2>
-      <div className='grid grid-cols-2 gap-3'>
+    <Section>
+      <SectionHeader title={title} />
+      <div className='grid grid-cols-2 gap-3 px-4'>
         {categories.map(category => (
           <CategoryCard
             key={category.id}
@@ -32,6 +33,6 @@ export function CategoryCardSection({
           />
         ))}
       </div>
-    </section>
+    </Section>
   );
 }
