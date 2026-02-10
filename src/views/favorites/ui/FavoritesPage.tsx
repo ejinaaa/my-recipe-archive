@@ -25,9 +25,10 @@ import { PageHeader } from '@/shared/ui/page-header';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
+import { RecipeList } from '@/widgets/recipe-list';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { ROUTES } from '@/shared/config';
+import { FavoritesPageSkeleton } from './FavoritesPageSkeleton';
 
 const favoritesEmptyFallback = (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
@@ -92,42 +93,11 @@ export function FavoritesPage() {
   };
 
   return (
-    <div className='min-h-screen pb-20 bg-background'>
-      {/* Header */}
-      <PageHeader className='py-3'>
-        <div className='flex items-center gap-2'>
-          <SearchBar
-            defaultValue={searchQuery ?? undefined}
-            onSearch={handleSearch}
-            placeholder='어떤 요리를 찾으세요?'
-          />
-          <SortButton
-            onClick={handleSortClick}
-            isActive={isSortActive(sortBy)}
-          />
-          <FilterButton
-            onClick={handleFilterClick}
-            isActive={isFilterActive(categoryFilters, cookingTimeRange)}
-          />
-        </div>
-      </PageHeader>
-
-      {/* Active Filter Badges */}
-      <ActiveFilterBadges
-        sortBy={sortBy}
-        categoryFilters={categoryFilters}
-        cookingTimeRange={cookingTimeRange}
-        filterOrder={filterOrder}
-        onRemoveSort={resetSort}
-        onRemoveCategoryFilter={removeCategoryFilter}
-        onRemoveCookingTime={removeCookingTime}
-      />
-
-      {/* Main */}
+    <div className='h-dvh flex flex-col bg-background'>
       <ErrorBoundary
         fallbackRender={({ resetErrorBoundary }) => (
           <QueryErrorFallback
-            skeleton={<RecipeListSkeleton />}
+            skeleton={<FavoritesPageSkeleton />}
             onRetry={resetErrorBoundary}
             onHome={() => router.push(ROUTES.RECIPES.LIST)}
             title='즐겨찾기 목록을 가져오지 못했어요'
@@ -135,22 +105,51 @@ export function FavoritesPage() {
           />
         )}
       >
-        <Suspense fallback={<RecipeListSkeleton />}>
-          <RecipeList
-            searchQuery={searchQuery ?? undefined}
-            categories={toCategoryFilter(categoryFilters)}
-            cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
-            sortBy={sortBy ?? undefined}
-            favoritesByUserId={userId}
-            emptyFallback={favoritesEmptyFallback}
-          />
+        <Suspense fallback={<FavoritesPageSkeleton />}>
+          {/* Header */}
+          <PageHeader className='py-3'>
+            <div className='flex items-center gap-2'>
+              <SearchBar
+                defaultValue={searchQuery ?? undefined}
+                onSearch={handleSearch}
+                placeholder='어떤 요리를 찾으세요?'
+              />
+              <SortButton
+                onClick={handleSortClick}
+                isActive={isSortActive(sortBy)}
+              />
+              <FilterButton
+                onClick={handleFilterClick}
+                isActive={isFilterActive(categoryFilters, cookingTimeRange)}
+              />
+            </div>
+          </PageHeader>
+
+          {/* Main */}
+          <main className='flex-1 overflow-y-auto'>
+            <ActiveFilterBadges
+              sortBy={sortBy}
+              categoryFilters={categoryFilters}
+              cookingTimeRange={cookingTimeRange}
+              filterOrder={filterOrder}
+              onRemoveSort={resetSort}
+              onRemoveCategoryFilter={removeCategoryFilter}
+              onRemoveCookingTime={removeCookingTime}
+            />
+            <RecipeList
+              searchQuery={searchQuery ?? undefined}
+              categories={toCategoryFilter(categoryFilters)}
+              cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
+              sortBy={sortBy ?? undefined}
+              favoritesByUserId={userId}
+              emptyFallback={favoritesEmptyFallback}
+            />
+          </main>
         </Suspense>
       </ErrorBoundary>
 
-      {/* Bottom Navigation */}
       <BottomNavigation activeTab='favorites' />
 
-      {/* Filter Bottom Sheet */}
       <FilterBottomSheet
         open={isFilterOpen}
         onOpenChange={setIsFilterOpen}
@@ -159,7 +158,6 @@ export function FavoritesPage() {
         onApply={setFilters}
       />
 
-      {/* Sort Bottom Sheet */}
       <SortBottomSheet
         open={isSortOpen}
         onOpenChange={setIsSortOpen}

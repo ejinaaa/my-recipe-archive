@@ -56,13 +56,13 @@ function RecipeCreateContent({
   const { data: categoryGroups } = useSuspenseCategoryGroups();
 
   return (
-    <main className='px-4 pt-6'>
+    <div className='px-4 pt-6 pb-8'>
       <RecipeCreateForm
         categoryGroups={categoryGroups}
         onSubmit={onSubmit}
         userId={userId}
       />
-    </main>
+    </div>
   );
 }
 
@@ -106,36 +106,32 @@ export function RecipeCreatePage() {
   };
 
   return (
-    <div className='min-h-screen pb-20 bg-background'>
-      {/* Header */}
+    <div className='h-dvh flex flex-col bg-background'>
       <PageHeader>
         <h1 className='text-heading-2 text-text-primary text-center'>
           오늘은 어떤 요리를 기록할까요?
         </h1>
       </PageHeader>
 
-      {/* Form */}
-      <ErrorBoundary
-        fallbackRender={({ resetErrorBoundary }) => (
-          <ErrorFallback
-            onRetry={resetErrorBoundary}
-            onBack={() => router.push(ROUTES.RECIPES.LIST)}
-            title='카테고리 정보를 가져오지 못했어요'
-            description='레시피 작성에 필요한 카테고리를 준비하지 못했어요'
-          />
-        )}
-      >
-        <Suspense fallback={<FormSkeleton />}>
-          <RecipeCreateContent
-            onSubmit={handleSubmit}
-            userId={profile?.id}
-          />
-        </Suspense>
-      </ErrorBoundary>
+      <main className='flex-1 overflow-y-auto'>
+        <ErrorBoundary
+          fallbackRender={({ resetErrorBoundary }) => (
+            <ErrorFallback
+              onRetry={resetErrorBoundary}
+              onBack={() => router.push(ROUTES.RECIPES.LIST)}
+              title='카테고리 정보를 가져오지 못했어요'
+              description='레시피 작성에 필요한 카테고리를 준비하지 못했어요'
+            />
+          )}
+        >
+          <Suspense fallback={<FormSkeleton />}>
+            <RecipeCreateContent onSubmit={handleSubmit} userId={profile?.id} />
+          </Suspense>
+        </ErrorBoundary>
+      </main>
 
       <BottomNavigation activeTab='register' />
 
-      {/* Mutation 에러 Bottom Sheet */}
       <ErrorBottomSheet
         open={!!mutationError}
         onOpenChange={open => !open && setMutationError(null)}

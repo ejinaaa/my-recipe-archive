@@ -53,7 +53,7 @@ export function RecipesPage() {
   );
 
   return (
-    <div className='min-h-screen pb-20 bg-background'>
+    <div className='h-dvh flex flex-col bg-background'>
       <PageHeader>
         <div className='flex items-center justify-between'>
           <ProfileGreeting profile={profile} />
@@ -72,6 +72,7 @@ export function RecipesPage() {
         </div>
       </PageHeader>
 
+      <main className='flex-1 overflow-y-auto'>
       <div className='flex flex-col gap-6 mt-2'>
         {/* 오늘의 추천 요리 */}
         <SilentErrorBoundary>
@@ -173,6 +174,7 @@ export function RecipesPage() {
           </Suspense>
         </ErrorBoundary>
       </Section>
+      </main>
 
       <BottomNavigation activeTab='home' />
     </div>

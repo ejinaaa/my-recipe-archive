@@ -38,7 +38,7 @@ function SearchContent({
   return (
     <>
       {/* Header */}
-      <PageHeader sticky={false} className='pb-6'>
+      <PageHeader className='pb-6'>
         <SearchBar
           onSearch={onSearch}
           placeholder='어떤 요리를 찾으세요?'
@@ -46,7 +46,7 @@ function SearchContent({
       </PageHeader>
 
       {/* Main */}
-      <main className='space-y-6 pb-6'>
+      <main className='flex-1 overflow-y-auto space-y-6 pb-6'>
         <CuisineBadgeSection
           cuisines={cuisineGroup?.options ?? []}
           onSelect={onCuisineSelect}
@@ -87,7 +87,7 @@ export function SearchPage() {
   };
 
   return (
-    <div className='min-h-screen pb-20 bg-background'>
+    <div className='h-dvh flex flex-col bg-background'>
       <ErrorBoundary
         fallbackRender={({ resetErrorBoundary }) => (
           <QueryErrorFallback

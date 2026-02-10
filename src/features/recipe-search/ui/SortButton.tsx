@@ -4,9 +4,10 @@ import { Button } from '@/shared/ui/button';
 interface SortButtonProps {
   onClick?: () => void;
   isActive?: boolean;
+  disabled?: boolean;
 }
 
-export function SortButton({ onClick, isActive = false }: SortButtonProps) {
+export function SortButton({ onClick, isActive = false, disabled }: SortButtonProps) {
   return (
     <div className='relative'>
       <Button
@@ -14,6 +15,7 @@ export function SortButton({ onClick, isActive = false }: SortButtonProps) {
         colorScheme='neutral'
         size='sm'
         onClick={onClick}
+        disabled={disabled}
         aria-label='정렬'
       >
         <ArrowUpDown />

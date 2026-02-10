@@ -34,7 +34,7 @@ import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
  */
 function FormSkeleton() {
   return (
-    <main className='px-4 pt-6 flex flex-col gap-6'>
+    <div className='px-4 pt-6 flex flex-col gap-6'>
       <div className='flex flex-col items-center gap-2'>
         <Skeleton className='size-24 rounded-full' />
         <Skeleton className='h-3 w-32' />
@@ -57,7 +57,7 @@ function FormSkeleton() {
           </div>
         </div>
       ))}
-    </main>
+    </div>
   );
 }
 
@@ -94,7 +94,7 @@ function RecipeEditContent({
   return (
     <>
       {/* Form */}
-      <main className='px-4 pt-6 pb-6'>
+      <div className='px-4 pt-6 pb-6'>
         <RecipeCreateForm
           categoryGroups={categoryGroups}
           onSubmit={onSubmit}
@@ -113,7 +113,7 @@ function RecipeEditContent({
         >
           이 레시피를 삭제할게요
         </Button>
-      </main>
+      </div>
 
       {/* 삭제 확인 Bottom Sheet */}
       <DeleteRecipeConfirm
@@ -189,7 +189,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
   };
 
   return (
-    <div className='min-h-screen pb-20 bg-background'>
+    <div className='h-dvh flex flex-col bg-background'>
       {/* Header */}
       <PageHeader>
         <div className='relative flex items-center justify-center'>
@@ -210,26 +210,28 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       </PageHeader>
 
       {/* Content */}
-      <ErrorBoundary
-        fallbackRender={({ resetErrorBoundary }) => (
-          <ErrorFallback
-            onRetry={resetErrorBoundary}
-            onBack={() => router.push(ROUTES.RECIPES.LIST)}
-            title='필요한 정보를 가져오지 못했어요'
-            description='레시피 수정에 필요한 데이터를 준비하지 못했어요'
-          />
-        )}
-      >
-        <Suspense fallback={<FormSkeleton />}>
-          <RecipeEditContent
-            id={id}
-            onSubmit={handleSubmit}
-            onDelete={handleDelete}
-            isDeletePending={deleteRecipe.isPending}
-            userId={profile?.id}
-          />
-        </Suspense>
-      </ErrorBoundary>
+      <main className='flex-1 overflow-y-auto'>
+        <ErrorBoundary
+          fallbackRender={({ resetErrorBoundary }) => (
+            <ErrorFallback
+              onRetry={resetErrorBoundary}
+              onBack={() => router.push(ROUTES.RECIPES.LIST)}
+              title='필요한 정보를 가져오지 못했어요'
+              description='레시피 수정에 필요한 데이터를 준비하지 못했어요'
+            />
+          )}
+        >
+          <Suspense fallback={<FormSkeleton />}>
+            <RecipeEditContent
+              id={id}
+              onSubmit={handleSubmit}
+              onDelete={handleDelete}
+              isDeletePending={deleteRecipe.isPending}
+              userId={profile?.id}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      </main>
 
       <BottomNavigation activeTab='register' />
 

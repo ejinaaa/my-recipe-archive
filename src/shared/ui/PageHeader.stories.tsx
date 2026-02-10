@@ -7,9 +7,7 @@ const meta = {
   title: 'shared/PageHeader',
   component: PageHeader,
   tags: ['autodocs'],
-  argTypes: {
-    sticky: { control: 'boolean' },
-  },
+  argTypes: {},
   decorators: [
     (Story) => (
       <div className='bg-neutral-100 min-h-[200px]'>
@@ -75,10 +73,10 @@ export const WithBackButton: Story = {
   },
 };
 
-/** non-sticky 헤더 */
-export const NonSticky: Story = {
+/** className 커스텀 */
+export const CustomClassName: Story = {
   args: {
-    sticky: false,
+    className: 'pb-6',
     children: (
       <h1 className='text-heading-2 text-text-primary'>검색</h1>
     ),

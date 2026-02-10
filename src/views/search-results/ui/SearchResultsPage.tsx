@@ -22,8 +22,9 @@ import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
+import { RecipeList } from '@/widgets/recipe-list';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
+import { SearchResultsPageSkeleton } from './SearchResultsPageSkeleton';
 
 export function SearchResultsPage() {
   const router = useRouter();
@@ -68,43 +69,11 @@ export function SearchResultsPage() {
   };
 
   return (
-    <div className='min-h-screen pb-20 bg-background'>
-      {/* Header */}
-      <PageHeader className='py-3'>
-        <div className='flex items-center gap-2'>
-          <BackButton onBack={handleBack} />
-          <SearchBar
-            defaultValue={searchQuery ?? undefined}
-            onSearch={handleSearch}
-            placeholder='어떤 요리를 찾으세요?'
-          />
-          <SortButton
-            onClick={handleSortClick}
-            isActive={isSortActive(sortBy)}
-          />
-          <FilterButton
-            onClick={handleFilterClick}
-            isActive={isFilterActive(categoryFilters, cookingTimeRange)}
-          />
-        </div>
-      </PageHeader>
-
-      {/* Active Filter Badges */}
-      <ActiveFilterBadges
-        sortBy={sortBy}
-        categoryFilters={categoryFilters}
-        cookingTimeRange={cookingTimeRange}
-        filterOrder={filterOrder}
-        onRemoveSort={resetSort}
-        onRemoveCategoryFilter={removeCategoryFilter}
-        onRemoveCookingTime={removeCookingTime}
-      />
-
-      {/* Main */}
+    <div className='h-dvh flex flex-col bg-background'>
       <ErrorBoundary
         fallbackRender={({ resetErrorBoundary }) => (
           <QueryErrorFallback
-            skeleton={<RecipeListSkeleton />}
+            skeleton={<SearchResultsPageSkeleton />}
             onRetry={resetErrorBoundary}
             onHome={() => router.push(ROUTES.RECIPES.LIST)}
             title='검색 결과를 가져오지 못했어요'
@@ -112,20 +81,50 @@ export function SearchResultsPage() {
           />
         )}
       >
-        <Suspense fallback={<RecipeListSkeleton />}>
-          <RecipeList
-            searchQuery={searchQuery ?? undefined}
-            categories={toCategoryFilter(categoryFilters)}
-            cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
-            sortBy={sortBy ?? undefined}
-          />
+        <Suspense fallback={<SearchResultsPageSkeleton />}>
+          {/* Header */}
+          <PageHeader className='py-3'>
+            <div className='flex items-center gap-2'>
+              <BackButton onBack={handleBack} />
+              <SearchBar
+                defaultValue={searchQuery ?? undefined}
+                onSearch={handleSearch}
+                placeholder='어떤 요리를 찾으세요?'
+              />
+              <SortButton
+                onClick={handleSortClick}
+                isActive={isSortActive(sortBy)}
+              />
+              <FilterButton
+                onClick={handleFilterClick}
+                isActive={isFilterActive(categoryFilters, cookingTimeRange)}
+              />
+            </div>
+          </PageHeader>
+
+          {/* Main */}
+          <main className='flex-1 overflow-y-auto'>
+            <ActiveFilterBadges
+              sortBy={sortBy}
+              categoryFilters={categoryFilters}
+              cookingTimeRange={cookingTimeRange}
+              filterOrder={filterOrder}
+              onRemoveSort={resetSort}
+              onRemoveCategoryFilter={removeCategoryFilter}
+              onRemoveCookingTime={removeCookingTime}
+            />
+            <RecipeList
+              searchQuery={searchQuery ?? undefined}
+              categories={toCategoryFilter(categoryFilters)}
+              cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
+              sortBy={sortBy ?? undefined}
+            />
+          </main>
         </Suspense>
       </ErrorBoundary>
 
-      {/* Bottom Navigation */}
       <BottomNavigation activeTab='search' />
 
-      {/* Filter Bottom Sheet */}
       <FilterBottomSheet
         open={isFilterOpen}
         onOpenChange={setIsFilterOpen}
@@ -134,7 +133,6 @@ export function SearchResultsPage() {
         onApply={setFilters}
       />
 
-      {/* Sort Bottom Sheet */}
       <SortBottomSheet
         open={isSortOpen}
         onOpenChange={setIsSortOpen}

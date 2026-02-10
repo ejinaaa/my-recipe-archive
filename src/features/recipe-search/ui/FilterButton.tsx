@@ -4,9 +4,10 @@ import { Button } from '@/shared/ui/button';
 interface FilterButtonProps {
   onClick?: () => void;
   isActive?: boolean;
+  disabled?: boolean;
 }
 
-export function FilterButton({ onClick, isActive = false }: FilterButtonProps) {
+export function FilterButton({ onClick, isActive = false, disabled }: FilterButtonProps) {
   return (
     <div className='relative'>
       <Button
@@ -14,6 +15,7 @@ export function FilterButton({ onClick, isActive = false }: FilterButtonProps) {
         colorScheme='neutral'
         size='sm'
         onClick={onClick}
+        disabled={disabled}
         aria-label='필터'
       >
         <SlidersHorizontal />

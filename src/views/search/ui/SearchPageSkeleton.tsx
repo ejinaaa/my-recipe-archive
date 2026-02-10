@@ -1,18 +1,20 @@
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
+import { SearchBar } from '@/features/recipe-search';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
+import { PageHeader } from '@/shared/ui/page-header';
 import { Section, SectionHeader } from '@/shared/ui/section';
 import { Skeleton } from '@/shared/ui/skeleton';
 
 export function SearchPageSkeleton() {
   return (
-    <div className='min-h-screen pb-20 bg-background'>
+    <>
       {/* Header */}
-      <header className='px-4 pt-4 pb-6'>
-        <Skeleton className='h-12 w-full rounded-full' />
-      </header>
+      <PageHeader className='pb-6'>
+        <SearchBar disabled onSearch={() => {}} />
+      </PageHeader>
 
       {/* Main */}
-      <main className='space-y-6 pb-6'>
+      <main className='flex-1 overflow-y-auto space-y-6 pb-6'>
         {/* 장르별 섹션 */}
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.cuisine} />
@@ -43,6 +45,6 @@ export function SearchPageSkeleton() {
           </div>
         </Section>
       </main>
-    </div>
+    </>
   );
 }

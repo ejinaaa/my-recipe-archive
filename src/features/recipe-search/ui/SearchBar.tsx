@@ -13,12 +13,14 @@ interface SearchBarProps {
   defaultValue?: string;
   onSearch: (query: string) => void;
   placeholder?: string;
+  disabled?: boolean;
 }
 
 export function SearchBar({
   defaultValue = '',
   onSearch,
   placeholder = '어떤 요리를 찾으세요?',
+  disabled,
 }: SearchBarProps) {
   const [inputValue, setInputValue] = useState(defaultValue);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,7 +54,7 @@ export function SearchBar({
   };
 
   return (
-    <InputGroup size='sm' className='flex-1'>
+    <InputGroup size='sm' className='flex-1' disabled={disabled}>
       <InputGroupAddon>
         <Search />
       </InputGroupAddon>
