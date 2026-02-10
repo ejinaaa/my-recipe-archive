@@ -1,7 +1,7 @@
 import { Section, SectionHeader } from '@/shared/ui/section';
 import { Skeleton } from '@/shared/ui/skeleton';
 
-interface RecipeSectionSkeletonProps {
+interface RecipeCarouselSkeletonProps {
   /** 섹션 제목 */
   title: string;
   /** 더보기 버튼 표시 여부 */
@@ -9,9 +9,9 @@ interface RecipeSectionSkeletonProps {
 }
 
 /**
- * RecipeSection 로딩 스켈레톤
+ * RecipeCarousel 로딩 스켈레톤
  */
-export function RecipeSectionSkeleton({ title, showMore = true }: RecipeSectionSkeletonProps) {
+export function RecipeCarouselSkeleton({ title, showMore = true }: RecipeCarouselSkeletonProps) {
   return (
     <Section>
       <SectionHeader title={title} moreHref={showMore ? '#' : undefined} disabled />

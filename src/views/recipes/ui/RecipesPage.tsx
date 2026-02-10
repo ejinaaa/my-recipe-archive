@@ -14,12 +14,9 @@ import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { CategorySection, CategorySectionSkeleton } from '@/widgets/category-section';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
-import { RecipeSectionSkeleton } from '@/widgets/recipe-section';
+import { RecipeCarousel, RecipeCarouselSkeleton } from '@/widgets/recipe-section';
 import { ProfileGreeting } from './ProfileGreeting';
 import { SilentErrorBoundary } from './sections/SilentErrorBoundary';
-import { MostCookedSection } from './sections/MostCookedSection';
-import { TryMoreSection } from './sections/TryMoreSection';
-import { RecentRecipesSection } from './sections/RecentRecipesSection';
 import { TodayPickSection } from './sections/TodayPickSection';
 
 export function RecipesPage() {
@@ -81,8 +78,11 @@ export function RecipesPage() {
 
         {/* 많이 해본 요리 */}
         <SilentErrorBoundary>
-          <Suspense fallback={<RecipeSectionSkeleton title='자주 만드는 요리들이에요' />}>
-            <MostCookedSection
+          <Suspense fallback={<RecipeCarouselSkeleton title='자주 만드는 요리들이에요' />}>
+            <RecipeCarousel
+              title='자주 만드는 요리들이에요'
+              sortBy='most_cooked'
+              moreHref='/search/results?sort=most_cooked'
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
             />
@@ -98,8 +98,11 @@ export function RecipesPage() {
 
         {/* 더 도전해볼 요리 */}
         <SilentErrorBoundary>
-          <Suspense fallback={<RecipeSectionSkeleton title='이런 요리도 만들어봐요' />}>
-            <TryMoreSection
+          <Suspense fallback={<RecipeCarouselSkeleton title='이런 요리도 만들어봐요' />}>
+            <RecipeCarousel
+              title='이런 요리도 만들어봐요'
+              sortBy='least_cooked'
+              moreHref='/search/results?sort=least_cooked'
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
             />
@@ -108,8 +111,11 @@ export function RecipesPage() {
 
         {/* 최근 추가한 레시피 */}
         <SilentErrorBoundary>
-          <Suspense fallback={<RecipeSectionSkeleton title='새로 추가한 요리에요' />}>
-            <RecentRecipesSection
+          <Suspense fallback={<RecipeCarouselSkeleton title='새로 추가한 요리에요' />}>
+            <RecipeCarousel
+              title='새로 추가한 요리에요'
+              sortBy='latest'
+              moreHref='/search/results?sort=latest'
               userId={profile?.id}
               onRecipeClick={handleRecipeClick}
             />

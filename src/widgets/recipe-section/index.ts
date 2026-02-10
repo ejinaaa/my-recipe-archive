@@ -1,2 +1,2 @@
-export { RecipeSection } from './ui/RecipeSection';
-export { RecipeSectionSkeleton } from './ui/RecipeSectionSkeleton';
+export { RecipeCarousel } from './ui/RecipeCarousel';
+export { RecipeCarouselSkeleton } from './ui/RecipeCarouselSkeleton';

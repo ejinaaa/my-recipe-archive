@@ -2,19 +2,24 @@
 
 import { useMemo, useCallback } from 'react';
 import { RecipeCardCompact } from '@/entities/recipe/ui/RecipeCardCompact';
+import { useSuspenseRecipeSection } from '@/entities/recipe/api/hooks';
 import {
   useFavoriteStatuses,
   useToggleFavorite,
 } from '@/entities/favorite/api/hooks';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { Section, SectionHeader } from '@/shared/ui/section';
-import type { Recipe } from '@/entities/recipe/model/types';
+import type { RecipeSortBy } from '@/entities/recipe/api/server';
 
-interface RecipeSectionProps {
+const DEFAULT_SECTION_LIMIT = 6;
+
+interface RecipeCarouselProps {
   /** 섹션 제목 */
   title: string;
-  /** 표시할 레시피 목록 */
-  recipes: Recipe[];
+  /** 정렬 기준 */
+  sortBy: RecipeSortBy;
+  /** 조회할 레시피 수 */
+  limit?: number;
   /** "전체 보기" 링크 경로 */
   moreHref?: string;
   /** 현재 유저 ID (즐겨찾기용) */
@@ -24,16 +29,19 @@ interface RecipeSectionProps {
 }
 
 /**
- * 수평 스크롤 레시피 섹션 위젯
- * 즐겨찾기 상태 관리를 내부에서 처리
+ * 수평 스크롤 레시피 캐러셀 위젯
+ * 내부에서 정렬 기준별 레시피를 조회하고 즐겨찾기 상태를 관리
  */
-export function RecipeSection({
+export function RecipeCarousel({
   title,
-  recipes,
+  sortBy,
+  limit = DEFAULT_SECTION_LIMIT,
   moreHref,
   userId,
   onRecipeClick,
-}: RecipeSectionProps) {
+}: RecipeCarouselProps) {
+  const { data: recipes } = useSuspenseRecipeSection(sortBy, limit);
+
   const recipeIds = useMemo(() => recipes.map(r => r.id), [recipes]);
   const { data: favoriteStatuses } = useFavoriteStatuses(userId, recipeIds);
   const toggleFavorite = useToggleFavorite();
@@ -45,6 +53,8 @@ export function RecipeSection({
     },
     [userId, toggleFavorite],
   );
+
+  if (recipes.length === 0) return null;
 
   return (
     <Section>
