@@ -104,14 +104,17 @@ export async function createRecipeAction(data: RecipeInsert) {
 ```typescript
 // client.ts - Route API 호출 함수
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
+import { handleApiResponse } from '@/shared/api/fetchWithError';
 
 export const fetchRecipe = async (id: string): Promise<Recipe | null> => {
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/recipes/${id}`);
-  if (!res.ok) throw new Error('레시피를 불러오는데 실패했습니다.');
-  return res.json();
+  if (res.status === 404) return null;
+  return handleApiResponse<Recipe>(res, '레시피 정보를 가져오지 못했어요');
 };
 ```
+
+> 에러 처리 세부 패턴은 `error-handling.md` 참고
 
 ## 핵심 원칙
 
