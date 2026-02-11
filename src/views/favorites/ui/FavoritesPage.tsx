@@ -21,6 +21,7 @@ import {
 
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api';
+import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
@@ -93,26 +94,21 @@ export function FavoritesPage() {
   return (
     <div className='h-dvh flex flex-col bg-background'>
       {/* Header */}
-      <PageHeader className='py-3'>
-        <div className='flex items-center gap-2'>
-          <SearchBar
-            defaultValue={searchQuery ?? undefined}
-            onSearch={handleSearch}
-            placeholder='어떤 요리를 찾으세요?'
-          />
-          <SortButton
-            onClick={handleSortClick}
-            isActive={isSortActive(sortBy)}
-          />
-          <FilterButton
-            onClick={handleFilterClick}
-            isActive={isFilterActive(categoryFilters, cookingTimeRange)}
-          />
-        </div>
+      <PageHeader>
+        <SearchBar
+          defaultValue={searchQuery ?? undefined}
+          onSearch={handleSearch}
+          placeholder='어떤 요리를 찾으세요?'
+        />
+        <SortButton onClick={handleSortClick} isActive={isSortActive(sortBy)} />
+        <FilterButton
+          onClick={handleFilterClick}
+          isActive={isFilterActive(categoryFilters, cookingTimeRange)}
+        />
       </PageHeader>
 
       {/* Main */}
-      <main className='flex-1 overflow-y-auto'>
+      <PageContent>
         <ActiveFilterBadges
           sortBy={sortBy}
           categoryFilters={categoryFilters}
@@ -143,7 +139,7 @@ export function FavoritesPage() {
             />
           </Suspense>
         </ErrorBoundary>
-      </main>
+      </PageContent>
 
       <BottomNavigation activeTab='favorites' />
 

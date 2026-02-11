@@ -3,7 +3,6 @@
 import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
-import { ChevronLeft } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { ROUTES } from '@/shared/config';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
@@ -22,12 +21,14 @@ import {
   convertRecipeToFormData,
   type RecipeFormData,
 } from '@/features/recipe-create';
+import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ErrorFallback } from '@/shared/ui/error-fallback';
 import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
+import { BackButton } from '@/shared/ui/back-button';
 
 /**
  * 폼 영역 스켈레톤 (내부 Suspense용, header 제외)
@@ -192,25 +193,14 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
     <div className='h-dvh flex flex-col bg-background'>
       {/* Header */}
       <PageHeader>
-        <div className='relative flex items-center justify-center'>
-          <Button
-            variant='solid'
-            colorScheme='neutral'
-            size='sm'
-            className='absolute left-0 size-10 p-0'
-            onClick={handleBack}
-            aria-label='뒤로가기'
-          >
-            <ChevronLeft className='size-5' />
-          </Button>
-          <h1 className='text-heading-2 text-text-primary'>
-            레시피를 다듬어볼까요?
-          </h1>
-        </div>
+        <BackButton onBack={handleBack} />
+        <h1 className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-heading-2 text-text-primary'>
+          레시피를 다듬어볼까요?
+        </h1>
       </PageHeader>
 
       {/* Content */}
-      <main className='flex-1 overflow-y-auto'>
+      <PageContent>
         <ErrorBoundary
           fallbackRender={({ resetErrorBoundary }) => (
             <ErrorFallback
@@ -231,7 +221,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
             />
           </Suspense>
         </ErrorBoundary>
-      </main>
+      </PageContent>
 
       <BottomNavigation activeTab='register' />
 

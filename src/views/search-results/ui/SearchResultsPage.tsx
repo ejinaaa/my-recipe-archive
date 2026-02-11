@@ -17,6 +17,7 @@ import {
   isFilterActive,
 } from '@/features/recipe-search';
 import { BackButton } from '@/shared/ui/back-button';
+import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
@@ -69,27 +70,22 @@ export function SearchResultsPage() {
   return (
     <div className='h-dvh flex flex-col bg-background'>
       {/* Header */}
-      <PageHeader className='py-3'>
-        <div className='flex items-center gap-2'>
-          <BackButton onBack={handleBack} />
-          <SearchBar
-            defaultValue={searchQuery ?? undefined}
-            onSearch={handleSearch}
-            placeholder='어떤 요리를 찾으세요?'
-          />
-          <SortButton
-            onClick={handleSortClick}
-            isActive={isSortActive(sortBy)}
-          />
-          <FilterButton
-            onClick={handleFilterClick}
-            isActive={isFilterActive(categoryFilters, cookingTimeRange)}
-          />
-        </div>
+      <PageHeader>
+        <BackButton onBack={handleBack} />
+        <SearchBar
+          defaultValue={searchQuery ?? undefined}
+          onSearch={handleSearch}
+          placeholder='어떤 요리를 찾으세요?'
+        />
+        <SortButton onClick={handleSortClick} isActive={isSortActive(sortBy)} />
+        <FilterButton
+          onClick={handleFilterClick}
+          isActive={isFilterActive(categoryFilters, cookingTimeRange)}
+        />
       </PageHeader>
 
       {/* Main */}
-      <main className='flex-1 overflow-y-auto'>
+      <PageContent>
         <ActiveFilterBadges
           sortBy={sortBy}
           categoryFilters={categoryFilters}
@@ -118,7 +114,7 @@ export function SearchResultsPage() {
             />
           </Suspense>
         </ErrorBoundary>
-      </main>
+      </PageContent>
 
       <BottomNavigation activeTab='search' />
 

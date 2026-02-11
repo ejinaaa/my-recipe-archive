@@ -27,6 +27,8 @@ import { BackButton } from '@/shared/ui/back-button';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
+import { PageContent } from '@/shared/ui/page-content';
+import { PageHeader } from '@/shared/ui/page-header';
 import { ROUTES } from '@/shared/config';
 import {
   useSuspenseRecipe,
@@ -46,7 +48,11 @@ interface RecipeDetailPageProps {
 export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   const router = useRouter();
   const { data: recipe } = useSuspenseRecipe(id);
-  const { hasValidImage: hasThumbImage, hasError: thumbImageError, handleError: handleImageError } = useImageError(recipe?.thumbnail_url);
+  const {
+    hasValidImage: hasThumbImage,
+    hasError: thumbImageError,
+    handleError: handleImageError,
+  } = useImageError(recipe?.thumbnail_url);
   const { data: profile } = useCurrentProfile();
   const userId = profile?.id;
   const { data: cookCount } = useCookCount(userId, id);
@@ -88,11 +94,10 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
     toggleFavorite.mutate({ userId, recipeId: id });
   };
 
-
   return (
     <div className='relative min-h-screen bg-background'>
       {/* Fixed Header */}
-      <div className='fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full px-4 py-2'>
+      <PageHeader className='fixed top-0 left-0 right-0 z-50'>
         <BackButton onBack={handleBack} />
         <div className='flex items-center gap-2'>
           <Button
@@ -112,7 +117,7 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
             size='sm'
           />
         </div>
-      </div>
+      </PageHeader>
 
       {/* Thumbnail Section - 350px 고정 */}
       <div className='relative w-full h-[350px] overflow-hidden rounded-b-3xl'>
@@ -140,7 +145,7 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
       </div>
 
       {/* Content Section */}
-      <div className='relative bg-background pt-6 px-4 pb-20 z-10'>
+      <PageContent className='relative bg-background pt-6 px-4 pb-20 z-10'>
         {/* Badges */}
         <div className='flex flex-wrap gap-1.5 mb-4'>
           {recipe.cooking_time && (
@@ -235,7 +240,7 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
             )}
           </div>
         )}
-      </div>
+      </PageContent>
     </div>
   );
 }

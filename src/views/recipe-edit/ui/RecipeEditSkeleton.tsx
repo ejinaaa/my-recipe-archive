@@ -1,3 +1,4 @@
+import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
@@ -6,15 +7,13 @@ export function RecipeEditSkeleton() {
   return (
     <div className='h-dvh flex flex-col bg-background'>
       {/* Header */}
-      <PageHeader>
-        <div className='relative flex items-center justify-center'>
-          <Skeleton className='absolute left-0 size-10 rounded-full' />
-          <Skeleton className='h-6 w-48' />
-        </div>
+      <PageHeader className='justify-center'>
+        <Skeleton className='size-10 rounded-full' />
+        <Skeleton className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-48' />
       </PageHeader>
 
       {/* Form Skeleton */}
-      <main className='flex-1 overflow-y-auto'>
+      <PageContent>
         <div className='px-4 pt-6 flex flex-col gap-6'>
           {/* 썸네일 */}
           <div className='flex flex-col items-center gap-2'>
@@ -84,7 +83,7 @@ export function RecipeEditSkeleton() {
           {/* 제출 버튼 */}
           <Skeleton className='h-14 w-full rounded-full mt-4' />
         </div>
-      </main>
+      </PageContent>
 
       <BottomNavigation activeTab='register' />
     </div>

@@ -10,6 +10,7 @@ import { SearchBar } from '@/features/recipe-search';
 import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
+import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
@@ -38,15 +39,12 @@ function SearchContent({
   return (
     <>
       {/* Header */}
-      <PageHeader className='pb-6'>
-        <SearchBar
-          onSearch={onSearch}
-          placeholder='어떤 요리를 찾으세요?'
-        />
+      <PageHeader>
+        <SearchBar onSearch={onSearch} placeholder='어떤 요리를 찾으세요?' />
       </PageHeader>
 
       {/* Main */}
-      <main className='flex-1 overflow-y-auto space-y-6 pb-6'>
+      <PageContent className='space-y-6 py-6'>
         <CuisineBadgeSection
           cuisines={cuisineGroup?.options ?? []}
           onSelect={onCuisineSelect}
@@ -63,7 +61,7 @@ function SearchContent({
           categories={dishTypeGroup?.options ?? []}
           onSelect={onCategorySelect}
         />
-      </main>
+      </PageContent>
     </>
   );
 }

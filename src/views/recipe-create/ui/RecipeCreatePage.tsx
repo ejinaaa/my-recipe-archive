@@ -15,6 +15,7 @@ import {
   RecipeCreateForm,
   type RecipeFormData,
 } from '@/features/recipe-create';
+import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ErrorFallback } from '@/shared/ui/error-fallback';
 import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
@@ -107,13 +108,13 @@ export function RecipeCreatePage() {
 
   return (
     <div className='h-dvh flex flex-col bg-background'>
-      <PageHeader>
+      <PageHeader className='justify-center'>
         <h1 className='text-heading-2 text-text-primary text-center'>
           오늘은 어떤 요리를 기록할까요?
         </h1>
       </PageHeader>
 
-      <main className='flex-1 overflow-y-auto'>
+      <PageContent>
         <ErrorBoundary
           fallbackRender={({ resetErrorBoundary }) => (
             <ErrorFallback
@@ -128,7 +129,7 @@ export function RecipeCreatePage() {
             <RecipeCreateContent onSubmit={handleSubmit} userId={profile?.id} />
           </Suspense>
         </ErrorBoundary>
-      </main>
+      </PageContent>
 
       <BottomNavigation activeTab='register' />
 

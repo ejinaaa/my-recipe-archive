@@ -7,15 +7,15 @@ interface PageHeaderProps {
 
 /**
  * 페이지 공통 헤더 레이아웃
- * 기본 스타일: px-4 pt-4 pb-3
+ * 기본 스타일: px-4 py-3
  */
-export function PageHeader({
-  children,
-  className,
-}: PageHeaderProps) {
+export function PageHeader({ children, className }: PageHeaderProps) {
   return (
     <header
-      className={cn('px-4 pt-4 pb-3', className)}
+      className={cn(
+        'relative px-4 py-3 flex items-center justify-between gap-2 min-h-16',
+        className,
+      )}
     >
       {children}
     </header>
