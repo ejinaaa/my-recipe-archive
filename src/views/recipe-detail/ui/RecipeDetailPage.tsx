@@ -19,6 +19,10 @@ import {
   useCookCount,
   useAddCookingLog,
 } from '@/entities/cooking-log/api/hooks';
+import {
+  useIsFavorited,
+  useToggleFavorite,
+} from '@/entities/favorite/api/hooks';
 import { BackButton } from '@/shared/ui/back-button';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
@@ -48,6 +52,8 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   const { data: cookCount } = useCookCount(userId, id);
   const addCookingLog = useAddCookingLog();
   const incrementViewCount = useIncrementViewCount();
+  const { data: isFavorited } = useIsFavorited(userId, id);
+  const toggleFavorite = useToggleFavorite();
   const [showSuccess, setShowSuccess] = useState(false);
 
   // 페이지 진입 시 조회수 증가
@@ -78,7 +84,8 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   };
 
   const handleToggleFavorite = () => {
-    // TODO: 즐겨찾기 기능 구현 시 추가
+    if (!userId) return;
+    toggleFavorite.mutate({ userId, recipeId: id });
   };
 
 
@@ -100,7 +107,7 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
             <Pencil className='size-5' />
           </Button>
           <FavoriteButton
-            isFavorite={false}
+            isFavorite={isFavorited ?? false}
             onToggle={handleToggleFavorite}
             size='sm'
           />
