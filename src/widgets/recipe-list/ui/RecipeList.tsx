@@ -1,13 +1,13 @@
 'use client';
 
 import { useMemo, useCallback, useDeferredValue, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
+import { RecipeListEndMessage } from './RecipeListEndMessage';
+import { RecipeListLoadingIndicator } from './RecipeListLoadingIndicator';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
 import { useSuspenseInfiniteRecipes } from '@/entities/recipe/api/hooks';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import {
-  useFavoriteStatuses,
+  useRecipeFavorites,
   useToggleFavorite,
 } from '@/entities/favorite/api/hooks';
 import type {
@@ -48,8 +48,6 @@ export function RecipeList({
   favoritesByUserId,
   emptyFallback = defaultEmptyFallback,
 }: RecipeListProps) {
-  const router = useRouter();
-
   // 쿼리 파라미터 객체 안정화 (참조 동일성 보장)
   const categoriesKey = JSON.stringify(categories);
   const cookingTimeKey = JSON.stringify(cookingTimeRange);
@@ -75,18 +73,11 @@ export function RecipeList({
   const { data: currentProfile } = useCurrentProfile();
   const userId = currentProfile?.id;
 
-  // 레시피 ID 목록 추출
-  const recipeIds = useMemo(() => recipes.map(recipe => recipe.id), [recipes]);
-
   // 즐겨찾기 상태 조회
-  const { data: favoriteStatuses } = useFavoriteStatuses(userId, recipeIds);
+  const { favoriteStatuses } = useRecipeFavorites(userId, recipes);
 
   // 즐겨찾기 토글 mutation
   const toggleFavorite = useToggleFavorite();
-
-  const handleRecipeClick = (recipeId: string) => {
-    router.push(ROUTES.RECIPES.DETAIL(recipeId));
-  };
 
   // 즐겨찾기 토글 핸들러
   const handleToggleFavorite = useCallback(
@@ -106,21 +97,8 @@ export function RecipeList({
         isEmpty={recipes.length === 0}
         containerClassName='grid grid-cols-2 gap-2 px-4'
         emptyComponent={emptyFallback}
-        loadingComponent={
-          <div className='flex items-center justify-center py-8'>
-            <Loader2 className='size-6 animate-spin text-text-secondary' />
-            <span className='ml-2 text-body-2 text-text-secondary'>
-              불러오는 중...
-            </span>
-          </div>
-        }
-        endComponent={
-          <div className='flex items-center justify-center py-8'>
-            <p className='text-body-2 text-text-secondary'>
-              모든 레시피를 둘러봤어요
-            </p>
-          </div>
-        }
+        loadingComponent={<RecipeListLoadingIndicator />}
+        endComponent={<RecipeListEndMessage />}
       >
         {recipes.map(recipe => (
           <RecipeCard
@@ -128,7 +106,7 @@ export function RecipeList({
             recipe={recipe}
             isFavorite={favoriteStatuses?.[recipe.id] ?? false}
             onToggleFavorite={() => handleToggleFavorite(recipe.id)}
-            onClick={() => handleRecipeClick(recipe.id)}
+            href={ROUTES.RECIPES.DETAIL(recipe.id)}
             className='w-full max-w-none'
           />
         ))}

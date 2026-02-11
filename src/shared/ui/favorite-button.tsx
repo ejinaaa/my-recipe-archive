@@ -19,6 +19,7 @@ const FavoriteButton = React.forwardRef<HTMLButtonElement, FavoriteButtonProps>(
     ref
   ) => {
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
       e.stopPropagation();
       onClick?.(e);
       onToggle?.();

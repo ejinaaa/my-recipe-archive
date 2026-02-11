@@ -1,15 +1,16 @@
 'use client';
 
-import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Textarea } from '@/shared/ui/textarea';
-import { Badge } from '@/shared/ui/badge';
 import { Slider } from '@/shared/ui/slider';
 import { Field, FieldLabel } from '@/shared/ui/field';
 import { cn } from '@/shared/lib/utils';
 import { useRecipeForm, type RecipeFormData } from '../model/hooks';
 import { useThumbnailUpload } from '../model/useThumbnailUpload';
+import { CategoryOptionBadge } from './CategoryOptionBadge';
+import { IngredientItem } from './IngredientItem';
+import { StepItem } from './StepItem';
 import { ThumbnailUploader } from './ThumbnailUploader';
 import type { RecipeCategory } from '@/entities/recipe/model/types';
 import type { CategoryGroup } from '@/entities/category/model/types';
@@ -168,38 +169,27 @@ export function RecipeCreateForm({
       {/* 카테고리 선택 */}
       {categoryGroups.map(group => (
         <Field key={group.type} className='gap-3'>
-          <FieldLabel required>
-            {CATEGORY_TYPE_LABELS[group.type]}
-          </FieldLabel>
+          <FieldLabel required>{CATEGORY_TYPE_LABELS[group.type]}</FieldLabel>
           <div className='flex flex-wrap gap-2'>
-            {group.options.map(option => {
-              const isSelected =
-                formData.categories[option.type]?.some(
-                  c => c.code === option.code,
-                ) ?? false;
-              const category: RecipeCategory = {
-                type: option.type,
-                code: option.code,
-                name: option.name,
-              } as RecipeCategory;
-
-              return (
-                <Badge
-                  key={`${option.type}-${option.code}`}
-                  variant='outline'
-                  colorScheme='neutral'
-                  selected={isSelected}
-                  onClick={() => !isDisabled && toggleCategory(category)}
-                  className={cn(
-                    'cursor-pointer select-none',
-                    isDisabled && 'cursor-not-allowed opacity-50',
-                  )}
-                >
-                  {option.icon}
-                  {option.name}
-                </Badge>
-              );
-            })}
+            {group.options.map(option => (
+              <CategoryOptionBadge
+                key={`${option.type}-${option.code}`}
+                option={option}
+                selected={
+                  formData.categories[option.type]?.some(
+                    c => c.code === option.code,
+                  ) ?? false
+                }
+                onClick={() =>
+                  toggleCategory({
+                    type: option.type,
+                    code: option.code,
+                    name: option.name,
+                  } as RecipeCategory)
+                }
+                disabled={isDisabled}
+              />
+            ))}
           </div>
         </Field>
       ))}
@@ -209,59 +199,19 @@ export function RecipeCreateForm({
         <FieldLabel required>필요한 재료</FieldLabel>
         <div className='flex flex-col gap-3'>
           {formData.ingredients.map((ingredient, index) => (
-            <div key={index} className='flex gap-2 items-center'>
-              {/* 재료명 */}
-              <Input
-                size='sm'
-                placeholder='감자'
-                value={ingredient.name}
-                onChange={e => updateIngredient(index, 'name', e.target.value)}
-                disabled={isDisabled}
-                className='flex-1'
-              />
-              {/* 분량 */}
-              <Input
-                size='sm'
-                placeholder='2'
-                value={ingredient.amount}
-                onChange={e =>
-                  updateIngredient(index, 'amount', e.target.value)
-                }
-                disabled={isDisabled}
-                className='w-16'
-              />
-              {/* 단위 */}
-              <Input
-                size='sm'
-                placeholder='개'
-                value={ingredient.unit || ''}
-                onChange={e => updateIngredient(index, 'unit', e.target.value)}
-                disabled={isDisabled}
-                className='w-16'
-              />
-              <Button
-                type='button'
-                variant='solid'
-                colorScheme='neutral'
-                size='sm'
-                onClick={() => insertIngredientAt(index)}
-                disabled={isDisabled}
-                className='size-10 p-0 shrink-0'
-              >
-                <Plus className='size-4' />
-              </Button>
-              <Button
-                type='button'
-                variant='solid'
-                colorScheme='neutral'
-                size='sm'
-                onClick={() => removeIngredient(index)}
-                disabled={isDisabled || formData.ingredients.length <= 1}
-                className='size-10 p-0 shrink-0'
-              >
-                <Trash2 className='size-4' />
-              </Button>
-            </div>
+            <IngredientItem
+              key={index}
+              name={ingredient.name}
+              amount={ingredient.amount}
+              unit={ingredient.unit || ''}
+              onFieldChange={(field, value) =>
+                updateIngredient(index, field, value)
+              }
+              onInsert={() => insertIngredientAt(index)}
+              onRemove={() => removeIngredient(index)}
+              disabled={isDisabled}
+              removeDisabled={isDisabled || formData.ingredients.length <= 1}
+            />
           ))}
         </div>
       </Field>
@@ -271,41 +221,16 @@ export function RecipeCreateForm({
         <FieldLabel required>만드는 순서</FieldLabel>
         <div className='flex flex-col gap-3'>
           {formData.steps.map((step, index) => (
-            <div key={index} className='flex gap-2 items-start'>
-              <div className='shrink-0 size-8 rounded-full bg-secondary-base text-white flex items-center justify-center text-body-2 font-medium mt-2'>
-                {step.step}
-              </div>
-              <Textarea
-                placeholder={`${step.step}단계에서 할 일을 알려주세요`}
-                value={step.description}
-                onChange={e => updateStep(index, e.target.value)}
-                disabled={isDisabled}
-                className='flex-1 min-h-20'
-                size='sm'
-              />
-              <Button
-                type='button'
-                variant='solid'
-                colorScheme='neutral'
-                size='sm'
-                onClick={() => insertStepAt(index)}
-                disabled={isDisabled}
-                className='size-10 p-0 shrink-0 mt-2'
-              >
-                <Plus className='size-4' />
-              </Button>
-              <Button
-                type='button'
-                variant='solid'
-                colorScheme='neutral'
-                size='sm'
-                onClick={() => removeStep(index)}
-                disabled={isDisabled || formData.steps.length <= 1}
-                className='size-10 p-0 shrink-0 mt-2'
-              >
-                <Trash2 className='size-4' />
-              </Button>
-            </div>
+            <StepItem
+              key={index}
+              stepNumber={step.step}
+              description={step.description}
+              onDescriptionChange={value => updateStep(index, value)}
+              onInsert={() => insertStepAt(index)}
+              onRemove={() => removeStep(index)}
+              disabled={isDisabled}
+              removeDisabled={isDisabled || formData.steps.length <= 1}
+            />
           ))}
         </div>
       </Field>

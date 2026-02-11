@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { getOptionsByType } from '@/entities/category/model/types';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
 import { ROUTES } from '@/shared/config';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
@@ -15,8 +16,7 @@ export function CategorySection() {
   const router = useRouter();
   const { data: categoryGroups } = useSuspenseCategoryGroups();
 
-  const situationGroup = categoryGroups.find(g => g.type === 'situation');
-  const categories = situationGroup?.options ?? [];
+  const categories = getOptionsByType(categoryGroups, 'situation');
 
   if (categories.length === 0) return null;
 

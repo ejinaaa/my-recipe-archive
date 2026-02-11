@@ -1,14 +1,15 @@
 'use client';
 
-import { useMemo, useCallback } from 'react';
+import { useCallback } from 'react';
 import { RecipeCardCompact } from '@/entities/recipe/ui/RecipeCardCompact';
 import { useSuspenseRecipeSection } from '@/entities/recipe/api/hooks';
 import {
-  useFavoriteStatuses,
+  useRecipeFavorites,
   useToggleFavorite,
 } from '@/entities/favorite/api/hooks';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { Section, SectionHeader } from '@/shared/ui/section';
+import { ROUTES } from '@/shared/config';
 import type { RecipeSortBy } from '@/entities/recipe/api/server';
 
 const DEFAULT_SECTION_LIMIT = 6;
@@ -24,8 +25,6 @@ interface RecipeCarouselProps {
   moreHref?: string;
   /** 현재 유저 ID (즐겨찾기용) */
   userId?: string;
-  /** 레시피 카드 클릭 핸들러 */
-  onRecipeClick: (id: string) => void;
 }
 
 /**
@@ -38,12 +37,10 @@ export function RecipeCarousel({
   limit = DEFAULT_SECTION_LIMIT,
   moreHref,
   userId,
-  onRecipeClick,
 }: RecipeCarouselProps) {
   const { data: recipes } = useSuspenseRecipeSection(sortBy, limit);
 
-  const recipeIds = useMemo(() => recipes.map(r => r.id), [recipes]);
-  const { data: favoriteStatuses } = useFavoriteStatuses(userId, recipeIds);
+  const { favoriteStatuses } = useRecipeFavorites(userId, recipes);
   const toggleFavorite = useToggleFavorite();
 
   const handleToggleFavorite = useCallback(
@@ -67,7 +64,7 @@ export function RecipeCarousel({
             recipe={recipe}
             isFavorite={favoriteStatuses?.[recipe.id] ?? false}
             onToggleFavorite={() => handleToggleFavorite(recipe.id)}
-            onClick={() => onRecipeClick(recipe.id)}
+            href={ROUTES.RECIPES.DETAIL(recipe.id)}
           />
         ))}
       </HorizontalScroll>

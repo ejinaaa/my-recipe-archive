@@ -7,42 +7,17 @@ import { ROUTES } from '@/shared/config';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { useCreateRecipe } from '@/entities/recipe/api/hooks';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
-import type {
-  RecipeInsert,
-  RecipeCategory,
-} from '@/entities/recipe/model/types';
 import {
   RecipeCreateForm,
+  convertFormDataToRecipeData,
   type RecipeFormData,
 } from '@/features/recipe-create';
 import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ErrorFallback } from '@/shared/ui/error-fallback';
 import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
-import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-
-/**
- * 폼 영역 스켈레톤
- */
-function FormSkeleton() {
-  return (
-    <div className='px-4 pt-6 space-y-6'>
-      <Skeleton className='h-10 w-full rounded-lg' />
-      <Skeleton className='h-24 w-full rounded-lg' />
-      <Skeleton className='h-10 w-full rounded-lg' />
-      <Skeleton className='h-10 w-full rounded-lg' />
-      <div className='space-y-3'>
-        <Skeleton className='h-5 w-24 rounded-md' />
-        <div className='flex flex-wrap gap-2'>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className='h-8 w-16 rounded-full' />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { FormSkeleton } from './FormSkeleton';
 
 /**
  * 카테고리 데이터가 필요한 폼 콘텐츠
@@ -81,25 +56,11 @@ export function RecipeCreatePage() {
       return;
     }
 
-    // categories 객체(타입별 배열)를 flat 배열로 변환
-    const categoryArray = Object.values(formData.categories)
-      .flat()
-      .filter((cat): cat is RecipeCategory => cat !== undefined);
-
-    const insertData: RecipeInsert = {
-      user_id: profile.id,
-      title: formData.title,
-      description: formData.description || undefined,
-      thumbnail_url: formData.thumbnail_url || undefined,
-      cooking_time: formData.cooking_time,
-      servings: formData.servings,
-      categories: categoryArray,
-      ingredients: formData.ingredients,
-      steps: formData.steps,
-    };
-
     try {
-      const newRecipe = await createRecipe.mutateAsync(insertData);
+      const newRecipe = await createRecipe.mutateAsync({
+        user_id: profile.id,
+        ...convertFormDataToRecipeData(formData),
+      });
       router.replace(ROUTES.RECIPES.DETAIL(newRecipe.id));
     } catch {
       setMutationError({ retry: () => handleSubmit(formData) });

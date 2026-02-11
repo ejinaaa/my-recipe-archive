@@ -256,6 +256,16 @@ export function groupCategoriesByType(
 }
 
 /**
+ * CategoryGroup 배열에서 특정 타입의 옵션 목록을 반환
+ */
+export const getOptionsByType = (
+  groups: CategoryGroup[],
+  type: CategoryType,
+): CategoryOption[] => {
+  return groups.find(g => g.type === type)?.options ?? [];
+};
+
+/**
  * Finds a category option by type and code
  */
 export function findCategoryOption(

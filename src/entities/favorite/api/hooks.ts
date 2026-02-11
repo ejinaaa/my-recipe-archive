@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo } from 'react';
 import {
   useQuery,
   useMutation,
@@ -39,6 +40,19 @@ export function useFavoriteStatuses(
     queryFn: () => fetchFavoriteStatuses(userId!, recipeIds),
     enabled: !!userId && recipeIds.length > 0,
   });
+}
+
+/**
+ * 레시피 목록의 즐겨찾기 상태를 일괄 조회하는 훅
+ * recipeIds 메모이제이션 + useFavoriteStatuses를 묶어 제공
+ */
+export function useRecipeFavorites(
+  userId: string | undefined,
+  recipes: { id: string }[],
+) {
+  const recipeIds = useMemo(() => recipes.map(r => r.id), [recipes]);
+  const { data: favoriteStatuses } = useFavoriteStatuses(userId, recipeIds);
+  return { favoriteStatuses };
 }
 
 /**

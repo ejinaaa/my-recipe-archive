@@ -1,18 +1,15 @@
 'use client';
 
-import { Suspense, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { BookOpen, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { useCurrentProfile } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
-import { Button } from '@/shared/ui/button';
 import { LinkButton } from '@/shared/ui/link-button';
 import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { Section, SectionHeader } from '@/shared/ui/section';
-import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import {
   CategorySection,
@@ -24,40 +21,15 @@ import {
   RecipeCarouselSkeleton,
 } from '@/widgets/recipe-section';
 import { ProfileGreeting } from './ProfileGreeting';
+import { RecipesEmptyFallback } from './RecipesEmptyFallback';
 import { SilentErrorBoundary } from './sections/SilentErrorBoundary';
-import { TodayPickSection } from './sections/TodayPickSection';
+import {
+  TodayPickSection,
+  TodayPickSectionSkeleton,
+} from './sections/TodayPickSection';
 
 export function RecipesPage() {
   const { data: profile } = useCurrentProfile();
-  const router = useRouter();
-
-  const handleRecipeClick = useCallback(
-    (recipeId: string) => {
-      router.push(ROUTES.RECIPES.DETAIL(recipeId));
-    },
-    [router],
-  );
-
-  const recipesEmptyFallback = (
-    <div className='flex flex-col items-center justify-center py-20 px-3'>
-      <BookOpen className='size-12 text-text-secondary mb-4' />
-      <p className='text-body-1 text-text-secondary text-center'>
-        아직 등록한 레시피가 없어요
-      </p>
-      <p className='text-body-2 text-text-secondary text-center mt-1'>
-        나만의 레시피를 추가해 보세요
-      </p>
-      <Button
-        variant='solid'
-        colorScheme='primary'
-        size='md'
-        className='mt-4'
-        onClick={() => router.push(ROUTES.RECIPES.NEW)}
-      >
-        레시피 추가하기
-      </Button>
-    </div>
-  );
 
   return (
     <div className='h-dvh flex flex-col bg-background'>
@@ -80,25 +52,7 @@ export function RecipesPage() {
         <div className='flex flex-col gap-6 mt-2'>
           {/* 오늘의 추천 요리 */}
           <SilentErrorBoundary>
-            <Suspense
-              fallback={
-                <div className='px-4'>
-                  <div className='relative w-full h-[200px] overflow-hidden rounded-3xl bg-neutral-base/30'>
-                    {/* 그라데이션 오버레이 */}
-                    <div className='absolute inset-0 bg-gradient-to-br from-surface from-30% via-surface/60 via-60% to-transparent' />
-
-                    {/* 콘텐츠 스켈레톤 */}
-                    <div className='relative flex h-full w-[65%] flex-col justify-between p-4'>
-                      <div className='flex flex-col gap-2'>
-                        <Skeleton className='h-5 w-40 rounded-md' />
-                        <Skeleton className='h-4 w-32 rounded-md' />
-                      </div>
-                      <Skeleton className='h-11 w-[150px] rounded-full' />
-                    </div>
-                  </div>
-                </div>
-              }
-            >
+            <Suspense fallback={<TodayPickSectionSkeleton />}>
               <TodayPickSection />
             </Suspense>
           </SilentErrorBoundary>
@@ -115,7 +69,6 @@ export function RecipesPage() {
                 sortBy='most_cooked'
                 moreHref={`${ROUTES.SEARCH_RESULTS}?sort=most_cooked`}
                 userId={profile?.id}
-                onRecipeClick={handleRecipeClick}
               />
             </Suspense>
           </SilentErrorBoundary>
@@ -139,7 +92,6 @@ export function RecipesPage() {
                 sortBy='least_cooked'
                 moreHref={`${ROUTES.SEARCH_RESULTS}?sort=least_cooked`}
                 userId={profile?.id}
-                onRecipeClick={handleRecipeClick}
               />
             </Suspense>
           </SilentErrorBoundary>
@@ -154,7 +106,6 @@ export function RecipesPage() {
                 sortBy='latest'
                 moreHref={`${ROUTES.SEARCH_RESULTS}?sort=latest`}
                 userId={profile?.id}
-                onRecipeClick={handleRecipeClick}
               />
             </Suspense>
           </SilentErrorBoundary>
@@ -198,7 +149,7 @@ export function RecipesPage() {
                 size='lg'
                 moreHref={ROUTES.SEARCH_RESULTS}
               />
-              <RecipeList emptyFallback={recipesEmptyFallback} />
+              <RecipeList emptyFallback={<RecipesEmptyFallback />} />
             </Suspense>
           </ErrorBoundary>
         </Section>

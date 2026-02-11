@@ -1,22 +1,19 @@
-'use client';
-
-import Image from 'next/image';
-import { Clock, CookingPot, ImageOff } from 'lucide-react';
-import { useImageError } from '@/shared/lib/useImageError';
-import { Badge } from '@/shared/ui/badge';
+import Link from 'next/link';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { cn } from '@/shared/lib/utils';
 import type { Recipe } from '../model/types';
+import { RecipeThumbnailImage } from './RecipeThumbnailImage';
+import { CookingTimeBadge } from './CookingTimeBadge';
 
 export interface RecipeCardCompactProps {
   /** 레시피 데이터 */
   recipe: Pick<Recipe, 'id' | 'title' | 'thumbnail_url' | 'cooking_time'>;
+  /** 레시피 상세 페이지 링크 */
+  href: string;
   /** 즐겨찾기 여부 */
   isFavorite?: boolean;
   /** 즐겨찾기 토글 핸들러 */
   onToggleFavorite?: () => void;
-  /** 클릭 핸들러 */
-  onClick?: () => void;
   /** 추가 className */
   className?: string;
 }
@@ -26,47 +23,31 @@ export interface RecipeCardCompactProps {
  */
 export function RecipeCardCompact({
   recipe,
+  href,
   isFavorite = false,
   onToggleFavorite,
-  onClick,
   className,
 }: RecipeCardCompactProps) {
   const { title, thumbnail_url, cooking_time } = recipe;
-  const {
-    hasValidImage,
-    hasError: imageError,
-    handleError: handleImageError,
-  } = useImageError(thumbnail_url);
 
   return (
-    <div
+    <Link
+      href={href}
       className={cn(
-        'relative h-[120px] w-[160px] flex-shrink-0 overflow-hidden rounded-3xl cursor-pointer',
+        'relative block h-[120px] w-[160px] flex-shrink-0 overflow-hidden rounded-3xl',
         'transition-transform duration-200',
         className,
       )}
-      onClick={onClick}
     >
       {/* 배경 이미지 */}
       <div className='absolute inset-0'>
-        {hasValidImage ? (
-          <Image
-            src={thumbnail_url!}
-            alt={title}
-            width={160}
-            height={120}
-            className='h-full w-full object-cover'
-            onError={handleImageError}
-          />
-        ) : imageError ? (
-          <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
-            <ImageOff className='size-10 text-text-secondary' />
-          </div>
-        ) : (
-          <div className='flex h-full w-full items-center justify-center bg-neutral-base'>
-            <CookingPot className='size-10 text-text-secondary' />
-          </div>
-        )}
+        <RecipeThumbnailImage
+          src={thumbnail_url}
+          alt={title}
+          width={160}
+          height={120}
+          imageClassName='h-full w-full object-cover'
+        />
       </div>
 
       {/* 그라디언트 오버레이 */}
@@ -85,24 +66,14 @@ export function RecipeCardCompact({
 
         {/* 하단: 배지 + 제목 */}
         <div className='flex flex-col gap-1'>
-          {cooking_time && (
-            <div>
-              <Badge
-                variant='solid'
-                colorScheme='neutral'
-                size='sm'
-                transparent
-              >
-                <Clock className='size-3' />
-                {cooking_time}분
-              </Badge>
-            </div>
-          )}
+          <div>
+            {cooking_time && <CookingTimeBadge minutes={cooking_time} />}
+          </div>
           <h3 className='text-body-2 text-white line-clamp-2 font-medium'>
             {title}
           </h3>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

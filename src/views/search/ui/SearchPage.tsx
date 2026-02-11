@@ -5,18 +5,20 @@ import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
-import type { CategoryType } from '@/entities/category/model/types';
+import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
+import { CategoryChip } from '@/entities/category/ui/CategoryChip';
+import { CategoryCard } from '@/entities/category/ui';
 import { SearchBar } from '@/features/recipe-search';
 import { ROUTES } from '@/shared/config';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
+import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
+import { Section, SectionHeader } from '@/shared/ui/section';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { SearchPageSkeleton } from './SearchPageSkeleton';
-import { CuisineBadgeSection } from './CuisineBadgeSection';
-import { CategoryCardSection } from './CategoryCardSection';
 
 /**
  * 카테고리 데이터를 사용하는 검색 콘텐츠
@@ -32,9 +34,9 @@ function SearchContent({
 }) {
   const { data: categoryGroups } = useSuspenseCategoryGroups();
 
-  const cuisineGroup = categoryGroups.find(g => g.type === 'cuisine');
-  const situationGroup = categoryGroups.find(g => g.type === 'situation');
-  const dishTypeGroup = categoryGroups.find(g => g.type === 'dishType');
+  const cuisines = getOptionsByType(categoryGroups, 'cuisine');
+  const situations = getOptionsByType(categoryGroups, 'situation');
+  const dishTypes = getOptionsByType(categoryGroups, 'dishType');
 
   return (
     <>
@@ -45,22 +47,44 @@ function SearchContent({
 
       {/* Main */}
       <PageContent className='space-y-6 py-6'>
-        <CuisineBadgeSection
-          cuisines={cuisineGroup?.options ?? []}
-          onSelect={onCuisineSelect}
-        />
-        <CategoryCardSection
-          title={CATEGORY_TYPE_LABELS.situation}
-          type='situation'
-          categories={situationGroup?.options ?? []}
-          onSelect={onCategorySelect}
-        />
-        <CategoryCardSection
-          title={CATEGORY_TYPE_LABELS.dishType}
-          type='dishType'
-          categories={dishTypeGroup?.options ?? []}
-          onSelect={onCategorySelect}
-        />
+        <Section>
+          <SectionHeader title={CATEGORY_TYPE_LABELS.cuisine} />
+          <HorizontalScroll className='gap-2 px-4'>
+            {cuisines.map(cuisine => (
+              <CategoryChip
+                key={cuisine.id}
+                category={cuisine}
+                onClick={() => onCuisineSelect(cuisine.code)}
+              />
+            ))}
+          </HorizontalScroll>
+        </Section>
+
+        <Section>
+          <SectionHeader title={CATEGORY_TYPE_LABELS.situation} />
+          <div className='grid grid-cols-2 gap-3 px-4'>
+            {situations.map(category => (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                onClick={() => onCategorySelect('situation', category.code)}
+              />
+            ))}
+          </div>
+        </Section>
+
+        <Section>
+          <SectionHeader title={CATEGORY_TYPE_LABELS.dishType} />
+          <div className='grid grid-cols-2 gap-3 px-4'>
+            {dishTypes.map(category => (
+              <CategoryCard
+                key={category.id}
+                category={category}
+                onClick={() => onCategorySelect('dishType', category.code)}
+              />
+            ))}
+          </div>
+        </Section>
       </PageContent>
     </>
   );

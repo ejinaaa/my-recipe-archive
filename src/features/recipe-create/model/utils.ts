@@ -1,6 +1,26 @@
-import type { Recipe, RecipeCategory } from '@/entities/recipe/model/types';
+import type {
+  Recipe,
+  RecipeCategory,
+  Ingredient,
+  CookingStep,
+} from '@/entities/recipe/model/types';
 import type { CategoryType } from '@/entities/category/model/types';
 import type { RecipeFormData } from './hooks';
+
+/**
+ * convertFormDataToRecipeData의 반환 타입
+ * RecipeInsert(user_id 추가), RecipeUpdate(그대로) 모두에 스프레드 가능
+ */
+export interface RecipeData {
+  title: string;
+  description?: string;
+  thumbnail_url?: string;
+  cooking_time: number;
+  servings: number;
+  categories: RecipeCategory[];
+  ingredients: Ingredient[];
+  steps: CookingStep[];
+}
 
 /**
  * Recipe.categories 배열을 RecipeFormData.categories 객체로 변환
@@ -18,6 +38,32 @@ export const convertCategoriesToFormData = (
     },
     {} as Partial<Record<CategoryType, RecipeCategory[]>>,
   );
+};
+
+/**
+ * Recipe 엔티티를 RecipeFormData로 변환
+ */
+/**
+ * RecipeFormData를 API 전송용 데이터로 변환
+ * RecipeInsert/RecipeUpdate 공통 필드
+ */
+export const convertFormDataToRecipeData = (
+  formData: RecipeFormData,
+): RecipeData => {
+  const categories = Object.values(formData.categories)
+    .flat()
+    .filter((cat): cat is RecipeCategory => cat !== undefined);
+
+  return {
+    title: formData.title,
+    description: formData.description || undefined,
+    thumbnail_url: formData.thumbnail_url || undefined,
+    cooking_time: formData.cooking_time,
+    servings: formData.servings,
+    categories,
+    ingredients: formData.ingredients,
+    steps: formData.steps,
+  };
 };
 
 /**

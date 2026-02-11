@@ -1,12 +1,11 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Clock, CookingPot, ImageOff } from 'lucide-react';
-import { useImageError } from '@/shared/lib/useImageError';
-import { Badge } from '@/shared/ui/badge';
+import { ArrowRight } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import type { Recipe } from '../model/types';
+import { RecipeThumbnailImage } from './RecipeThumbnailImage';
+import { CookingTimeBadge } from './CookingTimeBadge';
 
 export interface RecipeCardHeroProps {
   /** 레시피 데이터 */
@@ -22,11 +21,6 @@ export interface RecipeCardHeroProps {
  */
 export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
   const { id, title, description, thumbnail_url, cooking_time } = recipe;
-  const {
-    hasValidImage,
-    hasError: imageError,
-    handleError: handleImageError,
-  } = useImageError(thumbnail_url);
 
   return (
     <Link
@@ -35,25 +29,14 @@ export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
     >
       {/* 배경 이미지 */}
       <div className='absolute inset-0'>
-        {hasValidImage ? (
-          <Image
-            src={thumbnail_url!}
-            alt={title}
-            fill
-            priority
-            sizes='(max-width: 768px) 100vw, 768px'
-            className='object-cover'
-            onError={handleImageError}
-          />
-        ) : imageError ? (
-          <div className='flex h-full w-full items-center justify-center bg-neutral-base/30'>
-            <ImageOff className='size-10 text-text-secondary' />
-          </div>
-        ) : (
-          <div className='flex h-full w-full items-center justify-center bg-neutral-base/30'>
-            <CookingPot className='size-10 text-text-secondary' />
-          </div>
-        )}
+        <RecipeThumbnailImage
+          src={thumbnail_url}
+          alt={title}
+          fill
+          priority
+          sizes='(max-width: 768px) 100vw, 768px'
+          fallbackClassName='bg-neutral-base/30'
+        />
       </div>
 
       {/* 좌측→우측 그라데이션 오버레이 */}
@@ -62,10 +45,7 @@ export function RecipeCardHero({ recipe }: RecipeCardHeroProps) {
       {/* 조리시간 배지 */}
       {cooking_time && (
         <div className='absolute top-3 right-3'>
-          <Badge variant='solid' colorScheme='neutral' size='sm' transparent>
-            <Clock className='size-3' />
-            {cooking_time}분
-          </Badge>
+          <CookingTimeBadge minutes={cooking_time} />
         </div>
       )}
 

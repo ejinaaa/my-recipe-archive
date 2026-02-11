@@ -1,3 +1,4 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { FavoriteButton } from './favorite-button';
 
@@ -64,5 +65,3 @@ export const Interactive: Story = {
     );
   },
 };
-
-import * as React from 'react';

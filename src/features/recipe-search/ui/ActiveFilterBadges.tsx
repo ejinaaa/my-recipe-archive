@@ -3,7 +3,8 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
-import type { CategoryType } from '@/entities/category/model/types';
+import { CATEGORY_TYPES } from '@/entities/category/model/constants';
+import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
 import type { RecipeSortBy } from '@/entities/recipe/api/server';
 import { Badge } from '@/shared/ui/badge';
@@ -13,8 +14,6 @@ import type { CategoryFilters, CookingTimeRange } from '../model/store';
 import { SORT_OPTIONS } from '../model/sortStore';
 import { isDefaultCookingTimeRange } from '../model/hooks';
 
-/** 카테고리 필터 렌더링 순서 (고정) */
-const CATEGORY_TYPES: CategoryType[] = ['situation', 'cuisine', 'dishType'];
 
 interface ActiveFilterBadgesProps {
   /** 현재 적용된 정렬 */
@@ -87,8 +86,7 @@ function ActiveFilterBadgesContent({
 
   // 카테고리 코드 → { icon, name } 변환
   const getCategoryInfo = (type: CategoryType, code: string) => {
-    const group = categoryGroups.find(g => g.type === type);
-    const option = group?.options.find(opt => opt.code === code);
+    const option = getOptionsByType(categoryGroups, type).find(opt => opt.code === code);
     return { icon: option?.icon, name: option?.name ?? code };
   };
 

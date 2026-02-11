@@ -2,10 +2,9 @@
 
 import type { LucideIcon } from 'lucide-react';
 import { Home, Search, Heart, Plus } from 'lucide-react';
-import { cn } from '@/shared/lib/utils';
 import { ROUTES } from '@/shared/config';
 import { useNavigationStore } from '@/shared/model';
-import { LinkButton } from '@/shared/ui/link-button';
+import { NavTabItem } from './NavTabItem';
 
 type NavTab = 'home' | 'search' | 'favorites' | 'register';
 
@@ -16,6 +15,13 @@ interface Tab {
   href: string;
 }
 
+const TABS: Tab[] = [
+  { id: 'home', icon: Home, label: '홈', href: ROUTES.RECIPES.LIST },
+  { id: 'search', icon: Search, label: '검색', href: ROUTES.SEARCH },
+  { id: 'favorites', icon: Heart, label: '즐겨찾기', href: ROUTES.FAVORITES },
+  { id: 'register', icon: Plus, label: '등록하기', href: ROUTES.RECIPES.NEW },
+];
+
 export function BottomNavigation({
   activeTab = 'search',
 }: {
@@ -23,13 +29,6 @@ export function BottomNavigation({
 }) {
   const { lastSearchUrl, lastFavoritesUrl, setLastSearchUrl, setLastFavoritesUrl } =
     useNavigationStore();
-
-  const tabs: Tab[] = [
-    { id: 'home', icon: Home, label: '홈', href: ROUTES.RECIPES.LIST },
-    { id: 'search', icon: Search, label: '검색', href: ROUTES.SEARCH },
-    { id: 'favorites', icon: Heart, label: '즐겨찾기', href: ROUTES.FAVORITES },
-    { id: 'register', icon: Plus, label: '등록하기', href: ROUTES.RECIPES.NEW },
-  ];
 
   /** 활성 탭이면 기본 경로, 아니면 저장된 URL 사용 */
   const getHref = (id: NavTab, baseHref: string) => {
@@ -49,42 +48,16 @@ export function BottomNavigation({
   return (
     <nav className='bg-background border-t border-border'>
       <div className='flex items-center justify-around h-16 max-w-screen-xl mx-auto'>
-        {tabs.map(({ id, icon: Icon, label, href }) => {
-          const isActive = activeTab === id;
-
-          return (
-            <LinkButton
-              key={id}
-              href={getHref(id, href)}
-              onClick={() => handleClick(id)}
-              variant='ghost'
-              colorScheme='neutral'
-              className={cn(
-                'flex-1 flex flex-col items-center justify-center gap-1',
-              )}
-            >
-              <div className='relative'>
-                <Icon
-                  className={cn(
-                    'size-5',
-                    isActive ? 'text-text-primary' : 'text-neutral-400',
-                  )}
-                />
-                {isActive && (
-                  <span className='absolute -top-1 -right-1 size-1.5 rounded-full bg-primary-light' />
-                )}
-              </div>
-              <span
-                className={cn(
-                  'text-caption',
-                  isActive ? 'text-text-primary' : 'text-neutral-400',
-                )}
-              >
-                {label}
-              </span>
-            </LinkButton>
-          );
-        })}
+        {TABS.map(({ id, icon, label, href }) => (
+          <NavTabItem
+            key={id}
+            href={getHref(id, href)}
+            icon={icon}
+            label={label}
+            isActive={activeTab === id}
+            onClick={() => handleClick(id)}
+          />
+        ))}
       </div>
     </nav>
   );

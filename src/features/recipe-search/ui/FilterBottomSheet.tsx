@@ -3,8 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
-import type { CategoryType } from '@/entities/category/model/types';
-import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
+import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
+import { CATEGORY_TYPES, CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
@@ -25,14 +25,6 @@ import { toggleCategoryFilter, initialFilters, initialCookingTimeRange } from '.
 import { CategoryFilterSection } from './CategoryFilterSection';
 import { CookingTimeFilterSection } from './CookingTimeFilterSection';
 
-/**
- * 카테고리 타입 정렬 순서
- */
-const CATEGORY_TYPE_ORDER: CategoryType[] = [
-  'situation',
-  'cuisine',
-  'dishType',
-];
 
 interface FilterBottomSheetProps {
   /** 바텀시트 열림 상태 */
@@ -53,7 +45,7 @@ interface FilterBottomSheetProps {
 function CategorySectionsSkeleton() {
   return (
     <>
-      {CATEGORY_TYPE_ORDER.map(type => (
+      {CATEGORY_TYPES.map(type => (
         <section key={type} className='space-y-3'>
           <h3 className='text-heading-3 text-text-primary'>
             {CATEGORY_TYPE_LABELS[type]}
@@ -128,13 +120,10 @@ function CategorySections({
 }) {
   const { data: categoryGroups } = useSuspenseCategoryGroups();
 
-  const sortedGroups = CATEGORY_TYPE_ORDER.map(type => {
-    const group = categoryGroups.find(g => g.type === type);
-    return {
-      type,
-      options: group?.options ?? [],
-    };
-  });
+  const sortedGroups = CATEGORY_TYPES.map(type => ({
+    type,
+    options: getOptionsByType(categoryGroups, type),
+  }));
 
   return (
     <>

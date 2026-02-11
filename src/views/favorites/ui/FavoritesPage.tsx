@@ -4,7 +4,6 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Heart } from 'lucide-react';
 import {
   SearchBar,
   SortButton,
@@ -29,18 +28,7 @@ import { BottomNavigation } from '@/widgets/bottom-navigation';
 import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { ROUTES } from '@/shared/config';
-
-const favoritesEmptyFallback = (
-  <div className='flex flex-col items-center justify-center py-20 px-3'>
-    <Heart className='size-12 text-text-secondary mb-4' />
-    <p className='text-body-1 text-text-secondary text-center'>
-      아직 즐겨찾기한 레시피가 없어요
-    </p>
-    <p className='text-body-2 text-text-secondary text-center mt-1'>
-      마음에 드는 레시피를 찾아 저장해 보세요
-    </p>
-  </div>
-);
+import { FavoritesEmptyFallback } from './FavoritesEmptyFallback';
 
 export function FavoritesPage() {
   const router = useRouter();
@@ -135,7 +123,7 @@ export function FavoritesPage() {
               cookingTimeRange={toCookingTimeRange(cookingTimeRange)}
               sortBy={sortBy ?? undefined}
               favoritesByUserId={userId}
-              emptyFallback={favoritesEmptyFallback}
+              emptyFallback={<FavoritesEmptyFallback />}
             />
           </Suspense>
         </ErrorBoundary>

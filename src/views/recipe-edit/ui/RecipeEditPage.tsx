@@ -12,55 +12,20 @@ import {
   useDeleteRecipe,
 } from '@/entities/recipe/api/hooks';
 import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
-import type {
-  RecipeCategory,
-  RecipeUpdate,
-} from '@/entities/recipe/model/types';
 import {
   RecipeCreateForm,
   convertRecipeToFormData,
+  convertFormDataToRecipeData,
   type RecipeFormData,
 } from '@/features/recipe-create';
 import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
 import { ErrorFallback } from '@/shared/ui/error-fallback';
 import { ErrorBottomSheet } from '@/shared/ui/error-bottom-sheet';
-import { Skeleton } from '@/shared/ui/skeleton';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
 import { BackButton } from '@/shared/ui/back-button';
-
-/**
- * 폼 영역 스켈레톤 (내부 Suspense용, header 제외)
- */
-function FormSkeleton() {
-  return (
-    <div className='px-4 pt-6 flex flex-col gap-6'>
-      <div className='flex flex-col items-center gap-2'>
-        <Skeleton className='size-24 rounded-full' />
-        <Skeleton className='h-3 w-32' />
-      </div>
-      <div className='flex flex-col gap-2'>
-        <Skeleton className='h-4 w-20' />
-        <Skeleton className='h-12 w-full rounded-xl' />
-      </div>
-      <div className='flex flex-col gap-2'>
-        <Skeleton className='h-4 w-16' />
-        <Skeleton className='h-24 w-full rounded-xl' />
-      </div>
-      {[1, 2, 3].map(i => (
-        <div key={i} className='flex flex-col gap-3'>
-          <Skeleton className='h-4 w-24' />
-          <div className='flex flex-wrap gap-2'>
-            {[1, 2, 3, 4, 5].map(j => (
-              <Skeleton key={j} className='h-8 w-16 rounded-full' />
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+import { DeleteRecipeConfirm } from './DeleteRecipeConfirm';
+import { FormSkeleton } from './FormSkeleton';
 
 interface RecipeEditPageProps {
   id: string;
@@ -161,24 +126,11 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
       return;
     }
 
-    // categories 객체(타입별 배열)를 flat 배열로 변환
-    const categoryArray = Object.values(formData.categories)
-      .flat()
-      .filter((cat): cat is RecipeCategory => cat !== undefined);
-
-    const updateData: RecipeUpdate = {
-      title: formData.title,
-      description: formData.description || undefined,
-      thumbnail_url: formData.thumbnail_url || undefined,
-      cooking_time: formData.cooking_time,
-      servings: formData.servings,
-      categories: categoryArray,
-      ingredients: formData.ingredients,
-      steps: formData.steps,
-    };
-
     try {
-      await updateRecipe.mutateAsync({ id, data: updateData });
+      await updateRecipe.mutateAsync({
+        id,
+        data: convertFormDataToRecipeData(formData),
+      });
       router.replace(ROUTES.RECIPES.DETAIL(id));
     } catch {
       setMutationError({
