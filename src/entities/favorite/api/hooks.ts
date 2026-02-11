@@ -126,14 +126,21 @@ export function useToggleFavorite(): UseMutationResult<
       }
     },
     onSettled: (_, __, { userId, recipeId }) => {
-      // 관련 쿼리 무효화
+      // 개별 상태 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: favoriteKeys.statuses(),
-        exact: false,
+        queryKey: favoriteKeys.status(userId, recipeId),
       });
+      // batchStatuses는 stale만 마킹 (즉시 refetch 방지 → 깜빡임 방지)
+      queryClient.invalidateQueries({
+        queryKey: [...favoriteKeys.statuses(), userId, 'batch'],
+        exact: false,
+        refetchType: 'none',
+      });
+      // 즐겨찾기 목록 무효화
       queryClient.invalidateQueries({
         queryKey: favoriteKeys.list(userId),
       });
+      // 레시피 상세 무효화
       queryClient.invalidateQueries({
         queryKey: recipeKeys.detail(recipeId),
       });
