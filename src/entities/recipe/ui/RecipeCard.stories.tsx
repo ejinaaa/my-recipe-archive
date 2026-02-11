@@ -30,10 +30,6 @@ const meta: Meta<typeof RecipeCard> = {
       action: 'favorite toggled',
       description: 'Callback when favorite button is clicked',
     },
-    onClick: {
-      action: 'card clicked',
-      description: 'Callback when card is clicked',
-    },
     className: {
       control: false,
     },

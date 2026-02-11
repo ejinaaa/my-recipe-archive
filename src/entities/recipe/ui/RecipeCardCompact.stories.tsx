@@ -31,16 +31,13 @@ const meta = {
       action: 'favorite toggled',
       description: '즐겨찾기 토글 콜백',
     },
-    onClick: {
-      action: 'card clicked',
-      description: '카드 클릭 콜백',
-    },
     className: {
       control: false,
     },
   },
   args: {
     recipe: mockRecipes[0],
+    href: `/recipes/${mockRecipes[0].id}`,
     isFavorite: false,
   },
 } satisfies Meta<typeof RecipeCardCompact>;

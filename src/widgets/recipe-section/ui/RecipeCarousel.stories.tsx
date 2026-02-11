@@ -64,16 +64,11 @@ const meta = {
       control: 'text',
       description: '"전체 보기" 링크 경로',
     },
-    onRecipeClick: {
-      action: 'recipe clicked',
-      description: '레시피 카드 클릭 콜백',
-    },
   },
   args: {
     title: '자주 만드는 요리들이에요',
     sortBy: 'most_cooked',
     moreHref: `${ROUTES.SEARCH_RESULTS}?sort=most_cooked`,
-    onRecipeClick: () => {},
   },
 } satisfies Meta<typeof RecipeCarousel>;
 
