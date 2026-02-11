@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import {
   useQueryStates,
   parseAsString,
@@ -24,9 +23,6 @@ const SORT_OPTIONS_VALUES: RecipeSortBy[] = [
   'least_viewed',
   'favorites',
 ];
-
-/** 필터 순서 추적에 사용되는 키 */
-export type FilterOrderKey = 'sort' | 'situation' | 'cuisine' | 'dishType' | 'cookingTime';
 
 /**
  * URL 쿼리 파라미터에서 검색/필터/정렬 상태를 읽고 쓰는 훅
@@ -65,26 +61,12 @@ export function useUrlQueryParams() {
         }
       : null;
 
-  // params 객체에서 활성 필터 순서 파생 (hydration safe)
-  const [filterOrder, setFilterOrder] = useState<FilterOrderKey[]>([]);
-
-  useEffect(() => {
-    const order: FilterOrderKey[] = [];
-    if (params.sort !== null) order.push('sort');
-    if (params.situation !== null) order.push('situation');
-    if (params.cuisine !== null) order.push('cuisine');
-    if (params.dishType !== null) order.push('dishType');
-    if (params.timeMin !== null || params.timeMax !== null) order.push('cookingTime');
-    setFilterOrder(order);
-  }, [params.sort, params.situation, params.cuisine, params.dishType, params.timeMin, params.timeMax]);
-
   return {
     // 읽기 (현재 URL 값)
     searchQuery: params.q,
     sortBy: params.sort,
     categoryFilters,
     cookingTimeRange,
-    filterOrder,
 
     // 쓰기 (URL 업데이트)
     setSearchQuery: (q: string) => setParams({ q: q || null }),

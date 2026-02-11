@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useCallback, type ReactNode } from 'react';
+import { useMemo, useCallback, useDeferredValue, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
@@ -50,14 +50,21 @@ export function RecipeList({
 }: RecipeListProps) {
   const router = useRouter();
 
+  // 쿼리 파라미터 객체 안정화 (참조 동일성 보장)
+  const categoriesKey = JSON.stringify(categories);
+  const cookingTimeKey = JSON.stringify(cookingTimeRange);
+  const params = useMemo(
+    () => ({ searchQuery, categories, cookingTimeRange, sortBy, favoritesByUserId }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [searchQuery, categoriesKey, cookingTimeKey, sortBy, favoritesByUserId]
+  );
+
+  // params 변경 시 이전 데이터를 유지하며 새 데이터를 transition으로 로딩
+  const deferredParams = useDeferredValue(params);
+  const isPending = params !== deferredParams;
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteRecipes({
-      searchQuery,
-      categories,
-      cookingTimeRange,
-      sortBy,
-      favoritesByUserId,
-    });
+    useSuspenseInfiniteRecipes(deferredParams);
 
   const recipes = useMemo(
     () => data.pages.flatMap(page => page.recipes),
@@ -91,39 +98,41 @@ export function RecipeList({
   );
 
   return (
-    <InfiniteScrollList
-      fetchNextPage={fetchNextPage}
-      hasNextPage={hasNextPage}
-      isFetchingNextPage={isFetchingNextPage}
-      isEmpty={recipes.length === 0}
-      containerClassName='grid grid-cols-2 gap-2 px-4'
-      emptyComponent={emptyFallback}
-      loadingComponent={
-        <div className='flex items-center justify-center py-8'>
-          <Loader2 className='size-6 animate-spin text-text-secondary' />
-          <span className='ml-2 text-body-2 text-text-secondary'>
-            불러오는 중...
-          </span>
-        </div>
-      }
-      endComponent={
-        <div className='flex items-center justify-center py-8'>
-          <p className='text-body-2 text-text-secondary'>
-            모든 레시피를 둘러봤어요
-          </p>
-        </div>
-      }
-    >
-      {recipes.map(recipe => (
-        <RecipeCard
-          key={recipe.id}
-          recipe={recipe}
-          isFavorite={favoriteStatuses?.[recipe.id] ?? false}
-          onToggleFavorite={() => handleToggleFavorite(recipe.id)}
-          onClick={() => handleRecipeClick(recipe.id)}
-          className='w-full max-w-none'
-        />
-      ))}
-    </InfiniteScrollList>
+    <div className={`transition-opacity ${isPending ? 'opacity-60' : ''}`}>
+      <InfiniteScrollList
+        fetchNextPage={fetchNextPage}
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        isEmpty={recipes.length === 0}
+        containerClassName='grid grid-cols-2 gap-2 px-4'
+        emptyComponent={emptyFallback}
+        loadingComponent={
+          <div className='flex items-center justify-center py-8'>
+            <Loader2 className='size-6 animate-spin text-text-secondary' />
+            <span className='ml-2 text-body-2 text-text-secondary'>
+              불러오는 중...
+            </span>
+          </div>
+        }
+        endComponent={
+          <div className='flex items-center justify-center py-8'>
+            <p className='text-body-2 text-text-secondary'>
+              모든 레시피를 둘러봤어요
+            </p>
+          </div>
+        }
+      >
+        {recipes.map(recipe => (
+          <RecipeCard
+            key={recipe.id}
+            recipe={recipe}
+            isFavorite={favoriteStatuses?.[recipe.id] ?? false}
+            onToggleFavorite={() => handleToggleFavorite(recipe.id)}
+            onClick={() => handleRecipeClick(recipe.id)}
+            className='w-full max-w-none'
+          />
+        ))}
+      </InfiniteScrollList>
+    </div>
   );
 }

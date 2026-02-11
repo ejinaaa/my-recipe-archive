@@ -9,7 +9,7 @@ export { CookingTimeFilterSection } from './ui/CookingTimeFilterSection';
 export { ActiveFilterBadges } from './ui/ActiveFilterBadges';
 
 // URL State Hook
-export { useUrlQueryParams, type FilterOrderKey } from './model/useUrlQueryParams';
+export { useUrlQueryParams } from './model/useUrlQueryParams';
 
 // Utilities
 export {

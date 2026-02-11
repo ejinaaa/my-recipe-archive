@@ -9,7 +9,7 @@ const meta = {
     sortBy: null,
     categoryFilters: { situation: [], cuisine: [], dishType: [] },
     cookingTimeRange: null,
-    filterOrder: [],
+
     onRemoveSort: () => {},
     onRemoveCategoryFilter: () => {},
     onRemoveCookingTime: () => {},
@@ -33,7 +33,7 @@ export const NoFilters: Story = {};
 export const SortOnly: Story = {
   args: {
     sortBy: 'most_cooked',
-    filterOrder: ['sort'],
+
   },
 };
 
@@ -45,7 +45,7 @@ export const CategoryOnly: Story = {
       cuisine: [],
       dishType: [],
     },
-    filterOrder: ['situation'],
+
   },
 };
 
@@ -53,7 +53,7 @@ export const CategoryOnly: Story = {
 export const CookingTimeOnly: Story = {
   args: {
     cookingTimeRange: { min: 10, max: 60 },
-    filterOrder: ['cookingTime'],
+
   },
 };
 
@@ -67,6 +67,6 @@ export const AllFilters: Story = {
       dishType: ['rice'],
     },
     cookingTimeRange: { min: 15, max: 90 },
-    filterOrder: ['sort', 'situation', 'cuisine', 'dishType', 'cookingTime'],
+
   },
 };

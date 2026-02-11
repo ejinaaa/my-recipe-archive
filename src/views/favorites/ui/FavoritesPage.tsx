@@ -25,10 +25,9 @@ import { PageHeader } from '@/shared/ui/page-header';
 import { useSaveUrlOnUnmount } from '@/shared/lib';
 import { useNavigationStore } from '@/shared/model';
 import { BottomNavigation } from '@/widgets/bottom-navigation';
-import { RecipeList } from '@/widgets/recipe-list';
+import { RecipeList, RecipeListSkeleton } from '@/widgets/recipe-list';
 import { QueryErrorFallback } from '@/shared/ui/query-error-fallback';
 import { ROUTES } from '@/shared/config';
-import { FavoritesPageSkeleton } from './FavoritesPageSkeleton';
 
 const favoritesEmptyFallback = (
   <div className='flex flex-col items-center justify-center py-20 px-3'>
@@ -62,7 +61,6 @@ export function FavoritesPage() {
     resetSort,
     removeCategoryFilter,
     removeCookingTime,
-    filterOrder,
   } = useUrlQueryParams();
 
   // 바텀시트 열림 상태 (로컬)
@@ -94,48 +92,47 @@ export function FavoritesPage() {
 
   return (
     <div className='h-dvh flex flex-col bg-background'>
-      <ErrorBoundary
-        fallbackRender={({ resetErrorBoundary }) => (
-          <QueryErrorFallback
-            skeleton={<FavoritesPageSkeleton />}
-            onRetry={resetErrorBoundary}
-            onHome={() => router.push(ROUTES.RECIPES.LIST)}
-            title='즐겨찾기 목록을 가져오지 못했어요'
-            description='네트워크 상태를 확인하고 다시 시도해주세요'
+      {/* Header */}
+      <PageHeader className='py-3'>
+        <div className='flex items-center gap-2'>
+          <SearchBar
+            defaultValue={searchQuery ?? undefined}
+            onSearch={handleSearch}
+            placeholder='어떤 요리를 찾으세요?'
           />
-        )}
-      >
-        <Suspense fallback={<FavoritesPageSkeleton />}>
-          {/* Header */}
-          <PageHeader className='py-3'>
-            <div className='flex items-center gap-2'>
-              <SearchBar
-                defaultValue={searchQuery ?? undefined}
-                onSearch={handleSearch}
-                placeholder='어떤 요리를 찾으세요?'
-              />
-              <SortButton
-                onClick={handleSortClick}
-                isActive={isSortActive(sortBy)}
-              />
-              <FilterButton
-                onClick={handleFilterClick}
-                isActive={isFilterActive(categoryFilters, cookingTimeRange)}
-              />
-            </div>
-          </PageHeader>
+          <SortButton
+            onClick={handleSortClick}
+            isActive={isSortActive(sortBy)}
+          />
+          <FilterButton
+            onClick={handleFilterClick}
+            isActive={isFilterActive(categoryFilters, cookingTimeRange)}
+          />
+        </div>
+      </PageHeader>
 
-          {/* Main */}
-          <main className='flex-1 overflow-y-auto'>
-            <ActiveFilterBadges
-              sortBy={sortBy}
-              categoryFilters={categoryFilters}
-              cookingTimeRange={cookingTimeRange}
-              filterOrder={filterOrder}
-              onRemoveSort={resetSort}
-              onRemoveCategoryFilter={removeCategoryFilter}
-              onRemoveCookingTime={removeCookingTime}
+      {/* Main */}
+      <main className='flex-1 overflow-y-auto'>
+        <ActiveFilterBadges
+          sortBy={sortBy}
+          categoryFilters={categoryFilters}
+          cookingTimeRange={cookingTimeRange}
+          onRemoveSort={resetSort}
+          onRemoveCategoryFilter={removeCategoryFilter}
+          onRemoveCookingTime={removeCookingTime}
+        />
+        <ErrorBoundary
+          fallbackRender={({ resetErrorBoundary }) => (
+            <QueryErrorFallback
+              skeleton={<RecipeListSkeleton />}
+              onRetry={resetErrorBoundary}
+              onHome={() => router.push(ROUTES.RECIPES.LIST)}
+              title='즐겨찾기 목록을 가져오지 못했어요'
+              description='네트워크 상태를 확인하고 다시 시도해주세요'
             />
+          )}
+        >
+          <Suspense fallback={<RecipeListSkeleton />}>
             <RecipeList
               searchQuery={searchQuery ?? undefined}
               categories={toCategoryFilter(categoryFilters)}
@@ -144,9 +141,9 @@ export function FavoritesPage() {
               favoritesByUserId={userId}
               emptyFallback={favoritesEmptyFallback}
             />
-          </main>
-        </Suspense>
-      </ErrorBoundary>
+          </Suspense>
+        </ErrorBoundary>
+      </main>
 
       <BottomNavigation activeTab='favorites' />
 

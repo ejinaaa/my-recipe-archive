@@ -8,10 +8,13 @@ import { formatCookingTime } from '@/entities/recipe/model/utils';
 import type { RecipeSortBy } from '@/entities/recipe/api/server';
 import { Badge } from '@/shared/ui/badge';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
+import { Skeleton } from '@/shared/ui/skeleton';
 import type { CategoryFilters, CookingTimeRange } from '../model/store';
 import { SORT_OPTIONS } from '../model/sortStore';
 import { isDefaultCookingTimeRange } from '../model/hooks';
-import type { FilterOrderKey } from '../model/useUrlQueryParams';
+
+/** 카테고리 필터 렌더링 순서 (고정) */
+const CATEGORY_TYPES: CategoryType[] = ['situation', 'cuisine', 'dishType'];
 
 interface ActiveFilterBadgesProps {
   /** 현재 적용된 정렬 */
@@ -20,8 +23,6 @@ interface ActiveFilterBadgesProps {
   categoryFilters: CategoryFilters;
   /** 현재 적용된 조리시간 범위 */
   cookingTimeRange: CookingTimeRange | null;
-  /** 필터 적용 순서 (URL 파라미터 순) */
-  filterOrder: FilterOrderKey[];
   /** 정렬 제거 핸들러 */
   onRemoveSort: () => void;
   /** 개별 카테고리 필터 제거 핸들러 */
@@ -33,15 +34,31 @@ interface ActiveFilterBadgesProps {
 /**
  * 현재 적용된 정렬/필터를 뱃지로 표시하는 컴포넌트
  *
- * filterOrder가 비어있으면 렌더링하지 않아 쿼리도 실행되지 않음.
+ * 활성 필터가 없으면 렌더링하지 않아 쿼리도 실행되지 않음.
  * 에러 발생 시 영역 자체를 숨김.
  */
 export function ActiveFilterBadges(props: ActiveFilterBadgesProps) {
-  if (props.filterOrder.length === 0) return null;
+  const { sortBy, categoryFilters, cookingTimeRange } = props;
+
+  const hasCategory = CATEGORY_TYPES.some(
+    type => categoryFilters[type].length > 0,
+  );
+  const hasCookingTime =
+    cookingTimeRange !== null && !isDefaultCookingTimeRange(cookingTimeRange);
+
+  if (!sortBy && !hasCategory && !hasCookingTime) return null;
 
   return (
     <ErrorBoundary fallback={null}>
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <HorizontalScroll className='gap-1.5 px-4 py-2'>
+            <Skeleton className='h-8 w-16 shrink-0 rounded-full' />
+            <Skeleton className='h-8 w-16 shrink-0 rounded-full' />
+            <Skeleton className='h-8 w-16 shrink-0 rounded-full' />
+          </HorizontalScroll>
+        }
+      >
         <ActiveFilterBadgesContent {...props} />
       </Suspense>
     </ErrorBoundary>
@@ -50,12 +67,13 @@ export function ActiveFilterBadges(props: ActiveFilterBadgesProps) {
 
 /**
  * 뱃지 렌더링 내부 컴포넌트 (useSuspenseCategoryGroups 사용)
+ *
+ * 고정 순서: sort → situation → cuisine → dishType → cookingTime
  */
 function ActiveFilterBadgesContent({
   sortBy,
   categoryFilters,
   cookingTimeRange,
-  filterOrder,
   onRemoveSort,
   onRemoveCategoryFilter,
   onRemoveCookingTime,
@@ -78,10 +96,10 @@ function ActiveFilterBadgesContent({
   const hasCookingTimeFilter =
     cookingTimeRange !== null && !isDefaultCookingTimeRange(cookingTimeRange);
 
-  // filterOrder를 순회하며 뱃지를 순서대로 직접 빌드
-  const badges = filterOrder.flatMap(orderKey => {
-    if (orderKey === 'sort' && sortOption) {
-      return (
+  return (
+    <HorizontalScroll className='gap-1.5 px-4 py-2'>
+      {/* 1. 정렬 */}
+      {sortOption && (
         <Badge
           key='sort'
           variant='outline'
@@ -94,34 +112,31 @@ function ActiveFilterBadgesContent({
           {sortOption.icon}
           {sortOption.label}
         </Badge>
-      );
-    }
+      )}
 
-    if (
-      (orderKey === 'situation' || orderKey === 'cuisine' || orderKey === 'dishType') &&
-      categoryFilters[orderKey].length > 0
-    ) {
-      return categoryFilters[orderKey].map(code => {
-        const info = getCategoryInfo(orderKey, code);
-        return (
-          <Badge
-            key={`${orderKey}-${code}`}
-            variant='outline'
-            colorScheme='neutral'
-            size='md'
-            closable
-            selected
-            onClose={() => onRemoveCategoryFilter(orderKey, code)}
-          >
-            {info.icon}
-            {info.name}
-          </Badge>
-        );
-      });
-    }
+      {/* 2. 카테고리 (situation → cuisine → dishType) */}
+      {CATEGORY_TYPES.flatMap(type =>
+        categoryFilters[type].map(code => {
+          const info = getCategoryInfo(type, code);
+          return (
+            <Badge
+              key={`${type}-${code}`}
+              variant='outline'
+              colorScheme='neutral'
+              size='md'
+              closable
+              selected
+              onClose={() => onRemoveCategoryFilter(type, code)}
+            >
+              {info.icon}
+              {info.name}
+            </Badge>
+          );
+        }),
+      )}
 
-    if (orderKey === 'cookingTime' && hasCookingTimeFilter && cookingTimeRange) {
-      return (
+      {/* 3. 조리시간 */}
+      {hasCookingTimeFilter && cookingTimeRange && (
         <Badge
           key='cookingTime'
           variant='outline'
@@ -134,17 +149,7 @@ function ActiveFilterBadgesContent({
           {formatCookingTime(cookingTimeRange.min)} ~{' '}
           {formatCookingTime(cookingTimeRange.max)}
         </Badge>
-      );
-    }
-
-    return [];
-  });
-
-  if (badges.length === 0) return null;
-
-  return (
-    <HorizontalScroll className='gap-1.5 px-4 py-2'>
-      {badges}
+      )}
     </HorizontalScroll>
   );
 }
