@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { SortBottomSheet } from './SortBottomSheet';
 import { Button } from '@/shared/ui/button';
-import type { RecipeSortBy } from '@/entities/recipe/api/server';
+import type { RecipeSortBy } from '@/entities/recipe/model/types';
 
 const meta = {
   title: 'features/recipe-search/SortBottomSheet',

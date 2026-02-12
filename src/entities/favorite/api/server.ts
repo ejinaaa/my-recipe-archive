@@ -26,7 +26,7 @@ export async function addFavoriteApi(
       throw new Error('즐겨찾기에 추가하지 못했어요');
     }
 
-    const { toFavorite } = await import('../model/types');
+    const { toFavorite } = await import('../model/utils');
     return toFavorite(data as FavoriteDB);
   } catch (error) {
     console.error('[Favorite API] addFavorite error:', error);

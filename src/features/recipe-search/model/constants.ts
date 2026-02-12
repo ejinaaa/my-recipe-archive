@@ -1,4 +1,26 @@
-import type { RecipeSortBy } from '@/entities/recipe/api/server';
+import type { RecipeSortBy } from '@/entities/recipe/model/types';
+import {
+  COOKING_TIME_MIN,
+  COOKING_TIME_MAX,
+} from '@/entities/recipe/model/constants';
+import type { CategoryFilters, CookingTimeRange } from './types';
+
+/**
+ * 초기 필터 값
+ */
+export const initialFilters: CategoryFilters = {
+  situation: [],
+  cuisine: [],
+  dishType: [],
+};
+
+/**
+ * 초기 조리시간 범위 값
+ */
+export const initialCookingTimeRange: CookingTimeRange = {
+  min: COOKING_TIME_MIN,
+  max: COOKING_TIME_MAX,
+};
 
 /**
  * 정렬 옵션 정의

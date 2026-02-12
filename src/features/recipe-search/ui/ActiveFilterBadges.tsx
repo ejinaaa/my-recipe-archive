@@ -4,15 +4,16 @@ import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import { CATEGORY_TYPES } from '@/entities/category/model/constants';
-import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
+import type { CategoryType } from '@/entities/category/model/types';
+import { getOptionsByType } from '@/entities/category/model/utils';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
-import type { RecipeSortBy } from '@/entities/recipe/api/server';
+import type { RecipeSortBy } from '@/entities/recipe/model/types';
 import { Badge } from '@/shared/ui/badge';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { Skeleton } from '@/shared/ui/skeleton';
-import type { CategoryFilters, CookingTimeRange } from '../model/store';
-import { SORT_OPTIONS } from '../model/sortStore';
-import { isDefaultCookingTimeRange } from '../model/hooks';
+import type { CategoryFilters, CookingTimeRange } from '../model/types';
+import { SORT_OPTIONS } from '../model/constants';
+import { isDefaultCookingTimeRange } from '../model/utils';
 
 
 interface ActiveFilterBadgesProps {

@@ -27,7 +27,7 @@ export async function getProfileApi(id: string): Promise<Profile | null> {
       throw new Error('프로필 정보를 가져오지 못했어요');
     }
 
-    const { toProfile } = await import('../model/types');
+    const { toProfile } = await import('../model/utils');
     return toProfile(data as ProfileDB);
   } catch (error) {
     console.error('[Profile API] getProfileApi error:', error);
@@ -79,7 +79,7 @@ export async function createProfileApi(data: ProfileInsert): Promise<Profile> {
       throw new Error('프로필을 만들지 못했어요');
     }
 
-    const { toProfile } = await import('../model/types');
+    const { toProfile } = await import('../model/utils');
     return toProfile(newProfile as ProfileDB);
   } catch (error) {
     console.error('[Profile API] createProfileApi error:', error);
@@ -109,7 +109,7 @@ export async function updateProfileApi(
       throw new Error('프로필을 수정하지 못했어요');
     }
 
-    const { toProfile } = await import('../model/types');
+    const { toProfile } = await import('../model/utils');
     return toProfile(updatedProfile as ProfileDB);
   } catch (error) {
     console.error('[Profile API] updateProfileApi error:', error);

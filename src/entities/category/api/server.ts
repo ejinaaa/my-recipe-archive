@@ -32,7 +32,7 @@ export async function getCategoryOptionsApi(
       throw new Error('카테고리 정보를 가져오지 못했어요');
     }
 
-    const { toCategoryOption } = await import('../model/types');
+    const { toCategoryOption } = await import('../model/utils');
     return (data as CategoryOptionDB[]).map(toCategoryOption);
   } catch (error) {
     console.error('[Category API] getCategoryOptionsApi error:', error);
@@ -63,7 +63,7 @@ export async function getCategoryOptionApi(
       throw new Error('카테고리 정보를 가져오지 못했어요');
     }
 
-    const { toCategoryOption } = await import('../model/types');
+    const { toCategoryOption } = await import('../model/utils');
     return toCategoryOption(data as CategoryOptionDB);
   } catch (error) {
     console.error('[Category API] getCategoryOptionApi error:', error);
@@ -77,7 +77,7 @@ export async function getCategoryOptionApi(
 export async function getCategoryGroupsApi(): Promise<CategoryGroup[]> {
   try {
     const options = await getCategoryOptionsApi();
-    const { groupCategoriesByType } = await import('../model/types');
+    const { groupCategoriesByType } = await import('../model/utils');
     return groupCategoriesByType(options);
   } catch (error) {
     console.error('[Category API] getCategoryGroupsApi error:', error);
@@ -105,7 +105,7 @@ export async function createCategoryOptionApi(
       throw new Error('카테고리를 추가하지 못했어요');
     }
 
-    const { toCategoryOption } = await import('../model/types');
+    const { toCategoryOption } = await import('../model/utils');
     return toCategoryOption(newOption as CategoryOptionDB);
   } catch (error) {
     console.error('[Category API] createCategoryOptionApi error:', error);
@@ -135,7 +135,7 @@ export async function updateCategoryOptionApi(
       throw new Error('카테고리를 수정하지 못했어요');
     }
 
-    const { toCategoryOption } = await import('../model/types');
+    const { toCategoryOption } = await import('../model/utils');
     return toCategoryOption(updatedOption as CategoryOptionDB);
   } catch (error) {
     console.error('[Category API] updateCategoryOptionApi error:', error);

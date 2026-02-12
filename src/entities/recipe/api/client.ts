@@ -1,12 +1,11 @@
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
 import { handleApiResponse } from '@/shared/api/fetchWithError';
 import { RECIPE_PAGE_SIZE } from '../model/constants';
-import type { Recipe } from '../model/types';
-import type { PaginatedRecipes, RecipeSortBy } from './server';
+import type { Recipe, PaginatedRecipes, RecipeSortBy } from '../model/types';
 import type { InfiniteRecipesParams } from './keys';
 
 /** InfiniteRecipesParams를 URL 쿼리 스트링으로 변환 */
-export const buildRecipesSearchParams = (
+const buildRecipesSearchParams = (
   params: InfiniteRecipesParams | undefined,
   offset: number
 ): URLSearchParams => {

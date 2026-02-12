@@ -3,7 +3,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
-import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
+import type { CategoryType } from '@/entities/category/model/types';
+import { getOptionsByType } from '@/entities/category/model/utils';
 import { CATEGORY_TYPES, CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import {
   COOKING_TIME_MIN,
@@ -20,8 +21,9 @@ import {
   DrawerFooter,
   DrawerTitle,
 } from '@/shared/ui/drawer';
-import type { CategoryFilters, CookingTimeRange } from '../model/store';
-import { toggleCategoryFilter, initialFilters, initialCookingTimeRange } from '../model/store';
+import type { CategoryFilters, CookingTimeRange } from '../model/types';
+import { toggleCategoryFilter } from '../model/utils';
+import { initialFilters, initialCookingTimeRange } from '../model/constants';
 import { CategoryFilterSection } from './CategoryFilterSection';
 import { CookingTimeFilterSection } from './CookingTimeFilterSection';
 

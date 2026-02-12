@@ -1,6 +1,6 @@
 // Types
 export type { Favorite, FavoriteDB } from './model/types';
-export { toFavorite } from './model/types';
+export { toFavorite } from './model/utils';
 
 // Server API
 export {

@@ -10,7 +10,7 @@ import {
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { Section, SectionHeader } from '@/shared/ui/section';
 import { ROUTES } from '@/shared/config';
-import type { RecipeSortBy } from '@/entities/recipe/api/server';
+import type { RecipeSortBy } from '@/entities/recipe/model/types';
 
 const DEFAULT_SECTION_LIMIT = 6;
 

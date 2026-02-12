@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
-import { getOptionsByType } from '@/entities/category/model/types';
+import { getOptionsByType } from '@/entities/category/model/utils';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
 import { ROUTES } from '@/shared/config';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';

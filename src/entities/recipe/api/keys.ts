@@ -2,7 +2,7 @@ import type {
   RecipeSortBy,
   CategoryFilter,
   CookingTimeRange,
-} from './server';
+} from '../model/types';
 
 /** 레시피 목록 조회 파라미터 */
 export interface InfiniteRecipesParams {

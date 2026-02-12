@@ -6,13 +6,13 @@ import {
   parseAsStringEnum,
   parseAsInteger,
 } from 'nuqs';
-import type { RecipeSortBy } from '@/entities/recipe/api/server';
+import type { RecipeSortBy } from '@/entities/recipe/model/types';
 import type { CategoryType } from '@/entities/category/model/types';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
 } from '@/entities/recipe/model/constants';
-import type { CategoryFilters, CookingTimeRange } from './store';
+import type { CategoryFilters, CookingTimeRange } from './types';
 
 const SORT_OPTIONS_VALUES: RecipeSortBy[] = [
   'latest',

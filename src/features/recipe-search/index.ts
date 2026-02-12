@@ -11,21 +11,18 @@ export { ActiveFilterBadges } from './ui/ActiveFilterBadges';
 // URL State Hook
 export { useUrlQueryParams } from './model/useUrlQueryParams';
 
+// Types
+export { type CategoryFilters, type CookingTimeRange } from './model/types';
+
+// Constants
+export { initialFilters, initialCookingTimeRange, SORT_OPTIONS } from './model/constants';
+
 // Utilities
 export {
+  toggleCategoryFilter,
   toCategoryFilter,
   toCookingTimeRange,
   isDefaultCookingTimeRange,
   isSortActive,
   isFilterActive,
-} from './model/hooks';
-
-// Types & Constants
-export {
-  toggleCategoryFilter,
-  initialFilters,
-  initialCookingTimeRange,
-  type CategoryFilters,
-  type CookingTimeRange,
-} from './model/store';
-export { SORT_OPTIONS } from './model/sortStore';
+} from './model/utils';

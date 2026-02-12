@@ -14,7 +14,7 @@ import type {
   CategoryFilter,
   CookingTimeRange,
   RecipeSortBy,
-} from '@/entities/recipe/api/server';
+} from '@/entities/recipe/model/types';
 import { ROUTES } from '@/shared/config';
 import { InfiniteScrollList } from '@/shared/ui/infinite-scroll-list';
 

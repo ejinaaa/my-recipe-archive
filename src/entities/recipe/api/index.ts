@@ -19,5 +19,5 @@ export type {
   RecipeSortBy,
   CategoryFilter,
   CookingTimeRange,
-} from './server';
+} from '../model/types';
 export type { InfiniteRecipesParams } from './keys';

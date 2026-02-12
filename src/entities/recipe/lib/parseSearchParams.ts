@@ -1,4 +1,4 @@
-import type { CategoryFilter } from '../api/server';
+import type { CategoryFilter } from '../model/types';
 import type { InfiniteRecipesParams } from '../api/keys';
 import { COOKING_TIME_MIN, COOKING_TIME_MAX } from '../model/constants';
 

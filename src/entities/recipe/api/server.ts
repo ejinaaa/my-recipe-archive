@@ -4,55 +4,9 @@ import type {
   RecipeDB,
   RecipeInsert,
   RecipeUpdate,
+  GetRecipesParams,
+  PaginatedRecipes,
 } from '../model/types';
-
-/** 정렬 옵션 */
-export type RecipeSortBy =
-  | 'latest'
-  | 'oldest'
-  | 'most_cooked'
-  | 'least_cooked'
-  | 'most_viewed'
-  | 'least_viewed'
-  | 'favorites';
-
-/** 카테고리 필터 */
-export interface CategoryFilter {
-  situation?: string[];
-  cuisine?: string[];
-  dishType?: string[];
-}
-
-/** 조리 시간 범위 필터 */
-export interface CookingTimeRange {
-  min?: number;
-  max?: number;
-}
-
-export interface GetRecipesParams {
-  userId?: string;
-  limit?: number;
-  offset?: number;
-  searchQuery?: string;
-  /** 공개 레시피만 조회 */
-  isPublic?: boolean;
-  /** 카테고리 필터 */
-  categories?: CategoryFilter;
-  /** 조리 시간 범위 */
-  cookingTimeRange?: CookingTimeRange;
-  /** 태그 필터 (AND 조건) */
-  tags?: string[];
-  /** 정렬 기준 */
-  sortBy?: RecipeSortBy;
-  /** 해당 유저가 즐겨찾기한 레시피만 조회 */
-  favoritesByUserId?: string;
-}
-
-export interface PaginatedRecipes {
-  recipes: Recipe[];
-  total: number;
-  hasMore: boolean;
-}
 
 /**
  * Get recipes with pagination support
@@ -203,7 +157,7 @@ export async function getRecipesPaginatedApi(
       throw new Error('레시피 목록을 가져오지 못했어요');
     }
 
-    const { toRecipe } = await import('../model/types');
+    const { toRecipe } = await import('../model/utils');
     const recipes = (data as RecipeDB[]).map(toRecipe);
     const total = count || 0;
 
@@ -239,7 +193,7 @@ export async function getRecipeApi(id: string): Promise<Recipe | null> {
       throw new Error('레시피 정보를 가져오지 못했어요');
     }
 
-    const { toRecipe } = await import('../model/types');
+    const { toRecipe } = await import('../model/utils');
     return toRecipe(data as RecipeDB);
   } catch (error) {
     console.error('[Recipe API] getRecipeApi error:', error);
@@ -253,7 +207,7 @@ export async function getRecipeApi(id: string): Promise<Recipe | null> {
 export async function createRecipeApi(data: RecipeInsert): Promise<Recipe> {
   try {
     const supabase = await createClient();
-    const { toRecipeDB, toRecipe } = await import('../model/types');
+    const { toRecipeDB, toRecipe } = await import('../model/utils');
 
     const dbData = toRecipeDB(data);
 
@@ -284,7 +238,7 @@ export async function updateRecipeApi(
 ): Promise<Recipe> {
   try {
     const supabase = await createClient();
-    const { toRecipeDB, toRecipe } = await import('../model/types');
+    const { toRecipeDB, toRecipe } = await import('../model/utils');
 
     const dbData = toRecipeDB(data);
 
@@ -357,7 +311,7 @@ export async function getRandomRecipeApi(): Promise<Recipe | null> {
 
     if (error || !data?.[0]) return null;
 
-    const { toRecipe } = await import('../model/types');
+    const { toRecipe } = await import('../model/utils');
     return toRecipe(data[0] as RecipeDB);
   } catch (error) {
     console.error('[Recipe API] getRandomRecipeApi error:', error);

@@ -201,70 +201,50 @@ export interface RecipeUpdate {
   tags?: string[];
 }
 
-/**
- * Converts a database recipe to an application recipe
- */
-export function toRecipe(dbRecipe: RecipeDB): Recipe {
-  return {
-    id: dbRecipe.id,
-    user_id: dbRecipe.user_id,
-    title: dbRecipe.title,
-    ...(dbRecipe.description && { description: dbRecipe.description }),
-    ...(dbRecipe.thumbnail_url && { thumbnail_url: dbRecipe.thumbnail_url }),
-    ...(dbRecipe.cooking_time && { cooking_time: dbRecipe.cooking_time }),
-    ...(dbRecipe.servings && { servings: dbRecipe.servings }),
-    categories: Array.isArray(dbRecipe.categories)
-      ? dbRecipe.categories
-      : Object.values(dbRecipe.categories || {})
-          .flat()
-          .filter((cat): cat is RecipeCategory => cat !== undefined),
-    ingredients: dbRecipe.ingredients || [],
-    steps: dbRecipe.steps || [],
-    is_public: dbRecipe.is_public ?? false,
-    view_count: dbRecipe.view_count ?? 0,
-    favorite_count: dbRecipe.favorite_count ?? 0,
-    cook_count: dbRecipe.cook_count ?? 0,
-    tags: dbRecipe.tags || [],
-    ...(dbRecipe.created_at && { created_at: new Date(dbRecipe.created_at) }),
-    ...(dbRecipe.updated_at && { updated_at: new Date(dbRecipe.updated_at) }),
-  };
+/** 정렬 옵션 */
+export type RecipeSortBy =
+  | 'latest'
+  | 'oldest'
+  | 'most_cooked'
+  | 'least_cooked'
+  | 'most_viewed'
+  | 'least_viewed'
+  | 'favorites';
+
+/** 카테고리 필터 */
+export interface CategoryFilter {
+  situation?: string[];
+  cuisine?: string[];
+  dishType?: string[];
 }
 
-/**
- * Converts an application recipe to database format
- */
-export function toRecipeDB(
-  recipe: RecipeInsert | RecipeUpdate,
-  user_id?: string,
-): Partial<RecipeDB> {
-  const result: Partial<RecipeDB> = {};
+/** 조리 시간 범위 필터 */
+export interface CookingTimeRange {
+  min?: number;
+  max?: number;
+}
 
-  if ('user_id' in recipe) result.user_id = recipe.user_id;
-  else if (user_id) result.user_id = user_id;
+export interface GetRecipesParams {
+  userId?: string;
+  limit?: number;
+  offset?: number;
+  searchQuery?: string;
+  /** 공개 레시피만 조회 */
+  isPublic?: boolean;
+  /** 카테고리 필터 */
+  categories?: CategoryFilter;
+  /** 조리 시간 범위 */
+  cookingTimeRange?: CookingTimeRange;
+  /** 태그 필터 (AND 조건) */
+  tags?: string[];
+  /** 정렬 기준 */
+  sortBy?: RecipeSortBy;
+  /** 해당 유저가 즐겨찾기한 레시피만 조회 */
+  favoritesByUserId?: string;
+}
 
-  if (recipe.title) result.title = recipe.title;
-  if (recipe.description !== undefined)
-    result.description = recipe.description || null;
-  if (recipe.thumbnail_url !== undefined)
-    result.thumbnail_url = recipe.thumbnail_url || null;
-  if (recipe.cooking_time !== undefined)
-    result.cooking_time = recipe.cooking_time || null;
-  if (recipe.servings !== undefined) result.servings = recipe.servings || null;
-  if (recipe.categories !== undefined) {
-    result.categories = recipe.categories.reduce(
-      (acc, cat) => {
-        const list = acc[cat.type] ?? [];
-        list.push(cat);
-        acc[cat.type] = list;
-        return acc;
-      },
-      {} as Record<CategoryType, RecipeCategory[]>,
-    );
-  }
-  if (recipe.ingredients !== undefined) result.ingredients = recipe.ingredients;
-  if (recipe.steps !== undefined) result.steps = recipe.steps;
-  if (recipe.is_public !== undefined) result.is_public = recipe.is_public;
-  if (recipe.tags !== undefined) result.tags = recipe.tags;
-
-  return result;
+export interface PaginatedRecipes {
+  recipes: Recipe[];
+  total: number;
+  hasMore: boolean;
 }

@@ -1,9 +1,29 @@
-import type { CategoryFilter, RecipeSortBy } from '@/entities/recipe/api/server';
+import type { CategoryType } from '@/entities/category/model/types';
+import type { CategoryFilter, RecipeSortBy } from '@/entities/recipe/model/types';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
 } from '@/entities/recipe/model/constants';
-import type { CategoryFilters, CookingTimeRange } from './store';
+import type { CategoryFilters, CookingTimeRange } from './types';
+
+/**
+ * 카테고리 필터 토글 유틸리티
+ */
+export const toggleCategoryFilter = (
+  filters: CategoryFilters,
+  type: CategoryType,
+  code: string,
+): CategoryFilters => {
+  const currentCodes = filters[type];
+  const isSelected = currentCodes.includes(code);
+
+  return {
+    ...filters,
+    [type]: isSelected
+      ? currentCodes.filter(c => c !== code)
+      : [...currentCodes, code],
+  };
+};
 
 /**
  * store의 CategoryFilters를 API의 CategoryFilter로 변환

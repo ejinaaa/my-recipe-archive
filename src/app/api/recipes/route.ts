@@ -1,10 +1,10 @@
 import { NextRequest } from 'next/server';
-import {
-  getRecipesPaginatedApi,
-  type CategoryFilter,
-  type CookingTimeRange,
-  type RecipeSortBy,
-} from '@/entities/recipe/api/server';
+import { getRecipesPaginatedApi } from '@/entities/recipe/api/server';
+import type {
+  CategoryFilter,
+  CookingTimeRange,
+  RecipeSortBy,
+} from '@/entities/recipe/model/types';
 import { RECIPE_PAGE_SIZE } from '@/entities/recipe/model/constants';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 

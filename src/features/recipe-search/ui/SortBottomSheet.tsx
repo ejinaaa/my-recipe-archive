@@ -10,8 +10,8 @@ import {
   DrawerFooter,
   DrawerTitle,
 } from '@/shared/ui/drawer';
-import type { RecipeSortBy } from '@/entities/recipe/api/server';
-import { SORT_OPTIONS } from '../model/sortStore';
+import type { RecipeSortBy } from '@/entities/recipe/model/types';
+import { SORT_OPTIONS } from '../model/constants';
 
 interface SortBottomSheetProps {
   /** 바텀시트 열림 상태 */

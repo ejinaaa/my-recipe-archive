@@ -21,7 +21,7 @@ import {
   fetchRandomRecipe,
 } from './client';
 import { recipeKeys, type InfiniteRecipesParams } from './keys';
-import type { RecipeSortBy } from './server';
+import type { RecipeSortBy } from '../model/types';
 
 /**
  * Suspense를 지원하는 단일 레시피 조회 hook
