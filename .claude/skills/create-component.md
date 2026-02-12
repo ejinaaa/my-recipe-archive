@@ -1,3 +1,7 @@
+---
+description: 컴포넌트 생성 — 새 컴포넌트를 scaffolding할 때 사용 (컴포넌트 파일 + 스토리 + index.ts export)
+---
+
 # 컴포넌트 생성
 
 새 컴포넌트를 scaffolding 합니다.

@@ -81,47 +81,7 @@ function Component({ data, onChange }) {
 
 ## 컴포넌트 설계 패턴
 
-### Controlled Component 패턴
-
-복잡한 UI 컴포넌트(모달, 드로어, 폼)는 **제어 컴포넌트**로 설계:
-
-```typescript
-interface Props {
-  // 1. 제어 props
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-
-  // 2. 초기값 (optional + 기본값)
-  initialValue?: T;
-
-  // 3. 결과 콜백
-  onApply: (value: T) => void;
-}
-```
-
-**장점:**
-- **테스트 용이성**: 모킹 없이 props만으로 테스트
-- **재사용성**: 다양한 상태 소스와 연결 가능
-- **예측 가능성**: 데이터 흐름이 명확
-
-### 임시 상태 패턴
-
-사용자가 "적용" 전까지 변경사항을 미리보기할 때:
-
-```typescript
-function Editor({ initialValue, onApply }) {
-  // 편집 중인 임시 상태
-  const [draft, setDraft] = useState(initialValue);
-
-  // 열릴 때 초기값 동기화
-  useEffect(() => {
-    if (open) setDraft(initialValue);
-  }, [open, initialValue]);
-
-  // 적용 시에만 외부로 전달
-  const handleApply = () => onApply(draft);
-}
-```
+> Controlled Component 패턴, 임시 상태 패턴은 `component-creation.md` 참고
 
 ## 안티패턴
 

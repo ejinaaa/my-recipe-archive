@@ -64,12 +64,15 @@ feature-name/
 ├── ui/              # UI 컴포넌트
 │   ├── Component.tsx
 │   └── Component.stories.tsx
-├── model/           # 타입, 상태, 비즈니스 로직
-│   ├── types.ts
-│   └── hooks.ts
-├── api/             # API 호출
-│   ├── server.ts    # 서버 컴포넌트용
-│   ├── actions.ts   # Server Actions
-│   └── hooks.ts     # React Query hooks
+├── model/           # 타입, 유틸리티, 상수
+│   ├── types.ts     # 타입/인터페이스 정의
+│   ├── utils.ts     # 변환/유틸리티 함수
+│   └── constants.ts # 상수 정의
+├── api/             # API 호출 (entities만 해당)
+│   ├── server.ts    # Supabase 직접 접근 (서버 전용)
+│   ├── client.ts    # Route API fetch 함수
+│   ├── actions.ts   # Server Actions (mutation 전용)
+│   ├── hooks.ts     # React Query hooks
+│   └── keys.ts      # Query keys factory
 └── index.ts         # Public exports
 ```

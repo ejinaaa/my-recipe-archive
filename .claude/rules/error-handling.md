@@ -84,9 +84,9 @@ const handleSubmit = async (formData) => {
 
 | meta 옵션 | 동작 | 사용 예 |
 |-----------|------|--------|
-| `suppressErrorToast: true` | 에러 무시 (toast 없음) | `useIncrementViewCount`, `useAddCookingLog` |
-| `handleErrorManually: true` | 글로벌 toast 건너뜀 (페이지에서 직접 처리) | `useCreateRecipe`, `useUpdateRecipe`, `useDeleteRecipe` |
-| (없음) | 글로벌 toast 표시 | `useToggleFavorite` 등 나머지 |
+| `suppressErrorToast: true` | 에러 무시 (toast 없음) | `useIncrementViewCountMutation`, `useAddCookingLogMutation` |
+| `handleErrorManually: true` | 글로벌 toast 건너뜀 (페이지에서 직접 처리) | `useCreateRecipeMutation`, `useUpdateRecipeMutation`, `useDeleteRecipeMutation` |
+| (없음) | 글로벌 toast 표시 | `useToggleFavoriteMutation` 등 나머지 |
 
 ## API 에러 처리
 

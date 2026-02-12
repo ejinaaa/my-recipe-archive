@@ -32,7 +32,7 @@ entities/{entity}/api/
 
 ```typescript
 import { createServerQueryClient, dehydrate, HydrationBoundary } from '@/shared/lib/prefetch';
-import { getRecipe } from '@/entities/recipe/api/server';
+import { getRecipeApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   // server.ts 함수로 직접 prefetch (Route API 아님!)
   await queryClient.prefetchQuery({
     queryKey: recipeKeys.detail(id),
-    queryFn: () => getRecipe(id),
+    queryFn: () => getRecipeApi(id),
   });
 
   return (
@@ -58,7 +58,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 ```typescript
 // 메인 콘텐츠 데이터 → useSuspenseQuery + Suspense/ErrorBoundary
 export function RecipeDetailPage({ id }: { id: string }) {
-  const { data: recipe } = useSuspenseRecipe(id);
+  const { data: recipe } = useSuspenseRecipeQuery(id);
   // data는 항상 존재 (Suspense가 로딩 처리)
 }
 ```
@@ -68,7 +68,7 @@ export function RecipeDetailPage({ id }: { id: string }) {
 ```typescript
 // 보조/조건부 데이터 → useQuery (enabled 옵션 필요)
 export function FavoriteButton({ userId, recipeId }: Props) {
-  const { data: isFavorited } = useIsFavorited(userId, recipeId);
+  const { data: isFavorited } = useIsFavoritedQuery(userId, recipeId);
   // enabled: !!userId && !!recipeId
 }
 ```
@@ -78,12 +78,12 @@ export function FavoriteButton({ userId, recipeId }: Props) {
 ### useSuspenseQuery 사용 (prefetch + HydrationBoundary 필수)
 - 페이지의 **메인 콘텐츠** 데이터
 - `enabled` 옵션이 **필요 없는** 쿼리
-- 예: `useSuspenseRecipe`, `useSuspenseInfiniteRecipes`, `useSuspenseCategoryGroups`
+- 예: `useSuspenseRecipeQuery`, `useSuspenseInfiniteRecipesQuery`, `useSuspenseCategoryGroupsQuery`
 
 ### useQuery 유지
 - `enabled` 옵션이 **필요한** 조건부 쿼리
 - 보조 데이터 (자체 로딩/에러 처리)
-- 예: `useIsFavorited`, `useFavoriteStatuses`, `useProfile`, `useCurrentProfile`
+- 예: `useIsFavoritedQuery`, `useFavoriteStatusesQuery`, `useProfileQuery`, `useCurrentProfileQuery`
 
 ## 쓰기 패턴: Server Actions
 
@@ -93,7 +93,7 @@ export function FavoriteButton({ userId, recipeId }: Props) {
 import { revalidatePath } from 'next/cache';
 
 export async function createRecipeAction(data: RecipeInsert) {
-  const recipe = await createRecipe(data);
+  const recipe = await createRecipeApi(data);
   revalidatePath('/recipes');
   return recipe;
 }

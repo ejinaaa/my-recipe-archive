@@ -69,7 +69,7 @@ src/
 
 - Path alias: `@/*` → `./src/*`
 - Views 레이어: 조합만, 비즈니스 로직 금지
-- Entity 구조: `api/` (server.ts, actions.ts, hooks.ts), `model/` (types.ts), `ui/`
+- Entity 구조: `api/` (server.ts, client.ts, actions.ts, hooks.ts, keys.ts), `model/` (types.ts, utils.ts, constants.ts), `ui/`
 - 새로운 컴포넌트/로직 작성 시, 프로젝트에 이미 정의된 코드가 있다면 우선적으로 재사용
 - 새로운 화면/UI 개발 시 프로젝트의 톤앤매너와 기존 스타일 패턴 유지
 

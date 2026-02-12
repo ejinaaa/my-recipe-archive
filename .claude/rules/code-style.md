@@ -96,10 +96,10 @@ export function RecipeCard({ recipe, onFavorite }: RecipeCardProps) {
 
 ```typescript
 // ✅ 훅은 function 선언문 사용
-export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
+export function useRecipesQuery(userId?: string): UseQueryResult<Recipe[], Error> {
   return useQuery({
     queryKey: recipeKeys.list(userId),
-    queryFn: () => getRecipesAction(userId),
+    queryFn: () => fetchRecipes(userId),
   });
 }
 ```
@@ -132,7 +132,7 @@ export const recipeKeys = {
  * 모든 레시피를 조회하는 훅
  * 선택적으로 유저 ID로 필터링 가능
  */
-export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
+export function useRecipesQuery(userId?: string): UseQueryResult<Recipe[], Error> {
   // ...
 }
 
@@ -140,7 +140,7 @@ export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
  * 새 레시피를 생성하는 훅
  * 즉각적인 UI 피드백을 위한 Optimistic Update 포함
  */
-export function useCreateRecipe(): UseMutationResult<Recipe, Error, RecipeInsert> {
+export function useCreateRecipeMutation(): UseMutationResult<Recipe, Error, RecipeInsert> {
   // ...
 }
 
@@ -208,6 +208,12 @@ interface Props {
   withDefault?: string;  // 선택 + 기본값 (컴포넌트에서 처리)
 }
 ```
+
+## TDD
+
+ROI가 높은 함수/훅(복잡한 분기, 데이터 변환, edge case 다수)을 새로 작성하거나 수정할 때는 TDD로 진행한다.
+
+> 테스트 패턴 및 TDD 사이클은 `testing.md` 참고
 
 ## 파일 구조
 

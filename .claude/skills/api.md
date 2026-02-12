@@ -1,3 +1,7 @@
+---
+description: Entity API 생성 — 새로운 Entity의 API 파일들(server.ts, client.ts, actions.ts, hooks.ts, keys.ts, model/types.ts, model/utils.ts)을 자동 생성할 때 사용
+---
+
 # Entity API 생성
 
 새로운 Entity의 API 파일들을 자동 생성합니다.
@@ -23,9 +27,9 @@
 - Supabase 테이블 이름 (기본: entity 복수형)
 - 필요한 CRUD 작업 선택
 
-### 2단계: 타입 생성
+### 2단계: model 파일 생성
 
-`src/entities/[entity]/model/types.ts`:
+**`src/entities/[entity]/model/types.ts`** - 타입 정의:
 
 ```typescript
 export interface [Entity]DB {
@@ -41,27 +45,37 @@ export type [Entity]Insert = Omit<[Entity]DB, 'id' | 'created_at' | 'updated_at'
 export type [Entity]Update = Partial<[Entity]Insert>;
 ```
 
+**`src/entities/[entity]/model/utils.ts`** - 변환 함수:
+
+```typescript
+import type { [Entity], [Entity]DB } from './types';
+
+export const to[Entity] = (row: [Entity]DB): [Entity] => ({
+  ...row,
+});
+```
+
 ### 3단계: API 파일 생성
 
 **server.ts** - 서버 컴포넌트용 CRUD:
 ```typescript
 import { createClient } from '@/shared/api/supabase/server';
-// get[Entity]s, get[Entity], create[Entity], update[Entity], delete[Entity]
+// get[Entity]sApi, get[Entity]Api, create[Entity]Api, update[Entity]Api, delete[Entity]Api
 ```
 
 **Route API** - 읽기 엔드포인트:
 ```typescript
 // src/app/api/[entities]/route.ts
-import { get[Entity]s } from '@/entities/[entity]/api/server';
+import { get[Entity]sApi } from '@/entities/[entity]/api/server';
 
 export async function GET(request: NextRequest) {
-  const data = await get[Entity]s();
+  const data = await get[Entity]sApi();
   return Response.json(data);
 }
 
 // src/app/api/[entities]/[id]/route.ts
 export async function GET(request, { params }) {
-  const data = await get[Entity](id);
+  const data = await get[Entity]Api(id);
   return Response.json(data);
 }
 ```
@@ -69,12 +83,12 @@ export async function GET(request, { params }) {
 **client.ts** - Route API 호출 함수:
 ```typescript
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
+import { handleApiResponse } from '@/shared/api/fetchWithError';
 
 export const fetch[Entity]s = async (): Promise<[Entity][]> => {
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/api/[entities]`);
-  if (!res.ok) throw new Error('...');
-  return res.json();
+  return handleApiResponse<[Entity][]>(res, '[entity] 목록을 가져오지 못했어요');
 };
 ```
 

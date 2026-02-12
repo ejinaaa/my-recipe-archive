@@ -1,3 +1,7 @@
+---
+description: 스토리 생성 — 컴포넌트의 Storybook 스토리(.stories.tsx)를 자동 생성할 때 사용
+---
+
 # 스토리 생성
 
 컴포넌트의 Storybook 스토리를 자동 생성합니다.

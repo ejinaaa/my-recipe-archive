@@ -136,7 +136,7 @@ Loading/Error 스토리에서도 프로필은 항상 캐시에 세팅:
 queryClient.setQueryData(profileKeys.current(), mockProfile);
 ```
 
-이유: `useCurrentProfile`은 `useQuery`(enabled 조건부)이므로, 캐시 없으면 추가 fetch 발생하여 의도치 않은 동작 유발.
+이유: `useCurrentProfileQuery`는 `useQuery`(enabled 조건부)이므로, 캐시 없으면 추가 fetch 발생하여 의도치 않은 동작 유발.
 
 ### Infinite Query 데이터 형태
 

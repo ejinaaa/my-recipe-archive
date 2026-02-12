@@ -1,6 +1,5 @@
 ---
 description: 리팩터링 원칙
-alwaysApply: true
 ---
 
 # 리팩터링 원칙
@@ -88,29 +87,9 @@ interface Props {
 
 ## 의존성 역전 (DIP)
 
-### 컴포넌트 의존성
+컴포넌트가 구체적인 구현(store, router)에 강결합되어 있으면 props로 대체한다.
 
-컴포넌트는 **구체적인 구현**이 아닌 **추상화(props)**에 의존해야 한다.
-
-```typescript
-// BAD: 구체적 구현에 의존
-function Component() {
-  const data = useSpecificStore();  // 특정 store에 강결합
-  const router = useRouter();       // Next.js에 강결합
-}
-
-// GOOD: 추상화(props)에 의존
-function Component({ data, onNavigate }) {
-  // 어디서 데이터가 오는지, 어디로 이동하는지 모름
-  // → 재사용 가능, 테스트 용이
-}
-```
-
-**장점:**
-
-- **테스트**: 모킹 없이 props만으로 테스트
-- **재사용**: 다양한 컨텍스트에서 사용 가능
-- **유연성**: 상태 소스 변경 시 컴포넌트 수정 불필요
+> 구체적인 패턴은 `component-creation.md` 안티패턴 #1 참고
 
 ## FSD 레이어 이동
 
