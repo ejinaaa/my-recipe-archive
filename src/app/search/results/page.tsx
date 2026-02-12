@@ -4,12 +4,12 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@/shared/lib/prefetch';
-import { getCurrentProfile } from '@/entities/user/api/server';
+import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { profileKeys } from '@/entities/user/api/keys';
-import { getRecipesPaginated } from '@/entities/recipe/api/server';
+import { getRecipesPaginatedApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { parseSearchParams } from '@/entities/recipe/lib/parseSearchParams';
-import { getCategoryGroups } from '@/entities/category/api/server';
+import { getCategoryGroupsApi } from '@/entities/category/api/server';
 import { categoryKeys } from '@/entities/category/api/keys';
 import type { InfiniteRecipesParams } from '@/entities/recipe/api/keys';
 import { SearchResultsPage } from '@/views/search-results';
@@ -31,16 +31,16 @@ export default async function SearchResultsRoute({
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: profileKeys.current(),
-      queryFn: getCurrentProfile,
+      queryFn: getCurrentProfileApi,
     }),
     queryClient.prefetchQuery({
       queryKey: categoryKeys.groups(),
-      queryFn: getCategoryGroups,
+      queryFn: getCategoryGroupsApi,
     }),
     queryClient.prefetchInfiniteQuery({
       queryKey: recipeKeys.infinite(infiniteParams),
       queryFn: ({ pageParam }) =>
-        getRecipesPaginated({ ...infiniteParams, offset: pageParam as number }),
+        getRecipesPaginatedApi({ ...infiniteParams, offset: pageParam as number }),
       initialPageParam: 0,
     }),
   ]);

@@ -57,16 +57,16 @@ function createSuccessQueryClient() {
     },
   });
 
-  // useSuspenseRecipe 캐시 (RecipeEditContent 내부)
+  // useSuspenseRecipeQuery 캐시 (RecipeEditContent 내부)
   queryClient.setQueryData(
     recipeKeys.detail(MOCK_RECIPE_ID),
     mockRecipes[0],
   );
 
-  // useSuspenseCategoryGroups 캐시 (RecipeEditContent 내부)
+  // useSuspenseCategoryGroupsQuery 캐시 (RecipeEditContent 내부)
   queryClient.setQueryData(categoryKeys.groups(), mockCategoryGroups);
 
-  // useCurrentProfile 캐시 (RecipeEditPage 셸)
+  // useCurrentProfileQuery 캐시 (RecipeEditPage 셸)
   queryClient.setQueryData(profileKeys.current(), mockProfile);
 
   return queryClient;

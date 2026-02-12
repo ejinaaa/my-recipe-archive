@@ -43,7 +43,7 @@ function createSuccessQueryClient() {
     },
   });
 
-  // useSuspenseCategoryGroups 캐시 (RecipeCreateContent 내부)
+  // useSuspenseCategoryGroupsQuery 캐시 (RecipeCreateContent 내부)
   queryClient.setQueryData(categoryKeys.groups(), mockCategoryGroups);
 
   // useCurrentProfile 캐시 (RecipeCreatePage 셸)

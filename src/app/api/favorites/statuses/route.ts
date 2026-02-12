@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getFavoriteStatuses } from '@/entities/favorite/api/server';
+import { getFavoriteStatusesApi } from '@/entities/favorite/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const recipeIds = recipeIdsParam.split(',').filter(Boolean);
 
   try {
-    const data = await getFavoriteStatuses(userId, recipeIds);
+    const data = await getFavoriteStatusesApi(userId, recipeIds);
     return Response.json(data);
   } catch (error) {
     return handleRouteError(error, 'GET /api/favorites/statuses');

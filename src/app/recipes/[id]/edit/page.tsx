@@ -4,11 +4,11 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@/shared/lib/prefetch';
-import { getRecipe } from '@/entities/recipe/api/server';
+import { getRecipeApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
-import { getCategoryGroups } from '@/entities/category/api/server';
+import { getCategoryGroupsApi } from '@/entities/category/api/server';
 import { categoryKeys } from '@/entities/category/api/keys';
-import { getCurrentProfile } from '@/entities/user/api/server';
+import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { profileKeys } from '@/entities/user/api/keys';
 import { RecipeEditPage, RecipeEditSkeleton } from '@/views/recipe-edit';
 
@@ -23,15 +23,15 @@ export default async function Page({ params }: PageProps) {
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: recipeKeys.detail(id),
-      queryFn: () => getRecipe(id),
+      queryFn: () => getRecipeApi(id),
     }),
     queryClient.prefetchQuery({
       queryKey: categoryKeys.groups(),
-      queryFn: getCategoryGroups,
+      queryFn: getCategoryGroupsApi,
     }),
     queryClient.prefetchQuery({
       queryKey: profileKeys.current(),
-      queryFn: getCurrentProfile,
+      queryFn: getCurrentProfileApi,
     }),
   ]);
 

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getCategoryOption } from '@/entities/category/api/server';
+import { getCategoryOptionApi } from '@/entities/category/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(
@@ -17,7 +17,7 @@ export async function GET(
   }
 
   try {
-    const data = await getCategoryOption(numericId);
+    const data = await getCategoryOptionApi(numericId);
 
     if (!data) {
       return Response.json(

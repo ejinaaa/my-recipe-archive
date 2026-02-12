@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Search } from 'lucide-react';
-import { useCurrentProfile } from '@/entities/user/api/hooks';
+import { useCurrentProfileQuery } from '@/entities/user/api/hooks';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
 import { PageContent } from '@/shared/ui/page-content';
@@ -29,7 +29,7 @@ import {
 } from './sections/TodayPickSection';
 
 export function RecipesPage() {
-  const { data: profile } = useCurrentProfile();
+  const { data: profile } = useCurrentProfileQuery();
 
   return (
     <div className='h-dvh flex flex-col bg-background'>

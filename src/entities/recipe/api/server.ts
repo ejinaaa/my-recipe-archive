@@ -57,7 +57,7 @@ export interface PaginatedRecipes {
 /**
  * Get recipes with pagination support
  */
-export async function getRecipesPaginated(
+export async function getRecipesPaginatedApi(
   params: GetRecipesParams = {},
 ): Promise<PaginatedRecipes> {
   try {
@@ -213,7 +213,7 @@ export async function getRecipesPaginated(
       hasMore: offset + recipes.length < total,
     };
   } catch (error) {
-    console.error('[Recipe API] getRecipesPaginated error:', error);
+    console.error('[Recipe API] getRecipesPaginatedApi error:', error);
     throw error;
   }
 }
@@ -221,7 +221,7 @@ export async function getRecipesPaginated(
 /**
  * Get a single recipe by ID
  */
-export async function getRecipe(id: string): Promise<Recipe | null> {
+export async function getRecipeApi(id: string): Promise<Recipe | null> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -242,7 +242,7 @@ export async function getRecipe(id: string): Promise<Recipe | null> {
     const { toRecipe } = await import('../model/types');
     return toRecipe(data as RecipeDB);
   } catch (error) {
-    console.error('[Recipe API] getRecipe error:', error);
+    console.error('[Recipe API] getRecipeApi error:', error);
     throw error;
   }
 }
@@ -250,7 +250,7 @@ export async function getRecipe(id: string): Promise<Recipe | null> {
 /**
  * Create a new recipe
  */
-export async function createRecipe(data: RecipeInsert): Promise<Recipe> {
+export async function createRecipeApi(data: RecipeInsert): Promise<Recipe> {
   try {
     const supabase = await createClient();
     const { toRecipeDB, toRecipe } = await import('../model/types');
@@ -270,7 +270,7 @@ export async function createRecipe(data: RecipeInsert): Promise<Recipe> {
 
     return toRecipe(newRecipe as RecipeDB);
   } catch (error) {
-    console.error('[Recipe API] createRecipe error:', error);
+    console.error('[Recipe API] createRecipeApi error:', error);
     throw error;
   }
 }
@@ -278,7 +278,7 @@ export async function createRecipe(data: RecipeInsert): Promise<Recipe> {
 /**
  * Update an existing recipe
  */
-export async function updateRecipe(
+export async function updateRecipeApi(
   id: string,
   data: RecipeUpdate,
 ): Promise<Recipe> {
@@ -302,7 +302,7 @@ export async function updateRecipe(
 
     return toRecipe(updatedRecipe as RecipeDB);
   } catch (error) {
-    console.error('[Recipe API] updateRecipe error:', error);
+    console.error('[Recipe API] updateRecipeApi error:', error);
     throw error;
   }
 }
@@ -310,7 +310,7 @@ export async function updateRecipe(
 /**
  * Delete a recipe
  */
-export async function deleteRecipe(id: string): Promise<void> {
+export async function deleteRecipeApi(id: string): Promise<void> {
   try {
     const supabase = await createClient();
 
@@ -321,7 +321,7 @@ export async function deleteRecipe(id: string): Promise<void> {
       throw new Error('레시피를 삭제하지 못했어요');
     }
   } catch (error) {
-    console.error('[Recipe API] deleteRecipe error:', error);
+    console.error('[Recipe API] deleteRecipeApi error:', error);
     throw error;
   }
 }
@@ -330,7 +330,7 @@ export async function deleteRecipe(id: string): Promise<void> {
  * 오늘의 추천 레시피 (날짜 기반 결정적 랜덤)
  * 같은 날에는 항상 동일한 레시피를 반환
  */
-export async function getRandomRecipe(): Promise<Recipe | null> {
+export async function getRandomRecipeApi(): Promise<Recipe | null> {
   try {
     const supabase = await createClient();
 
@@ -360,7 +360,7 @@ export async function getRandomRecipe(): Promise<Recipe | null> {
     const { toRecipe } = await import('../model/types');
     return toRecipe(data[0] as RecipeDB);
   } catch (error) {
-    console.error('[Recipe API] getRandomRecipe error:', error);
+    console.error('[Recipe API] getRandomRecipeApi error:', error);
     return null;
   }
 }
@@ -369,7 +369,7 @@ export async function getRandomRecipe(): Promise<Recipe | null> {
  * Increment view count for a recipe
  * Uses RPC function to handle deduplication (1 view per user per day)
  */
-export async function incrementViewCount(
+export async function incrementViewCountApi(
   recipeId: string,
   userId: string,
 ): Promise<void> {
@@ -386,7 +386,7 @@ export async function incrementViewCount(
       // 조회수 증가 실패는 치명적이지 않으므로 에러를 던지지 않음
     }
   } catch (error) {
-    console.error('[Recipe API] incrementViewCount error:', error);
+    console.error('[Recipe API] incrementViewCountApi error:', error);
     // 조회수 증가 실패는 치명적이지 않으므로 에러를 던지지 않음
   }
 }

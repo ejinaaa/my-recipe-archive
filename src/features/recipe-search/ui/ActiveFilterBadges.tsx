@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import { CATEGORY_TYPES } from '@/entities/category/model/constants';
 import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
 import { formatCookingTime } from '@/entities/recipe/model/utils';
@@ -65,7 +65,7 @@ export function ActiveFilterBadges(props: ActiveFilterBadgesProps) {
 }
 
 /**
- * 뱃지 렌더링 내부 컴포넌트 (useSuspenseCategoryGroups 사용)
+ * 뱃지 렌더링 내부 컴포넌트 (useSuspenseCategoryGroupsQuery 사용)
  *
  * 고정 순서: sort → situation → cuisine → dishType → cookingTime
  */
@@ -77,7 +77,7 @@ function ActiveFilterBadgesContent({
   onRemoveCategoryFilter,
   onRemoveCookingTime,
 }: ActiveFilterBadgesProps) {
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
 
   // 정렬 옵션 조회
   const sortOption = sortBy

@@ -3,11 +3,11 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@/shared/lib/prefetch';
-import { getCurrentProfile } from '@/entities/user/api/server';
+import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { profileKeys } from '@/entities/user/api/keys';
-import { getRecipesPaginated, getRandomRecipe } from '@/entities/recipe/api/server';
+import { getRecipesPaginatedApi, getRandomRecipeApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
-import { getCategoryGroups } from '@/entities/category/api/server';
+import { getCategoryGroupsApi } from '@/entities/category/api/server';
 import { categoryKeys } from '@/entities/category/api/keys';
 import { RecipesPage } from '@/views/recipes';
 
@@ -20,18 +20,18 @@ export default async function Page() {
     // 프로필
     queryClient.prefetchQuery({
       queryKey: profileKeys.current(),
-      queryFn: getCurrentProfile,
+      queryFn: getCurrentProfileApi,
     }),
     // 오늘의 추천 레시피
     queryClient.prefetchQuery({
       queryKey: recipeKeys.random(),
-      queryFn: getRandomRecipe,
+      queryFn: getRandomRecipeApi,
     }),
     // 많이 해본 요리 섹션
     queryClient.prefetchQuery({
       queryKey: recipeKeys.section('most_cooked'),
       queryFn: async () => {
-        const data = await getRecipesPaginated({ sortBy: 'most_cooked', limit: 6 });
+        const data = await getRecipesPaginatedApi({ sortBy: 'most_cooked', limit: 6 });
         return data.recipes;
       },
     }),
@@ -39,7 +39,7 @@ export default async function Page() {
     queryClient.prefetchQuery({
       queryKey: recipeKeys.section('least_cooked'),
       queryFn: async () => {
-        const data = await getRecipesPaginated({ sortBy: 'least_cooked', limit: 6 });
+        const data = await getRecipesPaginatedApi({ sortBy: 'least_cooked', limit: 6 });
         return data.recipes;
       },
     }),
@@ -47,20 +47,20 @@ export default async function Page() {
     queryClient.prefetchQuery({
       queryKey: recipeKeys.section('latest'),
       queryFn: async () => {
-        const data = await getRecipesPaginated({ sortBy: 'latest', limit: 6 });
+        const data = await getRecipesPaginatedApi({ sortBy: 'latest', limit: 6 });
         return data.recipes;
       },
     }),
     // 카테고리
     queryClient.prefetchQuery({
       queryKey: categoryKeys.groups(),
-      queryFn: getCategoryGroups,
+      queryFn: getCategoryGroupsApi,
     }),
     // 전체 레시피 (무한 스크롤)
     queryClient.prefetchInfiniteQuery({
       queryKey: recipeKeys.infinite({}),
       queryFn: ({ pageParam }) =>
-        getRecipesPaginated({ offset: pageParam as number }),
+        getRecipesPaginatedApi({ offset: pageParam as number }),
       initialPageParam: 0,
     }),
   ]);

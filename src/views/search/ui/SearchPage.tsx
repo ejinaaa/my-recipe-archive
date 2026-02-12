@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import { CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
@@ -32,7 +32,7 @@ function SearchContent({
   onCuisineSelect: (code: string) => void;
   onCategorySelect: (type: CategoryType, code: string) => void;
 }) {
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
 
   const cuisines = getOptionsByType(categoryGroups, 'cuisine');
   const situations = getOptionsByType(categoryGroups, 'situation');

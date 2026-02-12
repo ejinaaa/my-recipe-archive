@@ -27,7 +27,7 @@ import type { RecipeSortBy } from './server';
  * Suspense를 지원하는 단일 레시피 조회 hook
  * Route API를 통해 데이터 조회
  */
-export function useSuspenseRecipe(id: string) {
+export function useSuspenseRecipeQuery(id: string) {
   return useSuspenseQuery({
     queryKey: recipeKeys.detail(id),
     queryFn: () => fetchRecipe(id),
@@ -38,7 +38,7 @@ export function useSuspenseRecipe(id: string) {
  * Suspense를 지원하는 무한 스크롤 레시피 목록 조회 hook
  * 초기 로딩 시 Suspense boundary로 throw됨
  */
-export function useSuspenseInfiniteRecipes(params?: InfiniteRecipesParams) {
+export function useSuspenseInfiniteRecipesQuery(params?: InfiniteRecipesParams) {
   return useSuspenseInfiniteQuery({
     queryKey: recipeKeys.infinite(params),
     queryFn: ({ pageParam = 0 }) => fetchRecipesPaginated(params, pageParam),
@@ -58,7 +58,7 @@ export function useSuspenseInfiniteRecipes(params?: InfiniteRecipesParams) {
  * 홈 섹션용 레시피 조회 hook (Suspense)
  * 정렬 기준별 상위 N개 레시피를 조회
  */
-export function useSuspenseRecipeSection(
+export function useSuspenseRecipeSectionQuery(
   sortBy: RecipeSortBy,
   limit: number = 6
 ) {
@@ -71,7 +71,7 @@ export function useSuspenseRecipeSection(
 /**
  * 오늘의 추천 레시피 조회 hook (Suspense)
  */
-export function useSuspenseRandomRecipe() {
+export function useSuspenseRandomRecipeQuery() {
   return useSuspenseQuery({
     queryKey: recipeKeys.random(),
     queryFn: fetchRandomRecipe,
@@ -82,7 +82,7 @@ export function useSuspenseRandomRecipe() {
  * Hook to create a new recipe
  * Includes optimistic updates for immediate UI feedback
  */
-export function useCreateRecipe(): UseMutationResult<
+export function useCreateRecipeMutation(): UseMutationResult<
   Recipe,
   Error,
   RecipeInsert
@@ -140,7 +140,7 @@ export function useCreateRecipe(): UseMutationResult<
  * Hook to update an existing recipe
  * Includes optimistic updates for immediate UI feedback
  */
-export function useUpdateRecipe(): UseMutationResult<
+export function useUpdateRecipeMutation(): UseMutationResult<
   Recipe,
   Error,
   { id: string; data: RecipeUpdate }
@@ -183,7 +183,7 @@ export function useUpdateRecipe(): UseMutationResult<
  * Hook to delete a recipe
  * Includes optimistic updates for immediate UI feedback
  */
-export function useDeleteRecipe(): UseMutationResult<void, Error, string> {
+export function useDeleteRecipeMutation(): UseMutationResult<void, Error, string> {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -221,7 +221,7 @@ export function useDeleteRecipe(): UseMutationResult<void, Error, string> {
  * Hook to increment view count
  * 하루에 유저당 1회만 카운트됨
  */
-export function useIncrementViewCount(): UseMutationResult<
+export function useIncrementViewCountMutation(): UseMutationResult<
   void,
   Error,
   { recipeId: string; userId: string }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import { getOptionsByType } from '@/entities/category/model/types';
 import { CategoryChip } from '@/entities/category/ui/CategoryChip';
 import { ROUTES } from '@/shared/config';
@@ -14,7 +14,7 @@ import { Section, SectionHeader } from '@/shared/ui/section';
  */
 export function CategorySection() {
   const router = useRouter();
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
 
   const categories = getOptionsByType(categoryGroups, 'situation');
 

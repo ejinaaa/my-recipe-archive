@@ -2,10 +2,10 @@
 
 import { useCallback } from 'react';
 import { RecipeCardCompact } from '@/entities/recipe/ui/RecipeCardCompact';
-import { useSuspenseRecipeSection } from '@/entities/recipe/api/hooks';
+import { useSuspenseRecipeSectionQuery } from '@/entities/recipe/api/hooks';
 import {
-  useRecipeFavorites,
-  useToggleFavorite,
+  useRecipeFavoritesQuery,
+  useToggleFavoriteMutation,
 } from '@/entities/favorite/api/hooks';
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 import { Section, SectionHeader } from '@/shared/ui/section';
@@ -38,10 +38,10 @@ export function RecipeCarousel({
   moreHref,
   userId,
 }: RecipeCarouselProps) {
-  const { data: recipes } = useSuspenseRecipeSection(sortBy, limit);
+  const { data: recipes } = useSuspenseRecipeSectionQuery(sortBy, limit);
 
-  const { favoriteStatuses } = useRecipeFavorites(userId, recipes);
-  const toggleFavorite = useToggleFavorite();
+  const { favoriteStatuses } = useRecipeFavoritesQuery(userId, recipes);
+  const toggleFavorite = useToggleFavoriteMutation();
 
   const handleToggleFavorite = useCallback(
     (recipeId: string) => {

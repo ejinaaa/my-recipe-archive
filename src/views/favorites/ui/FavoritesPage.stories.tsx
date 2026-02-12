@@ -26,10 +26,10 @@ function createSuccessQueryClient() {
     },
   });
 
-  // useCurrentProfile (FavoritesPage + RecipeList 내부)
+  // useCurrentProfileQuery (FavoritesPage + RecipeList 내부)
   queryClient.setQueryData(profileKeys.current(), mockProfile);
 
-  // useSuspenseInfiniteRecipes 캐시 (RecipeList 내부)
+  // useSuspenseInfiniteRecipesQuery 캐시 (RecipeList 내부)
   // favoritesByUserId가 포함된 키로 세팅
   queryClient.setQueryData(
     recipeKeys.infinite({ favoritesByUserId: MOCK_USER_ID }),

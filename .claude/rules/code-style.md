@@ -21,12 +21,35 @@ import { Recipe, RecipeInsert } from '../model/types';
 | 대상 | 규칙 | 예시 |
 |------|------|------|
 | 컴포넌트 | PascalCase | `RecipeCard`, `SearchBar` |
-| 훅 | use + PascalCase | `useRecipes`, `useCreateRecipe` |
+| 훅 | use + PascalCase + 접미사 | 아래 훅/함수 네이밍 참고 |
 | 유틸 함수 | camelCase | `formatDate`, `cn` |
 | 상수 | SCREAMING_SNAKE_CASE | `API_BASE_URL`, `MAX_ITEMS` |
 | 타입/인터페이스 | PascalCase | `Recipe`, `ButtonProps` |
 | 파일명 (컴포넌트) | PascalCase | `RecipeCard.tsx` |
 | 파일명 (유틸/훅) | camelCase | `hooks.ts`, `utils.ts` |
+
+## 훅/함수 네이밍 컨벤션
+
+| 분류 | 패턴 | 예시 |
+|------|------|------|
+| Query 훅 | `use` + 명사 + `Query` | `useCurrentProfileQuery` |
+| Suspense Query 훅 | `useSuspense` + 명사 + `Query` | `useSuspenseRecipeQuery` |
+| Mutation 훅 | `use` + 동사 + 명사 + `Mutation` | `useCreateRecipeMutation` |
+| Server API 함수 | 동사 + 명사 + `Api` | `getRecipeApi`, `createRecipeApi` |
+| Client fetch 함수 | `fetch` + 명사 | `fetchRecipe`, `fetchRecipesPaginated` |
+| Server Action | 동사 + 명사 + `Action` | `createRecipeAction` |
+
+```typescript
+// ✅ 훅 이름으로 역할 구분 가능
+const { data: profile } = useCurrentProfileQuery();           // Query
+const { data: recipe } = useSuspenseRecipeQuery(id);          // Suspense Query
+const createRecipe = useCreateRecipeMutation();                // Mutation
+
+// ✅ 함수 이름으로 호출 대상 구분 가능
+const recipe = await getRecipeApi(id);                         // Supabase 직접 접근
+const recipe = await fetchRecipe(id);                          // Route API 호출
+const recipe = await createRecipeAction(data);                 // Server Action
+```
 
 ## React 컴포넌트
 

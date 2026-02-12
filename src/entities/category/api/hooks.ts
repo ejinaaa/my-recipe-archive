@@ -30,7 +30,7 @@ import { categoryKeys } from './keys';
 /**
  * Hook to fetch all category options, optionally filtered by type
  */
-export function useCategoryOptions(
+export function useCategoryOptionsQuery(
   type?: CategoryType
 ): UseQueryResult<CategoryOption[], Error> {
   return useQuery({
@@ -42,7 +42,7 @@ export function useCategoryOptions(
 /**
  * Hook to fetch a single category option by ID
  */
-export function useCategoryOption(
+export function useCategoryOptionQuery(
   id: number
 ): UseQueryResult<CategoryOption | null, Error> {
   return useQuery({
@@ -55,7 +55,7 @@ export function useCategoryOption(
 /**
  * Hook to fetch category options grouped by type
  */
-export function useCategoryGroups(): UseQueryResult<CategoryGroup[], Error> {
+export function useCategoryGroupsQuery(): UseQueryResult<CategoryGroup[], Error> {
   return useQuery({
     queryKey: categoryKeys.groups(),
     queryFn: fetchCategoryGroups,
@@ -66,7 +66,7 @@ export function useCategoryGroups(): UseQueryResult<CategoryGroup[], Error> {
  * Suspense를 지원하는 카테고리 그룹 조회 hook
  * prefetch + HydrationBoundary와 함께 사용
  */
-export function useSuspenseCategoryGroups() {
+export function useSuspenseCategoryGroupsQuery() {
   return useSuspenseQuery({
     queryKey: categoryKeys.groups(),
     queryFn: fetchCategoryGroups,
@@ -77,7 +77,7 @@ export function useSuspenseCategoryGroups() {
  * Hook to create a new category option
  * Includes optimistic updates for immediate UI feedback
  */
-export function useCreateCategoryOption(): UseMutationResult<
+export function useCreateCategoryOptionMutation(): UseMutationResult<
   CategoryOption,
   Error,
   CategoryOptionInsert
@@ -125,7 +125,7 @@ export function useCreateCategoryOption(): UseMutationResult<
  * Hook to update an existing category option
  * Includes optimistic updates for immediate UI feedback
  */
-export function useUpdateCategoryOption(): UseMutationResult<
+export function useUpdateCategoryOptionMutation(): UseMutationResult<
   CategoryOption,
   Error,
   { id: number; data: CategoryOptionUpdate }
@@ -171,7 +171,7 @@ export function useUpdateCategoryOption(): UseMutationResult<
  * Hook to delete a category option
  * Includes optimistic updates for immediate UI feedback
  */
-export function useDeleteCategoryOption(): UseMutationResult<
+export function useDeleteCategoryOptionMutation(): UseMutationResult<
   void,
   Error,
   number

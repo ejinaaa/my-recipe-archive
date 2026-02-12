@@ -4,10 +4,10 @@ export { toFavorite } from './model/types';
 
 // Server API
 export {
-  addFavorite,
-  removeFavorite,
-  isFavorited,
-  getFavoriteStatuses,
+  addFavoriteApi,
+  removeFavoriteApi,
+  isFavoritedApi,
+  getFavoriteStatusesApi,
 } from './api/server';
 
 // Server Actions (mutation only)
@@ -21,7 +21,8 @@ export { favoriteKeys } from './api/keys';
 
 // Hooks
 export {
-  useIsFavorited,
-  useFavoriteStatuses,
-  useToggleFavorite,
+  useIsFavoritedQuery,
+  useFavoriteStatusesQuery,
+  useRecipeFavoritesQuery,
+  useToggleFavoriteMutation,
 } from './api/hooks';

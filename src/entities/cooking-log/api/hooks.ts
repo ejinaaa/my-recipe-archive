@@ -17,7 +17,7 @@ import { cookingLogKeys } from './keys';
 /**
  * 특정 레시피의 유저 요리 횟수 조회 hook
  */
-export function useCookCount(
+export function useCookCountQuery(
   userId: string | undefined,
   recipeId: string
 ): UseQueryResult<number, Error> {
@@ -31,7 +31,7 @@ export function useCookCount(
 /**
  * 유저의 모든 레시피별 요리 횟수 조회 hook
  */
-export function useUserCookCounts(
+export function useUserCookCountsQuery(
   userId: string | undefined
 ): UseQueryResult<RecipeCookCount[], Error> {
   return useQuery({
@@ -45,7 +45,7 @@ export function useUserCookCounts(
  * 요리 완료 기록 추가 hook
  * cook_count는 DB 트리거로 자동 증가
  */
-export function useAddCookingLog(): UseMutationResult<
+export function useAddCookingLogMutation(): UseMutationResult<
   CookingLog,
   Error,
   { userId: string; recipeId: string }
@@ -110,7 +110,7 @@ export function useAddCookingLog(): UseMutationResult<
 /**
  * 요리 기록 삭제 hook
  */
-export function useDeleteCookingLog(): UseMutationResult<
+export function useDeleteCookingLogMutation(): UseMutationResult<
   void,
   Error,
   { logId: string; recipeId: string; userId: string }

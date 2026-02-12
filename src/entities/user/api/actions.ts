@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import type { Profile, ProfileInsert, ProfileUpdate } from '../model/types';
-import { createProfile, updateProfile, deleteProfile } from './server';
+import { createProfileApi, updateProfileApi, deleteProfileApi } from './server';
 
 /**
  * Server Action: Create a new profile
@@ -12,7 +12,7 @@ export async function createProfileAction(
   data: ProfileInsert
 ): Promise<Profile> {
   try {
-    const profile = await createProfile(data);
+    const profile = await createProfileApi(data);
 
     // Revalidate profile pages
     revalidatePath('/profile');
@@ -34,7 +34,7 @@ export async function updateProfileAction(
   data: ProfileUpdate
 ): Promise<Profile> {
   try {
-    const profile = await updateProfile(id, data);
+    const profile = await updateProfileApi(id, data);
 
     // Revalidate profile pages
     revalidatePath('/profile');
@@ -53,7 +53,7 @@ export async function updateProfileAction(
  */
 export async function deleteProfileAction(id: string): Promise<void> {
   try {
-    await deleteProfile(id);
+    await deleteProfileApi(id);
 
     // Revalidate profile pages
     revalidatePath('/profile');

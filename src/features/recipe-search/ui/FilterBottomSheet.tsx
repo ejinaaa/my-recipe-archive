@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import { type CategoryType, getOptionsByType } from '@/entities/category/model/types';
 import { CATEGORY_TYPES, CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
 import {
@@ -118,7 +118,7 @@ function CategorySections({
   tempFilters: CategoryFilters;
   onToggle: (type: CategoryType, code: string) => void;
 }) {
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
 
   const sortedGroups = CATEGORY_TYPES.map(type => ({
     type,

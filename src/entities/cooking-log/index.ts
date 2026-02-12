@@ -8,11 +8,11 @@ export { toCookingLog } from './model/types';
 
 // Server API
 export {
-  addCookingLog,
-  deleteCookingLog,
-  getCookCount,
-  getUserCookCounts,
-  getCookingLogs,
+  addCookingLogApi,
+  deleteCookingLogApi,
+  getCookCountApi,
+  getUserCookCountsApi,
+  getCookingLogsApi,
 } from './api/server';
 
 // Server Actions (mutation only)
@@ -29,8 +29,8 @@ export { cookingLogKeys } from './api/keys';
 
 // Hooks
 export {
-  useCookCount,
-  useUserCookCounts,
-  useAddCookingLog,
-  useDeleteCookingLog,
+  useCookCountQuery,
+  useUserCookCountsQuery,
+  useAddCookingLogMutation,
+  useDeleteCookingLogMutation,
 } from './api/hooks';

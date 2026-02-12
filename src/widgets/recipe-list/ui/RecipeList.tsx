@@ -4,11 +4,11 @@ import { useMemo, useCallback, useDeferredValue, type ReactNode } from 'react';
 import { RecipeListEndMessage } from './RecipeListEndMessage';
 import { RecipeListLoadingIndicator } from './RecipeListLoadingIndicator';
 import { RecipeCard } from '@/entities/recipe/ui/RecipeCard';
-import { useSuspenseInfiniteRecipes } from '@/entities/recipe/api/hooks';
-import { useCurrentProfile } from '@/entities/user/api/hooks';
+import { useSuspenseInfiniteRecipesQuery } from '@/entities/recipe/api/hooks';
+import { useCurrentProfileQuery } from '@/entities/user/api/hooks';
 import {
-  useRecipeFavorites,
-  useToggleFavorite,
+  useRecipeFavoritesQuery,
+  useToggleFavoriteMutation,
 } from '@/entities/favorite/api/hooks';
 import type {
   CategoryFilter,
@@ -62,7 +62,7 @@ export function RecipeList({
   const isPending = params !== deferredParams;
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useSuspenseInfiniteRecipes(deferredParams);
+    useSuspenseInfiniteRecipesQuery(deferredParams);
 
   const recipes = useMemo(
     () => data.pages.flatMap(page => page.recipes),
@@ -70,14 +70,14 @@ export function RecipeList({
   );
 
   // 현재 사용자 프로필 조회
-  const { data: currentProfile } = useCurrentProfile();
+  const { data: currentProfile } = useCurrentProfileQuery();
   const userId = currentProfile?.id;
 
   // 즐겨찾기 상태 조회
-  const { favoriteStatuses } = useRecipeFavorites(userId, recipes);
+  const { favoriteStatuses } = useRecipeFavoritesQuery(userId, recipes);
 
   // 즐겨찾기 토글 mutation
-  const toggleFavorite = useToggleFavorite();
+  const toggleFavorite = useToggleFavoriteMutation();
 
   // 즐겨찾기 토글 핸들러
   const handleToggleFavorite = useCallback(

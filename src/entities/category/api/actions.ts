@@ -8,9 +8,9 @@ import type {
   CategoryOptionUpdate,
 } from '../model/types';
 import {
-  createCategoryOption,
-  updateCategoryOption,
-  deleteCategoryOption,
+  createCategoryOptionApi,
+  updateCategoryOptionApi,
+  deleteCategoryOptionApi,
 } from './server';
 
 /**
@@ -21,7 +21,7 @@ export async function createCategoryOptionAction(
   data: CategoryOptionInsert
 ): Promise<CategoryOption> {
   try {
-    const option = await createCategoryOption(data);
+    const option = await createCategoryOptionApi(data);
 
     // Revalidate pages that use categories
     revalidatePath(ROUTES.RECIPES.LIST);
@@ -46,7 +46,7 @@ export async function updateCategoryOptionAction(
   data: CategoryOptionUpdate
 ): Promise<CategoryOption> {
   try {
-    const option = await updateCategoryOption(id, data);
+    const option = await updateCategoryOptionApi(id, data);
 
     // Revalidate pages that use categories
     revalidatePath(ROUTES.RECIPES.LIST);
@@ -68,7 +68,7 @@ export async function updateCategoryOptionAction(
  */
 export async function deleteCategoryOptionAction(id: number): Promise<void> {
   try {
-    await deleteCategoryOption(id);
+    await deleteCategoryOptionApi(id);
 
     // Revalidate pages that use categories
     revalidatePath(ROUTES.RECIPES.LIST);

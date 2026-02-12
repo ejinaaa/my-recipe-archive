@@ -1,11 +1,11 @@
 // Server-side API (서버 컴포넌트, API Route에서만 사용)
 export {
-  getRecipe,
-  getRecipesPaginated,
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-  incrementViewCount,
+  getRecipeApi,
+  getRecipesPaginatedApi,
+  createRecipeApi,
+  updateRecipeApi,
+  deleteRecipeApi,
+  incrementViewCountApi,
 } from './server';
 
 // Server Actions (mutation only)

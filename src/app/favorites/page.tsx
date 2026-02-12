@@ -4,12 +4,12 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@/shared/lib/prefetch';
-import { getCurrentProfile } from '@/entities/user/api/server';
+import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { profileKeys } from '@/entities/user/api/keys';
-import { getRecipesPaginated } from '@/entities/recipe/api/server';
+import { getRecipesPaginatedApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { parseSearchParams } from '@/entities/recipe/lib/parseSearchParams';
-import { getCategoryGroups } from '@/entities/category/api/server';
+import { getCategoryGroupsApi } from '@/entities/category/api/server';
 import { categoryKeys } from '@/entities/category/api/keys';
 import type { InfiniteRecipesParams } from '@/entities/recipe/api/keys';
 import { FavoritesPage } from '@/views/favorites';
@@ -25,7 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
   const queryClient = createServerQueryClient();
 
   // 프로필을 먼저 가져와서 userId를 즐겨찾기 prefetch에 사용
-  const currentProfile = await getCurrentProfile();
+  const currentProfile = await getCurrentProfileApi();
 
   const infiniteParams: InfiniteRecipesParams = {
     ...parseSearchParams(resolvedSearchParams),
@@ -39,14 +39,14 @@ export default async function Page({ searchParams }: PageProps) {
     }),
     queryClient.prefetchQuery({
       queryKey: categoryKeys.groups(),
-      queryFn: getCategoryGroups,
+      queryFn: getCategoryGroupsApi,
     }),
     ...(currentProfile?.id
       ? [
           queryClient.prefetchInfiniteQuery({
             queryKey: recipeKeys.infinite(infiniteParams),
             queryFn: ({ pageParam }) =>
-              getRecipesPaginated({
+              getRecipesPaginatedApi({
                 ...infiniteParams,
                 offset: pageParam as number,
               }),

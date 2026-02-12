@@ -1,9 +1,9 @@
-import { getCurrentProfile } from '@/entities/user/api/server';
+import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET() {
   try {
-    const profile = await getCurrentProfile();
+    const profile = await getCurrentProfileApi();
 
     if (!profile) {
       return Response.json(

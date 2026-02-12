@@ -1,10 +1,10 @@
 // Server-side API
 export {
-  getProfile,
-  getCurrentProfile,
-  createProfile,
-  updateProfile,
-  deleteProfile,
+  getProfileApi,
+  getCurrentProfileApi,
+  createProfileApi,
+  updateProfileApi,
+  deleteProfileApi,
 } from './server';
 
 // Server Actions (mutation only)
@@ -22,11 +22,11 @@ export { profileKeys } from './keys';
 
 // Client-side React Query hooks
 export {
-  useProfile,
-  useCurrentProfile,
-  useCreateProfile,
-  useUpdateProfile,
-  useDeleteProfile,
+  useProfileQuery,
+  useCurrentProfileQuery,
+  useCreateProfileMutation,
+  useUpdateProfileMutation,
+  useDeleteProfileMutation,
 } from './hooks';
 
 // Re-export types for convenience

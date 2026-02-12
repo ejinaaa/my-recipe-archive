@@ -9,7 +9,7 @@ import type {
 /**
  * Get a profile by user ID
  */
-export async function getProfile(id: string): Promise<Profile | null> {
+export async function getProfileApi(id: string): Promise<Profile | null> {
   try {
     const supabase = await createClient();
     const { data, error } = await supabase
@@ -30,7 +30,7 @@ export async function getProfile(id: string): Promise<Profile | null> {
     const { toProfile } = await import('../model/types');
     return toProfile(data as ProfileDB);
   } catch (error) {
-    console.error('[Profile API] getProfile error:', error);
+    console.error('[Profile API] getProfileApi error:', error);
     throw error;
   }
 }
@@ -38,7 +38,7 @@ export async function getProfile(id: string): Promise<Profile | null> {
 /**
  * Get the current authenticated user's profile
  */
-export async function getCurrentProfile(): Promise<Profile | null> {
+export async function getCurrentProfileApi(): Promise<Profile | null> {
   try {
     const supabase = await createClient();
 
@@ -54,9 +54,9 @@ export async function getCurrentProfile(): Promise<Profile | null> {
     }
 
     // Get user's profile
-    return getProfile(user.id);
+    return getProfileApi(user.id);
   } catch (error) {
-    console.error('[Profile API] getCurrentProfile error:', error);
+    console.error('[Profile API] getCurrentProfileApi error:', error);
     throw error;
   }
 }
@@ -64,7 +64,7 @@ export async function getCurrentProfile(): Promise<Profile | null> {
 /**
  * Create a new profile
  */
-export async function createProfile(data: ProfileInsert): Promise<Profile> {
+export async function createProfileApi(data: ProfileInsert): Promise<Profile> {
   try {
     const supabase = await createClient();
 
@@ -82,7 +82,7 @@ export async function createProfile(data: ProfileInsert): Promise<Profile> {
     const { toProfile } = await import('../model/types');
     return toProfile(newProfile as ProfileDB);
   } catch (error) {
-    console.error('[Profile API] createProfile error:', error);
+    console.error('[Profile API] createProfileApi error:', error);
     throw error;
   }
 }
@@ -90,7 +90,7 @@ export async function createProfile(data: ProfileInsert): Promise<Profile> {
 /**
  * Update an existing profile
  */
-export async function updateProfile(
+export async function updateProfileApi(
   id: string,
   data: ProfileUpdate
 ): Promise<Profile> {
@@ -112,7 +112,7 @@ export async function updateProfile(
     const { toProfile } = await import('../model/types');
     return toProfile(updatedProfile as ProfileDB);
   } catch (error) {
-    console.error('[Profile API] updateProfile error:', error);
+    console.error('[Profile API] updateProfileApi error:', error);
     throw error;
   }
 }
@@ -120,7 +120,7 @@ export async function updateProfile(
 /**
  * Delete a profile
  */
-export async function deleteProfile(id: string): Promise<void> {
+export async function deleteProfileApi(id: string): Promise<void> {
   try {
     const supabase = await createClient();
 
@@ -131,7 +131,7 @@ export async function deleteProfile(id: string): Promise<void> {
       throw new Error('프로필을 삭제하지 못했어요');
     }
   } catch (error) {
-    console.error('[Profile API] deleteProfile error:', error);
+    console.error('[Profile API] deleteProfileApi error:', error);
     throw error;
   }
 }

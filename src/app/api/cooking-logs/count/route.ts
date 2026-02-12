@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getCookCount } from '@/entities/cooking-log/api/server';
+import { getCookCountApi } from '@/entities/cooking-log/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const count = await getCookCount(userId, recipeId);
+    const count = await getCookCountApi(userId, recipeId);
     return Response.json(count);
   } catch (error) {
     return handleRouteError(error, 'GET /api/cooking-logs/count');

@@ -3,7 +3,7 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@/shared/lib/prefetch';
-import { getCategoryGroups } from '@/entities/category/api/server';
+import { getCategoryGroupsApi } from '@/entities/category/api/server';
 import { categoryKeys } from '@/entities/category/api/keys';
 import { SearchPage } from '@/views/search';
 
@@ -14,7 +14,7 @@ export default async function SearchRoute() {
 
   await queryClient.prefetchQuery({
     queryKey: categoryKeys.groups(),
-    queryFn: getCategoryGroups,
+    queryFn: getCategoryGroupsApi,
   });
 
   return (

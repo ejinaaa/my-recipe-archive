@@ -4,7 +4,7 @@ import type { Favorite, FavoriteDB } from '../model/types';
 /**
  * 즐겨찾기 추가
  */
-export async function addFavorite(
+export async function addFavoriteApi(
   userId: string,
   recipeId: string
 ): Promise<Favorite> {
@@ -37,7 +37,7 @@ export async function addFavorite(
 /**
  * 즐겨찾기 삭제
  */
-export async function removeFavorite(
+export async function removeFavoriteApi(
   userId: string,
   recipeId: string
 ): Promise<void> {
@@ -63,7 +63,7 @@ export async function removeFavorite(
 /**
  * 특정 레시피가 즐겨찾기되었는지 확인
  */
-export async function isFavorited(
+export async function isFavoritedApi(
   userId: string,
   recipeId: string
 ): Promise<boolean> {
@@ -92,7 +92,7 @@ export async function isFavorited(
 /**
  * 여러 레시피의 즐겨찾기 여부를 한 번에 확인
  */
-export async function getFavoriteStatuses(
+export async function getFavoriteStatusesApi(
   userId: string,
   recipeIds: string[]
 ): Promise<Record<string, boolean>> {

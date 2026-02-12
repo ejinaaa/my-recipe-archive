@@ -4,7 +4,7 @@ import type { CookingLog, CookingLogDB, RecipeCookCount } from '../model/types';
 /**
  * 요리 기록 추가
  */
-export async function addCookingLog(
+export async function addCookingLogApi(
   userId: string,
   recipeId: string
 ): Promise<CookingLog> {
@@ -28,7 +28,7 @@ export async function addCookingLog(
 /**
  * 요리 기록 삭제
  */
-export async function deleteCookingLog(logId: string): Promise<void> {
+export async function deleteCookingLogApi(logId: string): Promise<void> {
   const supabase = await createClient();
 
   const { error } = await supabase
@@ -45,7 +45,7 @@ export async function deleteCookingLog(logId: string): Promise<void> {
 /**
  * 특정 유저의 특정 레시피 요리 횟수 조회
  */
-export async function getCookCount(
+export async function getCookCountApi(
   userId: string,
   recipeId: string
 ): Promise<number> {
@@ -68,7 +68,7 @@ export async function getCookCount(
 /**
  * 특정 유저의 모든 레시피별 요리 횟수 조회
  */
-export async function getUserCookCounts(
+export async function getUserCookCountsApi(
   userId: string
 ): Promise<RecipeCookCount[]> {
   const supabase = await createClient();
@@ -101,7 +101,7 @@ export async function getUserCookCounts(
 /**
  * 특정 유저의 특정 레시피 요리 기록 목록 조회
  */
-export async function getCookingLogs(
+export async function getCookingLogsApi(
   userId: string,
   recipeId: string
 ): Promise<CookingLog[]> {

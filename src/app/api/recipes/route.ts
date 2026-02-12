@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import {
-  getRecipesPaginated,
+  getRecipesPaginatedApi,
   type CategoryFilter,
   type CookingTimeRange,
   type RecipeSortBy,
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   })();
 
   try {
-    const data = await getRecipesPaginated({
+    const data = await getRecipesPaginatedApi({
       limit,
       offset,
       searchQuery,

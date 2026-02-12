@@ -24,13 +24,13 @@ function createSuccessQueryClient() {
     },
   });
 
-  // useSuspenseInfiniteRecipes 캐시 (RecipeList 내부)
+  // useSuspenseInfiniteRecipesQuery 캐시 (RecipeList 내부)
   queryClient.setQueryData(recipeKeys.infinite({}), {
     pages: [{ recipes: mockRecipes.slice(0, 6), hasMore: false }],
     pageParams: [0],
   });
 
-  // useCurrentProfile (RecipeList 내부)
+  // useCurrentProfileQuery (RecipeList 내부)
   queryClient.setQueryData(profileKeys.current(), mockProfile);
 
   return queryClient;

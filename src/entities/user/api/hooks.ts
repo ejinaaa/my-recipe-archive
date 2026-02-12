@@ -19,7 +19,7 @@ import { profileKeys } from './keys';
 /**
  * Hook to fetch a profile by ID
  */
-export function useProfile(id: string): UseQueryResult<Profile | null, Error> {
+export function useProfileQuery(id: string): UseQueryResult<Profile | null, Error> {
   return useQuery({
     queryKey: profileKeys.detail(id),
     queryFn: () => fetchProfile(id),
@@ -30,7 +30,7 @@ export function useProfile(id: string): UseQueryResult<Profile | null, Error> {
 /**
  * Hook to fetch the current authenticated user's profile
  */
-export function useCurrentProfile(): UseQueryResult<Profile | null, Error> {
+export function useCurrentProfileQuery(): UseQueryResult<Profile | null, Error> {
   return useQuery({
     queryKey: profileKeys.current(),
     queryFn: fetchCurrentProfile,
@@ -41,7 +41,7 @@ export function useCurrentProfile(): UseQueryResult<Profile | null, Error> {
  * Hook to create a new profile
  * Includes optimistic updates for immediate UI feedback
  */
-export function useCreateProfile(): UseMutationResult<
+export function useCreateProfileMutation(): UseMutationResult<
   Profile,
   Error,
   ProfileInsert
@@ -101,7 +101,7 @@ export function useCreateProfile(): UseMutationResult<
  * Hook to update an existing profile
  * Includes optimistic updates for immediate UI feedback
  */
-export function useUpdateProfile(): UseMutationResult<
+export function useUpdateProfileMutation(): UseMutationResult<
   Profile,
   Error,
   { id: string; data: ProfileUpdate }
@@ -145,7 +145,7 @@ export function useUpdateProfile(): UseMutationResult<
 /**
  * Hook to delete a profile
  */
-export function useDeleteProfile(): UseMutationResult<void, Error, string> {
+export function useDeleteProfileMutation(): UseMutationResult<void, Error, string> {
   const queryClient = useQueryClient();
 
   return useMutation({

@@ -1,6 +1,6 @@
 'use client';
 
-import { useSuspenseRandomRecipe } from '@/entities/recipe/api/hooks';
+import { useSuspenseRandomRecipeQuery } from '@/entities/recipe/api/hooks';
 import { RecipeCardHero } from '@/entities/recipe/ui/RecipeCardHero';
 import { Section } from '@/shared/ui/section';
 import { Skeleton } from '@/shared/ui/skeleton';
@@ -10,7 +10,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
  * 날짜 기반 랜덤 레시피 1개를 Hero 카드로 표시
  */
 export function TodayPickSection() {
-  const { data: recipe } = useSuspenseRandomRecipe();
+  const { data: recipe } = useSuspenseRandomRecipeQuery();
 
   if (!recipe) return null;
 

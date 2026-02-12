@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Button } from '@/shared/ui/button';
 import { ROUTES } from '@/shared/config';
-import { useCurrentProfile } from '@/entities/user/api/hooks';
+import { useCurrentProfileQuery } from '@/entities/user/api/hooks';
 import {
-  useSuspenseRecipe,
-  useUpdateRecipe,
-  useDeleteRecipe,
+  useSuspenseRecipeQuery,
+  useUpdateRecipeMutation,
+  useDeleteRecipeMutation,
 } from '@/entities/recipe/api/hooks';
-import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import {
   RecipeCreateForm,
   convertRecipeToFormData,
@@ -47,8 +47,8 @@ function RecipeEditContent({
   isDeletePending: boolean;
   userId?: string;
 }) {
-  const { data: recipe } = useSuspenseRecipe(id);
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const { data: recipe } = useSuspenseRecipeQuery(id);
+  const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   if (!recipe) {
@@ -94,9 +94,9 @@ function RecipeEditContent({
 
 export function RecipeEditPage({ id }: RecipeEditPageProps) {
   const router = useRouter();
-  const { data: profile } = useCurrentProfile();
-  const updateRecipe = useUpdateRecipe();
-  const deleteRecipe = useDeleteRecipe();
+  const { data: profile } = useCurrentProfileQuery();
+  const updateRecipe = useUpdateRecipeMutation();
+  const deleteRecipe = useDeleteRecipeMutation();
   const [mutationError, setMutationError] = useState<{
     retry: () => void;
     title: string;

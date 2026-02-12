@@ -1,11 +1,11 @@
 // Server-side API
 export {
-  getCategoryOptions,
-  getCategoryOption,
-  getCategoryGroups,
-  createCategoryOption,
-  updateCategoryOption,
-  deleteCategoryOption,
+  getCategoryOptionsApi,
+  getCategoryOptionApi,
+  getCategoryGroupsApi,
+  createCategoryOptionApi,
+  updateCategoryOptionApi,
+  deleteCategoryOptionApi,
 } from './server';
 
 // Server Actions (mutation only)
@@ -27,13 +27,13 @@ export { categoryKeys } from './keys';
 
 // Client-side React Query hooks
 export {
-  useCategoryOptions,
-  useCategoryOption,
-  useCategoryGroups,
-  useSuspenseCategoryGroups,
-  useCreateCategoryOption,
-  useUpdateCategoryOption,
-  useDeleteCategoryOption,
+  useCategoryOptionsQuery,
+  useCategoryOptionQuery,
+  useCategoryGroupsQuery,
+  useSuspenseCategoryGroupsQuery,
+  useCreateCategoryOptionMutation,
+  useUpdateCategoryOptionMutation,
+  useDeleteCategoryOptionMutation,
 } from './hooks';
 
 // Re-export types for convenience

@@ -11,7 +11,7 @@ import type {
 /**
  * Get all category options, optionally filtered by type
  */
-export async function getCategoryOptions(
+export async function getCategoryOptionsApi(
   type?: CategoryType
 ): Promise<CategoryOption[]> {
   try {
@@ -35,7 +35,7 @@ export async function getCategoryOptions(
     const { toCategoryOption } = await import('../model/types');
     return (data as CategoryOptionDB[]).map(toCategoryOption);
   } catch (error) {
-    console.error('[Category API] getCategoryOptions error:', error);
+    console.error('[Category API] getCategoryOptionsApi error:', error);
     throw error;
   }
 }
@@ -43,7 +43,7 @@ export async function getCategoryOptions(
 /**
  * Get a single category option by ID
  */
-export async function getCategoryOption(
+export async function getCategoryOptionApi(
   id: number
 ): Promise<CategoryOption | null> {
   try {
@@ -66,7 +66,7 @@ export async function getCategoryOption(
     const { toCategoryOption } = await import('../model/types');
     return toCategoryOption(data as CategoryOptionDB);
   } catch (error) {
-    console.error('[Category API] getCategoryOption error:', error);
+    console.error('[Category API] getCategoryOptionApi error:', error);
     throw error;
   }
 }
@@ -74,13 +74,13 @@ export async function getCategoryOption(
 /**
  * Get category options grouped by type
  */
-export async function getCategoryGroups(): Promise<CategoryGroup[]> {
+export async function getCategoryGroupsApi(): Promise<CategoryGroup[]> {
   try {
-    const options = await getCategoryOptions();
+    const options = await getCategoryOptionsApi();
     const { groupCategoriesByType } = await import('../model/types');
     return groupCategoriesByType(options);
   } catch (error) {
-    console.error('[Category API] getCategoryGroups error:', error);
+    console.error('[Category API] getCategoryGroupsApi error:', error);
     throw error;
   }
 }
@@ -88,7 +88,7 @@ export async function getCategoryGroups(): Promise<CategoryGroup[]> {
 /**
  * Create a new category option
  */
-export async function createCategoryOption(
+export async function createCategoryOptionApi(
   data: CategoryOptionInsert
 ): Promise<CategoryOption> {
   try {
@@ -108,7 +108,7 @@ export async function createCategoryOption(
     const { toCategoryOption } = await import('../model/types');
     return toCategoryOption(newOption as CategoryOptionDB);
   } catch (error) {
-    console.error('[Category API] createCategoryOption error:', error);
+    console.error('[Category API] createCategoryOptionApi error:', error);
     throw error;
   }
 }
@@ -116,7 +116,7 @@ export async function createCategoryOption(
 /**
  * Update an existing category option
  */
-export async function updateCategoryOption(
+export async function updateCategoryOptionApi(
   id: number,
   data: CategoryOptionUpdate
 ): Promise<CategoryOption> {
@@ -138,7 +138,7 @@ export async function updateCategoryOption(
     const { toCategoryOption } = await import('../model/types');
     return toCategoryOption(updatedOption as CategoryOptionDB);
   } catch (error) {
-    console.error('[Category API] updateCategoryOption error:', error);
+    console.error('[Category API] updateCategoryOptionApi error:', error);
     throw error;
   }
 }
@@ -146,7 +146,7 @@ export async function updateCategoryOption(
 /**
  * Delete a category option
  */
-export async function deleteCategoryOption(id: number): Promise<void> {
+export async function deleteCategoryOptionApi(id: number): Promise<void> {
   try {
     const supabase = await createClient();
 
@@ -160,7 +160,7 @@ export async function deleteCategoryOption(id: number): Promise<void> {
       throw new Error('카테고리를 삭제하지 못했어요');
     }
   } catch (error) {
-    console.error('[Category API] deleteCategoryOption error:', error);
+    console.error('[Category API] deleteCategoryOptionApi error:', error);
     throw error;
   }
 }

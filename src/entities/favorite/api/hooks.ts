@@ -17,7 +17,7 @@ import { favoriteKeys } from './keys';
 /**
  * Hook to check if a recipe is favorited
  */
-export function useIsFavorited(
+export function useIsFavoritedQuery(
   userId: string | undefined,
   recipeId: string,
 ): UseQueryResult<boolean, Error> {
@@ -31,7 +31,7 @@ export function useIsFavorited(
 /**
  * Hook to get favorite statuses for multiple recipes
  */
-export function useFavoriteStatuses(
+export function useFavoriteStatusesQuery(
   userId: string | undefined,
   recipeIds: string[],
 ): UseQueryResult<Record<string, boolean>, Error> {
@@ -44,21 +44,21 @@ export function useFavoriteStatuses(
 
 /**
  * 레시피 목록의 즐겨찾기 상태를 일괄 조회하는 훅
- * recipeIds 메모이제이션 + useFavoriteStatuses를 묶어 제공
+ * recipeIds 메모이제이션 + useFavoriteStatusesQuery를 묶어 제공
  */
-export function useRecipeFavorites(
+export function useRecipeFavoritesQuery(
   userId: string | undefined,
   recipes: { id: string }[],
 ) {
   const recipeIds = useMemo(() => recipes.map(r => r.id), [recipes]);
-  const { data: favoriteStatuses } = useFavoriteStatuses(userId, recipeIds);
+  const { data: favoriteStatuses } = useFavoriteStatusesQuery(userId, recipeIds);
   return { favoriteStatuses };
 }
 
 /**
  * Hook to toggle favorite status
  */
-export function useToggleFavorite(): UseMutationResult<
+export function useToggleFavoriteMutation(): UseMutationResult<
   boolean,
   Error,
   { userId: string; recipeId: string }

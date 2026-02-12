@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { ROUTES } from '@/shared/config';
-import { addFavorite, removeFavorite, isFavorited } from './server';
+import { addFavoriteApi, removeFavoriteApi, isFavoritedApi } from './server';
 
 /**
  * Server Action: 즐겨찾기 토글
@@ -12,12 +12,12 @@ export async function toggleFavoriteAction(
   recipeId: string
 ): Promise<boolean> {
   try {
-    const favorited = await isFavorited(userId, recipeId);
+    const favorited = await isFavoritedApi(userId, recipeId);
 
     if (favorited) {
-      await removeFavorite(userId, recipeId);
+      await removeFavoriteApi(userId, recipeId);
     } else {
-      await addFavorite(userId, recipeId);
+      await addFavoriteApi(userId, recipeId);
     }
 
     revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));

@@ -1,11 +1,11 @@
 // Client-side React Query hooks
 export {
-  useSuspenseRecipe,
-  useSuspenseInfiniteRecipes,
-  useCreateRecipe,
-  useUpdateRecipe,
-  useDeleteRecipe,
-  useIncrementViewCount,
+  useSuspenseRecipeQuery,
+  useSuspenseInfiniteRecipesQuery,
+  useCreateRecipeMutation,
+  useUpdateRecipeMutation,
+  useDeleteRecipeMutation,
+  useIncrementViewCountMutation,
 } from './hooks';
 
 // Query keys

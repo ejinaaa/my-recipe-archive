@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { ROUTES } from '@/shared/config';
 import type { CookingLog } from '../model/types';
-import { addCookingLog, deleteCookingLog } from './server';
+import { addCookingLogApi, deleteCookingLogApi } from './server';
 
 /**
  * Server Action: 요리 완료 기록 추가
@@ -13,7 +13,7 @@ export async function addCookingLogAction(
   recipeId: string
 ): Promise<CookingLog> {
   try {
-    const log = await addCookingLog(userId, recipeId);
+    const log = await addCookingLogApi(userId, recipeId);
     revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
     return log;
   } catch (error) {
@@ -30,7 +30,7 @@ export async function deleteCookingLogAction(
   recipeId: string
 ): Promise<void> {
   try {
-    await deleteCookingLog(logId);
+    await deleteCookingLogApi(logId);
     revalidatePath(ROUTES.RECIPES.DETAIL(recipeId));
   } catch (error) {
     console.error('[CookingLog Actions] deleteCookingLogAction error:', error);

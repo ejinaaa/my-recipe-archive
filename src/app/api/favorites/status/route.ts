@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { isFavorited } from '@/entities/favorite/api/server';
+import { isFavoritedApi } from '@/entities/favorite/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const data = await isFavorited(userId, recipeId);
+    const data = await isFavoritedApi(userId, recipeId);
     return Response.json(data);
   } catch (error) {
     return handleRouteError(error, 'GET /api/favorites/status');

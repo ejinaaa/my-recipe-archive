@@ -4,7 +4,7 @@ import {
   dehydrate,
   HydrationBoundary,
 } from '@/shared/lib/prefetch';
-import { getRecipe } from '@/entities/recipe/api/server';
+import { getRecipeApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { RecipeDetailPage, RecipeDetailSkeleton } from '@/views/recipe-detail';
 
@@ -18,7 +18,7 @@ export default async function Page({ params }: PageProps) {
 
   await queryClient.prefetchQuery({
     queryKey: recipeKeys.detail(id),
-    queryFn: () => getRecipe(id),
+    queryFn: () => getRecipeApi(id),
   });
 
   return (

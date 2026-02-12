@@ -4,10 +4,10 @@ import { revalidatePath } from 'next/cache';
 import { ROUTES } from '@/shared/config';
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
 import {
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-  incrementViewCount,
+  createRecipeApi,
+  updateRecipeApi,
+  deleteRecipeApi,
+  incrementViewCountApi,
 } from './server';
 
 /**
@@ -16,7 +16,7 @@ import {
  */
 export async function createRecipeAction(data: RecipeInsert): Promise<Recipe> {
   try {
-    const recipe = await createRecipe(data);
+    const recipe = await createRecipeApi(data);
 
     // Revalidate related pages
     revalidatePath(ROUTES.RECIPES.LIST);
@@ -38,7 +38,7 @@ export async function updateRecipeAction(
   data: RecipeUpdate
 ): Promise<Recipe> {
   try {
-    const recipe = await updateRecipe(id, data);
+    const recipe = await updateRecipeApi(id, data);
 
     // Revalidate related pages
     revalidatePath(ROUTES.RECIPES.LIST);
@@ -57,7 +57,7 @@ export async function updateRecipeAction(
  */
 export async function deleteRecipeAction(id: string): Promise<void> {
   try {
-    await deleteRecipe(id);
+    await deleteRecipeApi(id);
 
     // Revalidate related pages
     revalidatePath(ROUTES.RECIPES.LIST);
@@ -76,5 +76,5 @@ export async function incrementViewCountAction(
   recipeId: string,
   userId: string
 ): Promise<void> {
-  await incrementViewCount(recipeId, userId);
+  await incrementViewCountApi(recipeId, userId);
 }

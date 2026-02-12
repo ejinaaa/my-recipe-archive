@@ -4,9 +4,9 @@ import { useState, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ROUTES } from '@/shared/config';
-import { useCurrentProfile } from '@/entities/user/api/hooks';
-import { useCreateRecipe } from '@/entities/recipe/api/hooks';
-import { useSuspenseCategoryGroups } from '@/entities/category/api/hooks';
+import { useCurrentProfileQuery } from '@/entities/user/api/hooks';
+import { useCreateRecipeMutation } from '@/entities/recipe/api/hooks';
+import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import {
   RecipeCreateForm,
   convertFormDataToRecipeData,
@@ -29,7 +29,7 @@ function RecipeCreateContent({
   onSubmit: (formData: RecipeFormData) => Promise<void>;
   userId?: string;
 }) {
-  const { data: categoryGroups } = useSuspenseCategoryGroups();
+  const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
 
   return (
     <div className='px-4 pt-6 pb-8'>
@@ -44,8 +44,8 @@ function RecipeCreateContent({
 
 export function RecipeCreatePage() {
   const router = useRouter();
-  const { data: profile } = useCurrentProfile();
-  const createRecipe = useCreateRecipe();
+  const { data: profile } = useCurrentProfileQuery();
+  const createRecipe = useCreateRecipeMutation();
   const [mutationError, setMutationError] = useState<{
     retry: () => void;
   } | null>(null);

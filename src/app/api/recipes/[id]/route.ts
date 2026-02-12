@@ -1,4 +1,4 @@
-import { getRecipe } from '@/entities/recipe/api/server';
+import { getRecipeApi } from '@/entities/recipe/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
   const { id } = await params;
 
   try {
-    const recipe = await getRecipe(id);
+    const recipe = await getRecipeApi(id);
 
     if (!recipe) {
       return Response.json(

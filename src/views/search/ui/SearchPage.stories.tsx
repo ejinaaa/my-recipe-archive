@@ -18,7 +18,7 @@ function createSuccessQueryClient() {
     },
   });
 
-  // useSuspenseCategoryGroups 캐시 (SearchContent 내부)
+  // useSuspenseCategoryGroupsQuery 캐시 (SearchContent 내부)
   queryClient.setQueryData(categoryKeys.groups(), mockCategoryGroups);
 
   return queryClient;

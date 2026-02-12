@@ -18,7 +18,7 @@ import {
   isFilterActive,
 } from '@/features/recipe-search';
 
-import { useCurrentProfile } from '@/entities/user/api/hooks';
+import { useCurrentProfileQuery } from '@/entities/user/api/hooks';
 import { recipeKeys } from '@/entities/recipe/api';
 import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
@@ -56,7 +56,7 @@ export function FavoritesPage() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
 
-  const { data: currentProfile } = useCurrentProfile();
+  const { data: currentProfile } = useCurrentProfileQuery();
   const userId = currentProfile?.id;
 
   // 페이지 진입 시 레시피 목록 쿼리 무효화 (즐겨찾기 변경사항 반영)

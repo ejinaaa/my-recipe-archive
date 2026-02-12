@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Check, ChefHat, Loader2 } from 'lucide-react';
-import { useAddCookingLog } from '@/entities/cooking-log/api/hooks';
+import { useAddCookingLogMutation } from '@/entities/cooking-log/api/hooks';
 import { Button } from '@/shared/ui/button';
 
 interface CookingCompleteButtonProps {
@@ -14,7 +14,7 @@ export function CookingCompleteButton({
   userId,
   recipeId,
 }: CookingCompleteButtonProps) {
-  const addCookingLog = useAddCookingLog();
+  const addCookingLog = useAddCookingLogMutation();
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {

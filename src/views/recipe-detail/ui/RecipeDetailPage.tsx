@@ -1,17 +1,17 @@
 'use client';
 
 import { notFound, useRouter } from 'next/navigation';
-import { useCookCount } from '@/entities/cooking-log/api/hooks';
-import { useCurrentProfile } from '@/entities/user/api/hooks';
+import { useCookCountQuery } from '@/entities/cooking-log/api/hooks';
+import { useCurrentProfileQuery } from '@/entities/user/api/hooks';
 import {
-  useIsFavorited,
-  useToggleFavorite,
+  useIsFavoritedQuery,
+  useToggleFavoriteMutation,
 } from '@/entities/favorite/api/hooks';
 import { BackButton } from '@/shared/ui/back-button';
 import { FavoriteButton } from '@/shared/ui/favorite-button';
 import { PageContent } from '@/shared/ui/page-content';
 import { PageHeader } from '@/shared/ui/page-header';
-import { useSuspenseRecipe } from '@/entities/recipe/api/hooks';
+import { useSuspenseRecipeQuery } from '@/entities/recipe/api/hooks';
 import { useTrackViewCount } from './useTrackViewCount';
 import { CookCountBadge } from './CookCountBadge';
 import { CookingTimeBadge } from '@/entities/recipe/ui/CookingTimeBadge';
@@ -28,16 +28,16 @@ interface RecipeDetailPageProps {
 
 /**
  * 레시피 상세 페이지 컴포넌트
- * id를 받아서 useSuspenseRecipe hook으로 데이터 조회
+ * id를 받아서 useSuspenseRecipeQuery hook으로 데이터 조회
  */
 export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
   const router = useRouter();
-  const { data: recipe } = useSuspenseRecipe(id);
-  const { data: profile } = useCurrentProfile();
+  const { data: recipe } = useSuspenseRecipeQuery(id);
+  const { data: profile } = useCurrentProfileQuery();
   const userId = profile?.id;
-  const { data: cookCount } = useCookCount(userId, id);
-  const { data: isFavorited } = useIsFavorited(userId, id);
-  const toggleFavorite = useToggleFavorite();
+  const { data: cookCount } = useCookCountQuery(userId, id);
+  const { data: isFavorited } = useIsFavoritedQuery(userId, id);
+  const toggleFavorite = useToggleFavoriteMutation();
 
   useTrackViewCount(id, userId);
 
