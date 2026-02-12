@@ -48,21 +48,6 @@ export const buildRecipesSearchParams = (
   return searchParams;
 };
 
-/** API Route를 통해 전체 레시피 목록 조회 */
-export const fetchRecipes = async (
-  userId?: string
-): Promise<Recipe[]> => {
-  const searchParams = new URLSearchParams();
-  searchParams.set('limit', '1000');
-  searchParams.set('offset', '0');
-  if (userId) searchParams.set('favoritesByUserId', userId);
-
-  const baseUrl = getBaseUrl();
-  const res = await fetch(`${baseUrl}/api/recipes?${searchParams}`);
-  const data = await handleApiResponse<PaginatedRecipes>(res, '레시피 목록을 가져오지 못했어요');
-  return data.recipes;
-};
-
 /** API Route를 통해 레시피 목록 조회 (페이지네이션) */
 export const fetchRecipesPaginated = async (
   params: InfiniteRecipesParams | undefined,

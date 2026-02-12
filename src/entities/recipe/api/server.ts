@@ -219,15 +219,6 @@ export async function getRecipesPaginated(
 }
 
 /**
- * Get all recipes, optionally filtered by user ID
- * For backward compatibility
- */
-export async function getRecipes(userId?: string): Promise<Recipe[]> {
-  const result = await getRecipesPaginated({ userId, limit: 1000 });
-  return result.recipes;
-}
-
-/**
  * Get a single recipe by ID
  */
 export async function getRecipe(id: string): Promise<Recipe | null> {

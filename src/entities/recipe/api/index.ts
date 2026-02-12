@@ -1,9 +1,6 @@
 // Client-side React Query hooks
 export {
-  useRecipes,
-  useRecipe,
   useSuspenseRecipe,
-  useInfiniteRecipes,
   useSuspenseInfiniteRecipes,
   useCreateRecipe,
   useUpdateRecipe,

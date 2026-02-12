@@ -1,13 +1,10 @@
 'use client';
 
 import {
-  useQuery,
   useSuspenseQuery,
-  useInfiniteQuery,
   useSuspenseInfiniteQuery,
   useMutation,
   useQueryClient,
-  type UseQueryResult,
   type UseMutationResult,
 } from '@tanstack/react-query';
 import type { Recipe, RecipeInsert, RecipeUpdate } from '../model/types';
@@ -20,34 +17,11 @@ import {
 import {
   fetchRecipe,
   fetchRecipesPaginated,
-  fetchRecipes,
   fetchRecipesSection,
   fetchRandomRecipe,
 } from './client';
 import { recipeKeys, type InfiniteRecipesParams } from './keys';
 import type { RecipeSortBy } from './server';
-
-/**
- * Hook to fetch all recipes, optionally filtered by user ID
- */
-export function useRecipes(userId?: string): UseQueryResult<Recipe[], Error> {
-  return useQuery({
-    queryKey: recipeKeys.list(userId),
-    queryFn: () => fetchRecipes(userId),
-  });
-}
-
-/**
- * Hook to fetch a single recipe by ID
- * Route API를 통해 데이터 조회
- */
-export function useRecipe(id: string): UseQueryResult<Recipe | null, Error> {
-  return useQuery({
-    queryKey: recipeKeys.detail(id),
-    queryFn: () => fetchRecipe(id),
-    enabled: !!id,
-  });
-}
 
 /**
  * Suspense를 지원하는 단일 레시피 조회 hook
@@ -57,27 +31,6 @@ export function useSuspenseRecipe(id: string) {
   return useSuspenseQuery({
     queryKey: recipeKeys.detail(id),
     queryFn: () => fetchRecipe(id),
-  });
-}
-
-/**
- * Hook to fetch recipes with infinite scroll
- */
-export function useInfiniteRecipes(params?: InfiniteRecipesParams) {
-  return useInfiniteQuery({
-    queryKey: recipeKeys.infinite(params),
-    queryFn: ({ pageParam = 0 }) => fetchRecipesPaginated(params, pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage.hasMore) return undefined;
-      const loadedCount = allPages.reduce(
-        (sum, page) => sum + page.recipes.length,
-        0
-      );
-      return loadedCount;
-    },
-    initialPageParam: 0,
-    // 검색어 변경 시 기존 데이터 유지 (로딩 UI 없음)
-    placeholderData: previousData => previousData,
   });
 }
 

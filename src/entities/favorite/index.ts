@@ -11,11 +11,7 @@ export {
 } from './api/server';
 
 // Server Actions (mutation only)
-export {
-  addFavoriteAction,
-  removeFavoriteAction,
-  toggleFavoriteAction,
-} from './api/actions';
+export { toggleFavoriteAction } from './api/actions';
 
 // Client fetch functions
 export { fetchIsFavorited, fetchFavoriteStatuses } from './api/client';
