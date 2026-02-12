@@ -97,18 +97,6 @@ model/
 
 ## 네이밍
 
-```typescript
-describe('toRecipe', () => {
-  it('DB 행을 Recipe 타입으로 변환한다', () => { ... });
-  it('null 필드를 기본값으로 처리한다', () => { ... });
-});
-
-describe('toggleCategoryFilter', () => {
-  it('이미 선택된 카테고리를 제거한다', () => { ... });
-  it('새 카테고리를 추가한다', () => { ... });
-});
-```
-
 - `describe`: 함수명 또는 훅명
 - `it`: **한글**로 동작 설명 (`~한다`, `~된다`)
 - 테스트 당 하나의 assertion 원칙 (관련 assertions는 허용)
@@ -127,20 +115,6 @@ it('새 카테고리를 추가한다', () => {
 
   // Assert
   expect(result.cuisine).toEqual(['korean']);
-});
-```
-
-### Edge case
-
-```typescript
-describe('getOptionsByType', () => {
-  it('빈 배열이면 빈 결과를 반환한다', () => {
-    expect(getOptionsByType([], 'cuisine')).toEqual([]);
-  });
-
-  it('존재하지 않는 타입이면 빈 배열을 반환한다', () => {
-    expect(getOptionsByType(mockCategoryGroups, 'nonexistent' as CategoryType)).toEqual([]);
-  });
 });
 ```
 
@@ -175,32 +149,23 @@ function createWrapper() {
 ### Query 훅 — enabled 조건 검증
 
 ```typescript
-describe('useIsFavoritedQuery', () => {
-  it('userId가 없으면 쿼리를 실행하지 않는다', () => {
-    const { queryClient, wrapper } = createWrapper();
-    renderHook(() => useIsFavoritedQuery(undefined, 'recipe-1'), { wrapper });
-
-    expect(queryClient.isFetching()).toBe(0);
-  });
+it('userId가 없으면 쿼리를 실행하지 않는다', () => {
+  const { queryClient, wrapper } = createWrapper();
+  renderHook(() => useIsFavoritedQuery(undefined, 'recipe-1'), { wrapper });
+  expect(queryClient.isFetching()).toBe(0);
 });
 ```
 
 ### Mutation 훅 — optimistic update 검증
 
 ```typescript
-describe('useToggleFavoriteMutation', () => {
-  it('즐겨찾기 토글 시 캐시를 즉시 업데이트한다', async () => {
-    const { queryClient, wrapper } = createWrapper();
-    queryClient.setQueryData(favoriteKeys.status('user-1', 'recipe-1'), false);
-
-    const { result } = renderHook(() => useToggleFavoriteMutation(), { wrapper });
-
-    result.current.mutate({ userId: 'user-1', recipeId: 'recipe-1' });
-
-    await waitFor(() => {
-      const cached = queryClient.getQueryData(favoriteKeys.status('user-1', 'recipe-1'));
-      expect(cached).toBe(true);
-    });
+it('즐겨찾기 토글 시 캐시를 즉시 업데이트한다', async () => {
+  const { queryClient, wrapper } = createWrapper();
+  queryClient.setQueryData(favoriteKeys.status('user-1', 'recipe-1'), false);
+  const { result } = renderHook(() => useToggleFavoriteMutation(), { wrapper });
+  result.current.mutate({ userId: 'user-1', recipeId: 'recipe-1' });
+  await waitFor(() => {
+    expect(queryClient.getQueryData(favoriteKeys.status('user-1', 'recipe-1'))).toBe(true);
   });
 });
 ```
@@ -209,12 +174,3 @@ describe('useToggleFavoriteMutation', () => {
 
 - 기존 `entities/{entity}/model/mock.ts` 재사용 (**인라인 mock 금지**)
 - DB 레벨 mock 필요 시 `mock.ts`에 `mockRecipeDB` 등 추가
-- 테스트 전용 fixture가 필요하면 같은 `mock.ts`에 추가
-
-```typescript
-// ✅ mock.ts 재사용
-import { mockRecipes } from './mock';
-
-// ❌ 테스트 내 인라인 mock
-const recipe = { id: '1', title: '테스트' };
-```
