@@ -20,7 +20,6 @@ export async function getRecipesPaginatedApi(
       limit = 6,
       offset = 0,
       searchQuery,
-      isPublic,
       categories,
       cookingTimeRange,
       tags,
@@ -60,11 +59,6 @@ export async function getRecipesPaginatedApi(
     // 유저 ID 필터
     if (userId) {
       query = query.eq('user_id', userId);
-    }
-
-    // 공개 여부 필터
-    if (isPublic !== undefined) {
-      query = query.eq('is_public', isPublic);
     }
 
     // 텍스트 검색 (제목, 설명, 태그)

@@ -19,7 +19,6 @@ const mockRecipeDB: RecipeDB = {
   },
   ingredients: [{ name: '파스타', amount: '200', unit: 'g' }],
   steps: [{ step: 1, description: '면을 삶는다' }],
-  is_public: true,
   view_count: 100,
   favorite_count: 20,
   cook_count: 5,
@@ -42,7 +41,6 @@ const mockMinimalRecipeDB: RecipeDB = {
   categories: {},
   ingredients: [],
   steps: [],
-  is_public: false,
   view_count: 0,
   favorite_count: 0,
   cook_count: 0,
@@ -85,7 +83,6 @@ describe('toRecipe', () => {
     expect(recipe.thumbnail_url).toBe('https://example.com/image.jpg');
     expect(recipe.cooking_time).toBe(30);
     expect(recipe.servings).toBe(2);
-    expect(recipe.is_public).toBe(true);
     expect(recipe.view_count).toBe(100);
     expect(recipe.favorite_count).toBe(20);
     expect(recipe.cook_count).toBe(5);
@@ -138,16 +135,6 @@ describe('toRecipe', () => {
     expect(recipe.created_at).toBeInstanceOf(Date);
     expect(recipe.updated_at).toBeInstanceOf(Date);
     expect(recipe.created_at!.toISOString()).toBe('2024-01-15T00:00:00.000Z');
-  });
-
-  it('is_public이 undefined면 false를 기본값으로 사용한다', () => {
-    const dbRecipe: RecipeDB = {
-      ...mockMinimalRecipeDB,
-      is_public: undefined as unknown as boolean,
-    };
-    const recipe = toRecipe(dbRecipe);
-
-    expect(recipe.is_public).toBe(false);
   });
 
   it('count 필드가 undefined면 0을 기본값으로 사용한다', () => {
@@ -250,7 +237,6 @@ describe('toRecipeDB', () => {
     expect('categories' in result).toBe(false);
     expect('ingredients' in result).toBe(false);
     expect('steps' in result).toBe(false);
-    expect('is_public' in result).toBe(false);
     expect('tags' in result).toBe(false);
   });
 

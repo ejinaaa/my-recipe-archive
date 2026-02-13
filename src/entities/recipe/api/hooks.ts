@@ -109,7 +109,6 @@ export function useCreateRecipeMutation(): UseMutationResult<
           categories: newRecipe.categories || [],
           ingredients: newRecipe.ingredients || [],
           steps: newRecipe.steps || [],
-          is_public: newRecipe.is_public ?? false,
           view_count: 0,
           favorite_count: 0,
           cook_count: 0,

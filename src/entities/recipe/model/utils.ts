@@ -43,7 +43,6 @@ export const toRecipe = (dbRecipe: RecipeDB): Recipe => {
           .filter((cat): cat is RecipeCategory => cat !== undefined),
     ingredients: dbRecipe.ingredients || [],
     steps: dbRecipe.steps || [],
-    is_public: dbRecipe.is_public ?? false,
     view_count: dbRecipe.view_count ?? 0,
     favorite_count: dbRecipe.favorite_count ?? 0,
     cook_count: dbRecipe.cook_count ?? 0,
@@ -86,7 +85,6 @@ export const toRecipeDB = (
   }
   if (recipe.ingredients !== undefined) result.ingredients = recipe.ingredients;
   if (recipe.steps !== undefined) result.steps = recipe.steps;
-  if (recipe.is_public !== undefined) result.is_public = recipe.is_public;
   if (recipe.tags !== undefined) result.tags = recipe.tags;
 
   return result;

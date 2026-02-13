@@ -103,7 +103,7 @@ export const mockRecipes: Recipe[] = [
       { step: 6, description: '소금, 후추로 간하고 바질을 넣습니다.' },
       { step: 7, description: '접시에 담고 파마산 치즈를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 156,
     cook_count: 0,
     favorite_count: 23,
@@ -151,7 +151,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '삶은 면과 면수를 넣고 잘 섞습니다.' },
       { step: 6, description: '파슬리를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 89,
     cook_count: 0,
     favorite_count: 15,
@@ -194,7 +194,7 @@ export const mockRecipes: Recipe[] = [
       { step: 6, description: '펜네를 삶아 소스와 잘 버무립니다.' },
       { step: 7, description: '접시에 담고 파마산 치즈를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 234,
     cook_count: 0,
     favorite_count: 45,
@@ -237,7 +237,7 @@ export const mockRecipes: Recipe[] = [
       { step: 6, description: '면수를 조금씩 넣어 농도를 맞춥니다.' },
       { step: 7, description: '블랙 페퍼를 듬뿍 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 178,
     cook_count: 0,
     favorite_count: 38,
@@ -277,7 +277,7 @@ export const mockRecipes: Recipe[] = [
       { step: 6, description: '소금, 후추로 간을 맞춥니다.' },
       { step: 7, description: '파슬리를 뿌려 완성합니다.' },
     ],
-    is_public: false,
+
     view_count: 45,
     cook_count: 0,
     favorite_count: 8,
@@ -317,7 +317,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '삶은 스파게티를 넣고 잘 섞습니다.' },
       { step: 6, description: '파슬리를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 67,
     cook_count: 0,
     favorite_count: 12,
@@ -356,7 +356,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '올리브유를 두르고 잘 버무립니다.' },
       { step: 6, description: '파마산 치즈를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 123,
     cook_count: 0,
     favorite_count: 28,
@@ -404,7 +404,7 @@ export const mockRecipes: Recipe[] = [
         description: '불을 끄고 파마산 치즈와 버터를 넣어 완성합니다.',
       },
     ],
-    is_public: true,
+
     view_count: 198,
     cook_count: 0,
     favorite_count: 42,
@@ -445,7 +445,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '파마산 치즈를 뿌리고 레몬즙을 뿌립니다.' },
       { step: 6, description: '블랙 페퍼로 마무리합니다.' },
     ],
-    is_public: true,
+
     view_count: 92,
     cook_count: 0,
     favorite_count: 18,
@@ -485,7 +485,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '버터, 다진 마늘, 레몬즙을 넣고 끼얹어줍니다.' },
       { step: 6, description: '파슬리를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 312,
     cook_count: 0,
     favorite_count: 67,
@@ -528,7 +528,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '밥 위에 담고 참기름을 뿌립니다.' },
       { step: 6, description: '통깨와 김을 올려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 145,
     cook_count: 0,
     favorite_count: 31,
@@ -568,7 +568,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '간장과 굴소스로 양념합니다.' },
       { step: 6, description: '모든 야채가 익으면 완성입니다.' },
     ],
-    is_public: true,
+
     view_count: 78,
     cook_count: 0,
     favorite_count: 14,
@@ -613,7 +613,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '번에 소스를 바르고 야채를 올립니다.' },
       { step: 6, description: '패티를 올리고 피클을 얹어 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 267,
     cook_count: 0,
     favorite_count: 52,
@@ -652,7 +652,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '올리브유를 뿌리고 15-20분간 굽습니다.' },
       { step: 6, description: '신선한 바질을 올려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 189,
     cook_count: 0,
     favorite_count: 41,
@@ -695,7 +695,7 @@ export const mockRecipes: Recipe[] = [
       { step: 5, description: '올리브유를 뿌리고 칠리 플레이크를 올립니다.' },
       { step: 6, description: '후추를 뿌려 완성합니다.' },
     ],
-    is_public: true,
+
     view_count: 108,
     cook_count: 0,
     favorite_count: 22,

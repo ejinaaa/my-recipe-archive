@@ -8,7 +8,6 @@ import type {
 export interface InfiniteRecipesParams {
   userId?: string;
   searchQuery?: string;
-  isPublic?: boolean;
   categories?: CategoryFilter;
   cookingTimeRange?: CookingTimeRange;
   tags?: string[];

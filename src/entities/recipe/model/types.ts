@@ -89,8 +89,6 @@ export interface RecipeDB {
   ingredients: Ingredient[];
   /** Cooking steps as JSON array */
   steps: CookingStep[];
-  /** Whether the recipe is public */
-  is_public: boolean;
   /** View count */
   view_count: number;
   /** Favorite count */
@@ -130,8 +128,6 @@ export interface Recipe {
   ingredients: Ingredient[];
   /** Cooking steps */
   steps: CookingStep[];
-  /** Whether the recipe is public */
-  is_public: boolean;
   /** View count */
   view_count: number;
   /** Favorite count */
@@ -168,8 +164,6 @@ export interface RecipeInsert {
   ingredients?: Ingredient[];
   /** Cooking steps */
   steps?: CookingStep[];
-  /** Whether the recipe is public */
-  is_public?: boolean;
   /** Tags for search */
   tags?: string[];
 }
@@ -195,8 +189,6 @@ export interface RecipeUpdate {
   ingredients?: Ingredient[];
   /** Cooking steps */
   steps?: CookingStep[];
-  /** Whether the recipe is public */
-  is_public?: boolean;
   /** Tags for search */
   tags?: string[];
 }
@@ -229,8 +221,6 @@ export interface GetRecipesParams {
   limit?: number;
   offset?: number;
   searchQuery?: string;
-  /** 공개 레시피만 조회 */
-  isPublic?: boolean;
   /** 카테고리 필터 */
   categories?: CategoryFilter;
   /** 조리 시간 범위 */
