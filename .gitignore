@@ -50,3 +50,4 @@ public/serwist-worker-*.js
 
 # Claude Code local settings
 .claude/settings.local.json
+.claude/settings.json
