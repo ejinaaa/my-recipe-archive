@@ -21,9 +21,9 @@ export const viewport: Viewport = {
   maximumScale: 1,
   // 사용자 확대/축소 비활성화 (네이티브 앱처럼)
   userScalable: false,
-  // 브라우저 주소창/상태바 색상 — primary-base (#FF8762)
+  // 브라우저 주소창/상태바 색상 — primary-base (#FAD6AF)
   // manifest.ts의 theme_color와 동일하게 맞춤
-  themeColor: '#FF8762',
+  themeColor: '#FAD6AF',
 };
 
 export const metadata: Metadata = {
@@ -81,7 +81,7 @@ export default function RootLayout({
             >
               {children}
               <Toaster />
-              <DebugLogoutButton />
+              {process.env.NODE_ENV === 'development' && <DebugLogoutButton />}
             </ThemeProvider>
           </QueryProvider>
         </NuqsAdapter>
