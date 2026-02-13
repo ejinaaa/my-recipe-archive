@@ -25,17 +25,17 @@
 
 ## 기술 스택
 
-| 영역 | 기술 |
-|------|------|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS + Radix UI + CVA |
-| State | React Query (서버) · nuqs (URL) · Zustand (클라이언트) |
-| Form | React Hook Form + Zod |
-| Backend | Supabase (DB · Auth · Storage) |
-| PWA | Serwist |
-| Testing | Vitest · Storybook · MSW |
-| AI | Claude Code (개발 파트너) |
+| 영역      | 기술                                                   |
+| --------- | ------------------------------------------------------ |
+| Framework | Next.js 15 (App Router)                                |
+| Language  | TypeScript                                             |
+| Styling   | Tailwind CSS + Radix UI + CVA                          |
+| State     | React Query (서버) · nuqs (URL) · Zustand (클라이언트) |
+| Form      | React Hook Form + Zod                                  |
+| Backend   | Supabase (DB · Auth · Storage)                         |
+| PWA       | Serwist                                                |
+| Testing   | Vitest · Storybook · MSW                               |
+| AI        | Claude Code (개발 파트너)                              |
 
 ## 아키텍처
 
@@ -73,12 +73,12 @@ src/
 
 에러 유형별로 UI 패턴을 분리하여, 사용자 흐름을 최대한 유지하는 방향으로 설계했습니다.
 
-| 에러 유형 | 처리 방식 |
-|-----------|-----------|
-| 쿼리 에러 (메인 콘텐츠) | Skeleton + ErrorBoundary → 재시도 바텀시트 |
-| 뮤테이션 에러 (재시도 가능) | ErrorBottomSheet (흐름 유지) |
-| 뮤테이션 에러 (권한/404) | Toast 자동 dismiss |
-| 비치명적 에러 | 무시 (meta.suppressErrorToast) |
+| 에러 유형                   | 처리 방식                                  |
+| --------------------------- | ------------------------------------------ |
+| 쿼리 에러 (메인 콘텐츠)     | Skeleton + ErrorBoundary → 재시도 바텀시트 |
+| 뮤테이션 에러 (재시도 가능) | ErrorBottomSheet (흐름 유지)               |
+| 뮤테이션 에러 (권한/404)    | Toast 자동 dismiss                         |
+| 비치명적 에러               | 무시 (meta.suppressErrorToast)             |
 
 `MutationCache` 글로벌 핸들러가 mutation 에러를 일괄 처리하고, 개별 mutation은 `meta` 옵션으로 동작을 분기합니다.
 
@@ -104,34 +104,11 @@ Claude Code를 개발 파트너로 적극 활용하여, FSD 아키텍처 규칙 
 
 ## 테스트 전략
 
-| 계층 | 도구 | 대상 |
-|------|------|------|
+| 계층        | 도구                     | 대상                                                    |
+| ----------- | ------------------------ | ------------------------------------------------------- |
 | Unit / Hook | Vitest + Testing Library | 유틸 함수, Zod 스키마, React Query 훅 (7개 테스트 파일) |
-| Component | Storybook + MSW | UI 인터랙션, 상태별 렌더링 (37개 스토리) |
+| Component   | Storybook + MSW          | UI 인터랙션, 상태별 렌더링 (37개 스토리)                |
 
 Storybook에서 MSW로 API를 모킹하여 Default / Loading / Error / Empty 상태를 시각적으로 검증합니다.
 
 <!-- 📸 스크린샷 (선택): Storybook 화면 1장 — 다양한 상태(성공/에러/로딩)가 나열된 모습 -->
-
-## 시작하기
-
-```bash
-# 의존성 설치
-pnpm install
-
-# 환경 변수 설정
-cp .env.example .env.local
-# NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY 등 설정
-
-# 개발 서버
-pnpm dev
-
-# Storybook
-pnpm storybook
-
-# 테스트
-pnpm test
-
-# 프로덕션 빌드
-pnpm build
-```
