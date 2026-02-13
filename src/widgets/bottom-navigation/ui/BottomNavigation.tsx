@@ -51,7 +51,7 @@ export function BottomNavigation({
 
   return (
     <nav className='bg-background border-t border-border'>
-      <div className='flex items-center justify-around h-[70px] max-w-screen-xl mx-auto'>
+      <div className='flex items-center justify-around h-[70px] max-w-screen-xl mx-auto pb-3'>
         {TABS.map(({ id, icon, label, href }) => (
           <NavTabItem
             key={id}
