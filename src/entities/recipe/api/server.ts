@@ -102,6 +102,9 @@ export async function getRecipesPaginatedApi(
     }
 
     // 정렬 (보조 정렬로 id 사용하여 동일한 값에서도 순서 보장)
+    // 현재 모든 정렬은 전체 유저 기준 집계 컬럼(view_count, cook_count, favorite_count) 사용
+    // TODO: 추후 "내 기준" 정렬 추가 시 recipe_views, cooking_logs, favorites 테이블에서
+    //       user_id로 필터 후 COUNT 집계로 정렬하는 방식 필요
     switch (sortBy) {
       case 'oldest':
         query = query
@@ -278,14 +281,22 @@ export async function deleteRecipeApi(id: string): Promise<void> {
  * 오늘의 추천 레시피 (날짜 기반 결정적 랜덤)
  * 같은 날에는 항상 동일한 레시피를 반환
  */
-export async function getRandomRecipeApi(): Promise<Recipe | null> {
+export async function getRandomRecipeApi(
+  userId?: string,
+): Promise<Recipe | null> {
   try {
     const supabase = await createClient();
 
-    // 전체 레시피 수 조회
-    const { count } = await supabase
+    // 레시피 수 조회
+    let countQuery = supabase
       .from('recipes')
       .select('*', { count: 'exact', head: true });
+
+    if (userId) {
+      countQuery = countQuery.eq('user_id', userId);
+    }
+
+    const { count } = await countQuery;
 
     if (!count || count === 0) return null;
 
@@ -297,11 +308,16 @@ export async function getRandomRecipeApi(): Promise<Recipe | null> {
     );
     const offset = Math.abs(seed) % count;
 
-    const { data, error } = await supabase
+    let dataQuery = supabase
       .from('recipes')
       .select('*')
-      .order('created_at', { ascending: true })
-      .range(offset, offset);
+      .order('created_at', { ascending: true });
+
+    if (userId) {
+      dataQuery = dataQuery.eq('user_id', userId);
+    }
+
+    const { data, error } = await dataQuery.range(offset, offset);
 
     if (error || !data?.[0]) return null;
 

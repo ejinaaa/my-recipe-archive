@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { getRecipesPaginatedApi } from '@/entities/recipe/api/server';
+import { getCurrentProfileApi } from '@/entities/user/api/server';
 import type {
   CategoryFilter,
   CookingTimeRange,
@@ -41,7 +42,14 @@ export async function GET(request: NextRequest) {
   })();
 
   try {
+    // 인증된 유저 확인
+    const currentProfile = await getCurrentProfileApi();
+    if (!currentProfile) {
+      return Response.json({ error: '로그인이 필요해요' }, { status: 401 });
+    }
+
     const data = await getRecipesPaginatedApi({
+      userId: currentProfile.id,
       limit,
       offset,
       searchQuery,

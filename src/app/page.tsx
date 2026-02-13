@@ -16,22 +16,26 @@ export const dynamic = 'force-dynamic';
 export default async function Page() {
   const queryClient = createServerQueryClient();
 
+  // 프로필을 먼저 가져와서 userId를 레시피 prefetch에 사용
+  const currentProfile = await getCurrentProfileApi();
+  const userId = currentProfile?.id;
+
   await Promise.all([
     // 프로필
     queryClient.prefetchQuery({
       queryKey: profileKeys.current(),
-      queryFn: getCurrentProfileApi,
+      queryFn: () => currentProfile,
     }),
     // 오늘의 추천 레시피
     queryClient.prefetchQuery({
       queryKey: recipeKeys.random(),
-      queryFn: getRandomRecipeApi,
+      queryFn: () => getRandomRecipeApi(userId),
     }),
     // 많이 해본 요리 섹션
     queryClient.prefetchQuery({
       queryKey: recipeKeys.section('most_cooked'),
       queryFn: async () => {
-        const data = await getRecipesPaginatedApi({ sortBy: 'most_cooked', limit: 6 });
+        const data = await getRecipesPaginatedApi({ userId, sortBy: 'most_cooked', limit: 6 });
         return data.recipes;
       },
     }),
@@ -39,7 +43,7 @@ export default async function Page() {
     queryClient.prefetchQuery({
       queryKey: recipeKeys.section('least_cooked'),
       queryFn: async () => {
-        const data = await getRecipesPaginatedApi({ sortBy: 'least_cooked', limit: 6 });
+        const data = await getRecipesPaginatedApi({ userId, sortBy: 'least_cooked', limit: 6 });
         return data.recipes;
       },
     }),
@@ -47,7 +51,7 @@ export default async function Page() {
     queryClient.prefetchQuery({
       queryKey: recipeKeys.section('latest'),
       queryFn: async () => {
-        const data = await getRecipesPaginatedApi({ sortBy: 'latest', limit: 6 });
+        const data = await getRecipesPaginatedApi({ userId, sortBy: 'latest', limit: 6 });
         return data.recipes;
       },
     }),
@@ -60,7 +64,7 @@ export default async function Page() {
     queryClient.prefetchInfiniteQuery({
       queryKey: recipeKeys.infinite({}),
       queryFn: ({ pageParam }) =>
-        getRecipesPaginatedApi({ offset: pageParam as number }),
+        getRecipesPaginatedApi({ userId, offset: pageParam as number }),
       initialPageParam: 0,
     }),
   ]);

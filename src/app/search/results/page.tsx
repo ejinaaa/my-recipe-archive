@@ -26,12 +26,18 @@ export default async function SearchResultsRoute({
   const resolvedSearchParams = await searchParams;
   const queryClient = createServerQueryClient();
 
-  const infiniteParams: InfiniteRecipesParams = parseSearchParams(resolvedSearchParams);
+  // 프로필을 먼저 가져와서 userId를 레시피 prefetch에 사용
+  const currentProfile = await getCurrentProfileApi();
+
+  const infiniteParams: InfiniteRecipesParams = {
+    ...parseSearchParams(resolvedSearchParams),
+    userId: currentProfile?.id,
+  };
 
   await Promise.all([
     queryClient.prefetchQuery({
       queryKey: profileKeys.current(),
-      queryFn: getCurrentProfileApi,
+      queryFn: () => currentProfile,
     }),
     queryClient.prefetchQuery({
       queryKey: categoryKeys.groups(),

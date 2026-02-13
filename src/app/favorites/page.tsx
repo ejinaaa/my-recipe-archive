@@ -29,6 +29,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const infiniteParams: InfiniteRecipesParams = {
     ...parseSearchParams(resolvedSearchParams),
+    userId: currentProfile?.id,
     favoritesByUserId: currentProfile?.id,
   };
 
