@@ -22,7 +22,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // 스플래시 스크린(앱 로딩 화면) 배경색
     background_color: '#FFFFFF',
     // 모바일 상태바(주소창 영역) 색상 — primary-base
-    theme_color: '#FF8762',
+    theme_color: '#FFB299',
     // 화면 방향 고정 — portrait-primary: 세로 모드
     orientation: 'portrait-primary',
     // PWA 아이콘 — 192x192(홈 화면), 512x512(스플래시/고해상도) 최소 필요

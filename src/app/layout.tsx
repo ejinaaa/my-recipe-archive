@@ -21,9 +21,9 @@ export const viewport: Viewport = {
   maximumScale: 1,
   // 사용자 확대/축소 비활성화 (네이티브 앱처럼)
   userScalable: false,
-  // 브라우저 주소창/상태바 색상 — primary-base (#FAD6AF)
+  // 브라우저 주소창/상태바 색상 — primary-base (#FFB299)
   // manifest.ts의 theme_color와 동일하게 맞춤
-  themeColor: '#FAD6AF',
+  themeColor: '#FFB299',
 };
 
 export const metadata: Metadata = {
