@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { ROUTES } from '@/shared/config/routes';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -13,7 +14,7 @@ export default function manifest(): MetadataRoute.Manifest {
     // 앱의 언어
     lang: 'ko',
     // 홈 화면에서 앱 아이콘 탭 시 처음 열리는 URL
-    start_url: '/',
+    start_url: ROUTES.HOME,
     // PWA가 제어하는 URL 범위 — 이 범위 밖의 링크는 일반 브라우저에서 열림
     scope: '/',
     // 앱 표시 모드 — standalone: 주소창 없이 네이티브 앱처럼 표시
@@ -34,18 +35,18 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         name: '새 레시피 작성',
         short_name: '새 레시피',
-        url: '/recipes/new',
+        url: ROUTES.RECIPES.NEW,
         icons: [{ src: '/icons/add-icon-192.png', sizes: '192x192' }],
       },
       {
         name: '레시피 검색',
         short_name: '검색',
-        url: '/search',
+        url: ROUTES.SEARCH,
         icons: [{ src: '/icons/search-icon-192.png', sizes: '192x192' }],
       },
       {
         name: '즐겨찾기',
-        url: '/favorites',
+        url: ROUTES.FAVORITES,
         icons: [{ src: '/icons/favorite-icon-192.png', sizes: '192x192' }],
       },
     ],

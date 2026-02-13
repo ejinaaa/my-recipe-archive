@@ -45,7 +45,7 @@ src/entities/{entity}/
 **권장**: 페이지 초기 로딩, SEO가 중요한 경우
 
 ```tsx
-// app/recipes/page.tsx (서버 컴포넌트)
+// app/page.tsx (서버 컴포넌트)
 import { getRecipes } from '@/entities/recipe/api/server';
 
 export default async function RecipesPage() {

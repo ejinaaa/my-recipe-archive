@@ -3,6 +3,7 @@
 import { Button } from '@/shared/ui/button';
 import { KakaoIcon } from '@/shared/ui/kakao-icon';
 import { createClient } from '@/shared/api/supabase/client';
+import { ROUTES } from '@/shared/config/routes';
 
 export function KakaoLoginButton() {
   const handleKakaoLogin = async () => {
@@ -12,7 +13,7 @@ export function KakaoLoginButton() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao',
         options: {
-          redirectTo: `${window.location.origin}/auth/confirm?next=/recipes`,
+          redirectTo: `${window.location.origin}${ROUTES.AUTH.CONFIRM}?next=${ROUTES.HOME}`,
         },
       });
 

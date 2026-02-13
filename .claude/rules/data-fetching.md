@@ -94,7 +94,7 @@ import { revalidatePath } from 'next/cache';
 
 export async function createRecipeAction(data: RecipeInsert) {
   const recipe = await createRecipeApi(data);
-  revalidatePath('/recipes');
+  revalidatePath('/');
   return recipe;
 }
 ```
