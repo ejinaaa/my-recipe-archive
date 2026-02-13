@@ -1,11 +1,11 @@
 ---
-description: Storybook 스토리 작성 원칙 (CSF 3.0)
+description: Storybook story writing principles (CSF 3.0)
 globs: '**/*.stories.tsx'
 ---
 
-# Storybook 스토리 작성 원칙 (CSF 3.0)
+# Storybook Story Writing Principles (CSF 3.0)
 
-## 기본 구조
+## Basic Structure
 
 ```typescript
 import type { Meta, StoryObj } from '@storybook/react';
@@ -16,60 +16,60 @@ const meta = {
   title: '[layer]/[segment]/ComponentName',
   component: ComponentName,
   tags: ['autodocs'],
-  args: { /* 기본 args */ },
-  argTypes: { /* control 설정 */ },
+  args: { /* default args */ },
+  argTypes: { /* control settings */ },
 } satisfies Meta<typeof ComponentName>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 ```
 
-## 스토리 분리 원칙
+## Story Separation Principles
 
-### Control로 처리 (별도 스토리 X)
+### Handle via Controls (no separate story)
 
-`variant`, `size`, `disabled` 등 간단한 props → `argTypes`로 control 설정
+Simple props like `variant`, `size`, `disabled` → set as `argTypes` controls
 
-### 별도 스토리로 분리
+### Separate into Individual Stories
 
-- 복잡한 children 조합
-- 데이터 edge case (긴 텍스트, 이미지 없음 등)
-- Loading / Error / Empty 상태 (Widget/View)
+- Complex children compositions
+- Data edge cases (long text, missing image, etc.)
+- Loading / Error / Empty states (Widget/View)
 
-## 컴포넌트 유형별 필수 스토리
+## Required Stories by Component Type
 
-| 유형 | Default | 추가 스토리 |
+| Type | Default | Additional Stories |
 |------|---------|------------|
-| UI Primitive | argTypes control 설정 | 복잡한 children |
-| Entity | mock 데이터 사용 | edge case |
-| Feature | fn() 액션 핸들러 | 특수 상태 |
-| Widget | 기본 데이터 | Loading, Error, Empty |
-| View | 기본 데이터 | Loading, Error, Empty, MutationError |
+| UI Primitive | argTypes control setup | Complex children |
+| Entity | Use mock data | Edge cases |
+| Feature | fn() action handlers | Special states |
+| Widget | Default data | Loading, Error, Empty |
+| View | Default data | Loading, Error, Empty, MutationError |
 
-## Title 네이밍
+## Title Naming
 
-`[layer]/[segment]/ComponentName` — 예: `shared/Button`, `entities/recipe/RecipeCard`, `views/recipe-detail/RecipeDetailPage`
+`[layer]/[segment]/ComponentName` — e.g., `shared/Button`, `entities/recipe/RecipeCard`, `views/recipe-detail/RecipeDetailPage`
 
-## Mock 데이터 규칙
+## Mock Data Rules
 
-- `entities/{entity}/model/mock.ts`에서 import (**인라인 mock 금지**)
-- mock.ts 없으면 생성: `mock` 접두어, `SCREAMING_SNAKE_CASE` 상수, 한국어 데이터
-- 생성 후 `src/shared/mocks/handlers.ts`에 엔드포인트 핸들러 추가 검토
+- Import from `entities/{entity}/model/mock.ts` (**no inline mocks**)
+- If mock.ts doesn't exist, create it: `mock` prefix, `SCREAMING_SNAKE_CASE` constants, Korean data
+- After creation, review adding endpoint handlers to `src/shared/mocks/handlers.ts`
 
-## MSW + React Query 데이터 전략
+## MSW + React Query Data Strategy
 
-| 스토리 | QueryClient | Suspense | MSW parameters | 추가 요소 |
+| Story | QueryClient | Suspense | MSW parameters | Additional |
 |--------|-----------|----------|----------------|----------|
-| Default | Success | ✅ | — | — |
-| Empty | Success (빈 데이터) | ✅ | — | — |
-| Loading | Error + profile 캐시 | ❌ | `delay('infinite')` | — |
-| Error | Error | ❌ | `HttpResponse 500` | — |
-| MutationError | Success | ✅ | — | `ErrorBottomSheet` 직접 렌더 |
+| Default | Success | Yes | — | — |
+| Empty | Success (empty data) | Yes | — | — |
+| Loading | Error + profile cache | No | `delay('infinite')` | — |
+| Error | Error | No | `HttpResponse 500` | — |
+| MutationError | Success | Yes | — | Render `ErrorBottomSheet` directly |
 
-### QueryClient 팩토리 패턴
+### QueryClient Factory Pattern
 
 ```typescript
-// 성공: staleTime: Infinity + mock 데이터 세팅
+// Success: staleTime: Infinity + set mock data
 function createSuccessQueryClient() {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -82,7 +82,7 @@ function createSuccessQueryClient() {
   return queryClient;
 }
 
-// 에러: retry: false만 (staleTime 없음 → 즉시 fetch → MSW 에러 응답)
+// Error: retry: false only (no staleTime → immediate fetch → MSW error response)
 function createErrorQueryClient() {
   return new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
@@ -90,15 +90,15 @@ function createErrorQueryClient() {
 }
 ```
 
-### 핵심 규칙
+### Key Rules
 
-- **profileKeys.current()**: Loading/Error에서도 항상 캐시 세팅 (useQuery enabled 조건부이므로 캐시 없으면 의도치 않은 fetch 발생)
-- **Infinite Query**: `{ pages: [...], pageParams: [0] }` 구조로 세팅
-- **nuqs 사용 시**: 모든 decorator에 `NuqsTestingAdapter` 래핑
+- **profileKeys.current()**: Always set profile cache even in Loading/Error (useQuery enabled is conditional, missing cache triggers unintended fetch)
+- **Infinite Query**: Set with `{ pages: [...], pageParams: [0] }` structure
+- **When using nuqs**: Wrap all decorators with `NuqsTestingAdapter`
 
-## Decorator 패턴
+## Decorator Pattern
 
-기본 구조 (Default/Empty):
+Basic structure (Default/Empty):
 
 ```typescript
 decorators: [
@@ -115,11 +115,11 @@ decorators: [
 ],
 ```
 
-**변형:**
+**Variations:**
 
-| 스토리 | Decorator 차이점 |
+| Story | Decorator Differences |
 |--------|----------------|
-| Loading | `createErrorQueryClient()` + profile 캐시만 세팅, Suspense 없음, MSW `delay('infinite')` |
-| Error | `createErrorQueryClient()`, Suspense 없음, MSW `HttpResponse.json({...}, { status: 500 })` |
-| MutationError | `createSuccessQueryClient()`, `<Story />` 아래 `<ErrorBottomSheet open ... />` 추가 |
-| URL 상태 | 전체를 `<NuqsTestingAdapter>`로 래핑 |
+| Loading | `createErrorQueryClient()` + profile cache only, no Suspense, MSW `delay('infinite')` |
+| Error | `createErrorQueryClient()`, no Suspense, MSW `HttpResponse.json({...}, { status: 500 })` |
+| MutationError | `createSuccessQueryClient()`, add `<ErrorBottomSheet open ... />` below `<Story />` |
+| URL state | Wrap entire decorator with `<NuqsTestingAdapter>` |

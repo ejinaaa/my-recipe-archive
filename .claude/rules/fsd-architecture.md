@@ -1,78 +1,78 @@
 ---
-description: FSD (Feature-Sliced Design) 아키텍처 규칙
+description: FSD (Feature-Sliced Design) architecture rules
 alwaysApply: true
 ---
 
-# FSD 아키텍처 규칙
+# FSD Architecture Rules
 
-## 레이어 구조 (하위 → 상위)
+## Layer Structure (lower → upper)
 
 ```text
 src/
-├── shared/      # 1. 재사용 가능한 UI, 유틸리티
-├── entities/    # 2. 비즈니스 엔티티 (Recipe, User 등)
-├── features/    # 3. 사용자 기능/시나리오
-├── widgets/     # 4. 독립적인 UI 블록
-└── views/       # 5. 페이지 (조합만 담당)
+├── shared/      # 1. Reusable UI, utilities
+├── entities/    # 2. Business entities (Recipe, User, etc.)
+├── features/    # 3. User features/scenarios
+├── widgets/     # 4. Independent UI blocks
+└── views/       # 5. Pages (composition only)
 ```
 
-## Import 규칙
+## Import Rules
 
 ```typescript
-// ✅ 상위는 하위를 import 가능
+// ✅ Upper can import from lower
 import { RecipeCard } from '@/entities/recipe';
 import { Button } from '@/shared/ui/button';
 
-// ❌ 하위는 상위를 import 불가
-// features에서 widgets import 금지
+// ❌ Lower cannot import from upper
+// No importing widgets from features
 
-// ❌ 같은 레이어 간 import 금지
-// features/recipe-search에서 features/user-auth import 금지
+// ❌ No same-layer cross-imports
+// No importing features/user-auth from features/recipe-search
 ```
 
-## 레이어 배치 기준
+## Layer Placement Criteria
 
-| 레이어 | 배치 기준 |
-| -------- | ---------- |
-| **Widgets** | 자체 상태 관리, 복잡한 로직 (infinite scroll, data fetching), 여러 entities/features 조합 |
-| **Features** | 특정 사용자 시나리오, 단일 목적 기능, 여러 페이지에서 재사용 |
-| **Views** | 페이지 레벨 라우트, 다른 레이어들의 조합만, 로직 포함 금지 |
+| Layer | Criteria |
+|-------|----------|
+| **Widgets** | Own state management, complex logic (infinite scroll, data fetching), combines multiple entities/features |
+| **Features** | Specific user scenario, single-purpose functionality, reusable across pages |
+| **Views** | Page-level routes, composition of other layers only, no logic |
 
-## 같은 레이어 간 Cross-import 해결 패턴
+## Cross-import Resolution Between Same Layer
 
-같은 레이어의 다른 슬라이스에서 공통으로 사용하는 컴포넌트가 있을 때:
+When a component is shared across different slices in the same layer:
 
-| 상황 | 해결 방법 |
-| ------ | ---------- |
-| 여러 슬라이스에서 사용 | `shared`로 이동 + 도메인 특화 네이밍/인터페이스를 범용화 |
-| 같은 슬라이스 내부에서만 재사용 | 해당 슬라이스에 유지 |
+| Situation | Solution |
+|-----------|----------|
+| Used by multiple slices | Move to `shared` + generalize domain-specific naming/interface |
+| Reused only within same slice | Keep in that slice |
 
 ```typescript
-// ❌ entities/favorite/ui/FavoriteButton → entities/recipe에서 import 불가 (cross-import)
+// ❌ entities/favorite/ui/FavoriteButton → cannot import from entities/recipe (cross-import)
 
-// ✅ shared/ui/favorite-button으로 이동 + 도메인 무관한 인터페이스
-// isFavorite, onToggle — 범용적인 prop 네이밍
+// ✅ Move to shared/ui/favorite-button + domain-agnostic interface
+// isFavorite, onToggle — generic prop naming
 
-// ✅ entities/recipe/ui/ 내부에서만 사용 → 해당 슬라이스에 유지
+// ✅ Used only within entities/recipe/ui/ → keep in that slice
 // RecipeThumbnailImage, CookingTimeBadge, ServingsBadge
 ```
 
-## 폴더 구조 패턴
+## Folder Structure Pattern
 
 ```text
 feature-name/
-├── ui/              # UI 컴포넌트
+├── ui/              # UI components
 │   ├── Component.tsx
 │   └── Component.stories.tsx
-├── model/           # 타입, 유틸리티, 상수
-│   ├── types.ts     # 타입/인터페이스 정의
-│   ├── utils.ts     # 변환/유틸리티 함수
-│   └── constants.ts # 상수 정의
-├── api/             # API 호출 (entities만 해당)
-│   ├── server.ts    # Supabase 직접 접근 (서버 전용)
-│   ├── client.ts    # Route API fetch 함수
-│   ├── actions.ts   # Server Actions (mutation 전용)
-│   ├── hooks.ts     # React Query hooks
-│   └── keys.ts      # Query keys factory
+├── model/           # Types, utilities, constants
+│   ├── types.ts
+│   ├── utils.ts
+│   └── constants.ts
+├── api/             # API calls (entities only)
+│   ├── server.ts
+│   ├── client.ts
+│   ├── actions.ts
+│   ├── hooks.ts
+│   └── keys.ts
 └── index.ts         # Public exports
 ```

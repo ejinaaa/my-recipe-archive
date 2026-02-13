@@ -1,65 +1,65 @@
 ---
-description: 컴포넌트 생성 — 새 컴포넌트를 scaffolding할 때 사용 (컴포넌트 파일 + 스토리 + index.ts export)
+description: Component creation — Use when scaffolding a new component (component file + story + index.ts export)
 ---
 
-# 컴포넌트 생성
+# Component Creation
 
-새 컴포넌트를 scaffolding 합니다.
+Scaffold a new component.
 
-## 사용법
+## Usage
 
 ```
-/create-component [컴포넌트명] [레이어] [세그먼트?]
+/create-component [ComponentName] [layer] [segment?]
 ```
 
-예시:
+Examples:
 ```
 /create-component Button shared
 /create-component RecipeCard entities recipe
 /create-component SearchBar features recipe-search
 ```
 
-## 워크플로우
+## Workflow
 
-### 1단계: 정보 확인
+### Step 1: Gather Information
 
-입력이 부족하면 사용자에게 질문:
-- 컴포넌트 이름 (PascalCase)
-- 레이어 (shared/entities/features/widgets/views)
-- 세그먼트 (shared 외 레이어의 경우)
+Ask user if input is incomplete:
+- Component name (PascalCase)
+- Layer (shared/entities/features/widgets/views)
+- Segment (for non-shared layers)
 
-### 2단계: 기존 컴포넌트 확인
+### Step 2: Check Existing Components
 
-`shared/ui/`에 유사한 컴포넌트가 있는지 확인하고 있으면 알림
+Check if a similar component exists in `shared/ui/` and notify if found
 
-### 3단계: 파일 생성
+### Step 3: Generate Files
 
-**shared/ui의 경우:**
+**For shared/ui:**
 ```bash
 pnpm dlx shadcn@latest add [component-name]
 ```
-→ 생성된 파일에 디자인 시스템 적용
+→ Apply design system to generated files
 
-**다른 레이어의 경우:**
+**For other layers:**
 ```
 src/[layer]/[segment]/ui/
 ├── [ComponentName].tsx
 ├── [ComponentName].stories.tsx
-└── index.ts (export 추가)
+└── index.ts (add export)
 ```
 
-### 4단계: 스토리 생성
+### Step 4: Generate Story
 
-`/story` 워크플로우 실행하여 스토리 파일 생성
+Run `/story` workflow to generate story file
 
-### 5단계: Export 설정
+### Step 5: Set Up Exports
 
-`index.ts`에 export 추가
+Add export to `index.ts`
 
-### 6단계: 검증
+### Step 6: Verify
 
 ```bash
 pnpm build
 ```
 
-빌드 에러 시 수정
+Fix build errors if any

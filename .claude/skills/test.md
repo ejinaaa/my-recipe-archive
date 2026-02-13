@@ -1,73 +1,73 @@
 ---
-description: 테스트 생성 — 함수, 훅의 Vitest 테스트 파일을 자동 생성할 때 사용. TDD 워크플로우 지원.
+description: Test generation — Use when auto-generating Vitest test files for functions and hooks. Supports TDD workflow.
 ---
 
-# 테스트 생성
+# Test Generation
 
-대상 코드를 분석하고 Vitest 테스트 파일을 생성합니다.
+Analyze target code and generate Vitest test files.
 
-## 사용법
+## Usage
 
 ```
-/test [파일 경로 또는 함수명]
+/test [file path or function name]
 ```
 
-예시:
+Examples:
 
 ```
 /test src/entities/recipe/model/utils.ts
 /test toggleCategoryFilter
 ```
 
-## 모드 판단
+## Mode Selection
 
-| 조건 | 모드 |
+| Condition | Mode |
 |------|------|
-| 기존 코드에 테스트 추가 | **모드 A** (테스트 추가) |
-| 사용자가 "TDD" 언급 | **모드 B** (TDD) |
-| 새 함수/훅을 처음부터 작성 | **모드 B** (TDD) |
+| Adding tests to existing code | **Mode A** (Add Tests) |
+| User mentions "TDD" | **Mode B** (TDD) |
+| Writing new function/hook from scratch | **Mode B** (TDD) |
 
 ---
 
-## 모드 A: 기존 코드에 테스트 추가
+## Mode A: Add Tests to Existing Code
 
-### 1단계: 대상 분석
+### Step 1: Analyze Target
 
-대상 파일을 읽고 분석:
+Read and analyze the target file:
 
-- 함수/훅의 시그니처 (입출력 타입)
-- 분기 조건 (`if`, 삼항, `switch`)
-- Edge case (빈 배열, null/undefined, 경계값)
-- 외부 의존성 (React Query, URL 상태 등)
+- Function/hook signatures (input/output types)
+- Branch conditions (`if`, ternary, `switch`)
+- Edge cases (empty array, null/undefined, boundary values)
+- External dependencies (React Query, URL state, etc.)
 
-### 2단계: 테스트 유형 결정
+### Step 2: Determine Test Type
 
-| 대상 | 테스트 유형 | 필요 도구 |
+| Target | Test Type | Required Tools |
 |------|-----------|----------|
-| 순수 함수 (`model/utils.ts`, `shared/lib/`) | 유닛 테스트 | Vitest |
-| React Query 훅 (`api/hooks.ts`) | 훅 테스트 | Vitest + `@testing-library/react` |
-| URL 상태 훅 (`useUrlQueryParams`) | 훅 테스트 | Vitest + `nuqs/adapters/testing` |
-| UI 컴포넌트 인터랙션 | **Storybook play function** | `/story` 워크플로우로 안내 |
+| Pure functions (`model/utils.ts`, `shared/lib/`) | Unit test | Vitest |
+| React Query hooks (`api/hooks.ts`) | Hook test | Vitest + `@testing-library/react` |
+| URL state hooks (`useUrlQueryParams`) | Hook test | Vitest + `nuqs/adapters/testing` |
+| UI component interaction | **Storybook play function** | Redirect to `/story` workflow |
 
-### 3단계: mock 데이터 확인
+### Step 3: Check Mock Data
 
-1. `entities/{entity}/model/mock.ts` 존재 확인
-2. 필요한 mock이 없으면 `mock.ts`에 추가
-3. DB 레벨 mock 필요 시 `mockXxxDB` 네이밍으로 추가
+1. Check if `entities/{entity}/model/mock.ts` exists
+2. Add to `mock.ts` if needed mock is missing
+3. Add `mockXxxDB` naming for DB-level mocks
 
-### 4단계: 테스트 케이스 설계
+### Step 4: Design Test Cases
 
-각 함수/훅에 대해:
+For each function/hook:
 
-- **정상 케이스**: 대표적인 입력 → 기대 출력
-- **Edge case**: 빈 값, null, 경계값, 긴 문자열
-- **에러 케이스**: 잘못된 입력, 실패 시나리오
+- **Normal cases**: Representative input → expected output
+- **Edge cases**: Empty values, null, boundary values, long strings
+- **Error cases**: Invalid input, failure scenarios
 
-테스트 케이스 목록을 먼저 정리한 뒤 사용자에게 확인.
+Organize test case list first, then confirm with user.
 
-### 5단계: 테스트 파일 생성
+### Step 5: Generate Test File
 
-co-located `*.test.ts` 파일 생성:
+Create co-located `*.test.ts` file:
 
 ```typescript
 import { describe, expect, it } from 'vitest';
@@ -81,73 +81,73 @@ describe('targetFunction', () => {
 });
 ```
 
-### 6단계: 실행 및 검증
+### Step 6: Run and Verify
 
 ```bash
-pnpm vitest run [파일경로]
+pnpm vitest run [file-path]
 ```
 
-실패하는 테스트가 있으면 원인 분석 후 수정.
+Analyze and fix any failing tests.
 
 ---
 
-## 모드 B: TDD (새 코드 작성)
+## Mode B: TDD (Write New Code)
 
-### 1단계: 요구사항 분석
+### Step 1: Analyze Requirements
 
-사용자의 요구사항을 분석하여 테스트 케이스 도출:
+Derive test cases from user requirements:
 
-- 함수/훅의 이름과 시그니처 결정
-- 입출력 타입 정의
-- 정상/Edge/에러 케이스 목록화
-- 테스트 케이스를 사용자에게 확인
+- Decide function/hook name and signature
+- Define input/output types
+- List normal/edge/error cases
+- Confirm test cases with user
 
-### 2단계: Red — 실패하는 테스트 작성
+### Step 2: Red — Write Failing Tests
 
-1. 소스 파일에 **빈 함수 stub** 생성 (타입만 맞춤)
-2. `*.test.ts` 파일에 **첫 번째 테스트 케이스** 작성
-3. 테스트 실행하여 실패 확인
+1. Create **empty function stub** in source file (types only)
+2. Write **first test case** in `*.test.ts`
+3. Run test to confirm failure
 
 ```typescript
-// utils.ts — 빈 stub
+// utils.ts — empty stub
 export const formatCookingTime = (minutes: number): string => {
   throw new Error('Not implemented');
 };
 
-// utils.test.ts — 실패하는 테스트
+// utils.test.ts — failing test
 it('60분 미만이면 분 단위로 표시한다', () => {
   expect(formatCookingTime(30)).toBe('30분');
 });
 ```
 
-### 3단계: Green — 최소 구현
+### Step 3: Green — Minimal Implementation
 
-테스트를 통과하는 **최소한의** 코드 작성:
+Write **minimal** code to pass the test:
 
-- 하드코딩도 허용 (다음 테스트가 일반화를 강제)
-- 과도한 추상화 금지
+- Hard-coding is allowed (next test forces generalization)
+- No excessive abstraction
 
-### 4단계: Refactor
+### Step 4: Refactor
 
-테스트가 통과하는 상태에서:
+While tests are passing:
 
-- 중복 코드 제거
-- 가독성 개선
-- 네이밍 개선
+- Remove duplicate code
+- Improve readability
+- Improve naming
 
-### 5단계: 반복
+### Step 5: Repeat
 
-다음 테스트 케이스로 2~4단계 반복:
+Repeat steps 2–4 for the next test case:
 
-- 한 번에 하나의 테스트 케이스만 추가
-- 각 사이클마다 테스트 실행하여 통과 확인
-- 모든 케이스 완료 시 전체 테스트 실행
+- Add only one test case at a time
+- Run tests each cycle to confirm passing
+- Run all tests when all cases are complete
 
 ---
 
-## 주의사항
+## Cautions
 
-- `@testing-library/react` 미설치 시 훅 테스트 전에 설치 안내
-- `vitest.config.ts` 미설정 시 실행 전에 설정 안내
-- 컴포넌트 UI 테스트 요청 시 Storybook play function으로 안내
-- 테스트 파일에서도 프로젝트 코드 스타일 유지 (type-only import 등)
+- Guide to install `@testing-library/react` before hook tests if not installed
+- Guide to configure `vitest.config.ts` before running if not set up
+- Redirect to Storybook play function for UI component test requests
+- Maintain project code style in test files (type-only imports, etc.)

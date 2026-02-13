@@ -1,101 +1,101 @@
 ---
-description: URL 상태 마이그레이션 — 전역 상태(Zustand 등)를 URL 쿼리 파라미터(nuqs)로 마이그레이션할 때 사용
+description: URL state migration — Use when migrating global state (Zustand, etc.) to URL query parameters (nuqs)
 ---
 
-# URL 상태 마이그레이션
+# URL State Migration
 
-전역 상태를 URL 쿼리 파라미터로 마이그레이션합니다.
+Migrate global state to URL query parameters.
 
-## 사용법
+## Usage
 
 ```
 /url-state [feature-name]
 ```
 
-## 왜 URL 상태인가?
+## Why URL State?
 
-### URL의 장점
+### URL Advantages
 
-| 관점 | 이점 |
+| Perspective | Benefit |
 |------|------|
-| **사용자 경험** | 링크 공유, 북마크, 뒤로가기 |
-| **디버깅** | 상태가 URL에 명시적으로 노출 |
-| **SEO** | 검색 엔진이 상태별 페이지 인덱싱 가능 |
-| **테스트** | URL만으로 특정 상태 재현 가능 |
+| **User Experience** | Link sharing, bookmarks, back navigation |
+| **Debugging** | State explicitly exposed in URL |
+| **SEO** | Search engines can index state-specific pages |
+| **Testing** | Reproduce specific state with URL alone |
 
-### URL로 이동해야 하는 상태
+### State That Should Move to URL
 
-- 검색어, 필터, 정렬, 페이지네이션
-- 탭/뷰 선택 상태
-- 모달/드로어의 열림 상태 (딥링크 필요 시)
+- Search query, filters, sort, pagination
+- Tab/view selection state
+- Modal/drawer open state (when deep-linking needed)
 
-### URL로 이동하면 안 되는 상태
+### State That Should NOT Move to URL
 
-- 인증 토큰 등 민감 정보
-- 폼 입력 중 임시값
-- UI 애니메이션 상태
+- Sensitive info like auth tokens
+- Temporary form values during input
+- UI animation state
 
-## 설계 원칙
+## Design Principles
 
 ### 1. Clean URL
 
-기본값은 URL에서 생략한다.
+Omit defaults from URL.
 
 ```typescript
-// ?sort=latest (기본값) → URL에서 생략
-// ?sort=popular → URL에 표시
+// ?sort=latest (default) → omit from URL
+// ?sort=popular → show in URL
 
 setParams({ sort: value === 'latest' ? null : value });
 ```
 
-### 2. 단일 진실의 원천 (Single Source of Truth)
+### 2. Single Source of Truth
 
-URL과 전역 상태에 같은 데이터가 중복되면 안 된다.
+Same data must not be duplicated in URL and global state.
 
 ```typescript
-// BAD: 동기화 필요, 버그 유발
+// BAD: Needs sync, causes bugs
 const [urlQuery] = useQueryState('q');
-const { query } = useStore();  // 어디가 진실?
+const { query } = useStore();  // Which is the truth?
 
-// GOOD: URL이 유일한 원천
+// GOOD: URL is the only source
 const { query } = useUrlQueryParams();
 ```
 
-### 3. 컴포넌트와 상태 소스 분리
+### 3. Separate Component from State Source
 
-컴포넌트는 URL을 직접 알지 못하게 한다.
+Components should not directly know about URL.
 
 ```typescript
-// BAD: 컴포넌트가 URL에 직접 의존
+// BAD: Component directly depends on URL
 function Filter() {
   const [params] = useQueryStates({ ... });
 }
 
-// GOOD: props로 추상화
+// GOOD: Abstract via props
 function Filter({ initialValue, onApply }) {
-  // URL 구조를 모름
+  // Doesn't know URL structure
 }
 
-// 페이지에서 연결
+// Connect in page
 function Page() {
   const { filters, setFilters } = useUrlQueryParams();
   return <Filter initialValue={filters} onApply={setFilters} />;
 }
 ```
 
-## 워크플로우
+## Workflow
 
-### 1단계: 분석
+### Step 1: Analysis
 
-대상 상태가 URL에 적합한지 판단:
+Determine if the target state is suitable for URL:
 
-- 공유/북마크 필요성
-- 히스토리 복원 필요성
-- 보안 민감도
+- Sharing/bookmark needs
+- History restoration needs
+- Security sensitivity
 
-### 2단계: URL 훅 설계
+### Step 2: Design URL Hook
 
-파라미터 이름, 타입, 기본값 정의:
+Define parameter names, types, and defaults:
 
 ```typescript
 export function useUrlQueryParams() {
@@ -105,38 +105,38 @@ export function useUrlQueryParams() {
     page: parseAsInteger.withDefault(1),
   }, { shallow: true });
 
-  // 읽기/쓰기 인터페이스 제공
+  // Provide read/write interface
   return { ... };
 }
 ```
 
-### 3단계: 컴포넌트 리팩토링
+### Step 3: Refactor Components
 
-URL 의존성을 props로 대체:
+Replace URL dependencies with props:
 
-- `initialValue` props 추가
-- `onApply` 콜백 추가
-- 내부 상태를 로컬 임시 상태로 변경
+- Add `initialValue` props
+- Add `onApply` callback
+- Change internal state to local draft state
 
-### 4단계: 페이지 연결
+### Step 4: Connect in Page
 
-Views 레이어에서 URL 훅과 컴포넌트 연결.
+Connect URL hook and components in Views layer.
 
-### 5단계: 정리
+### Step 5: Clean Up
 
-- 기존 store에서 이동한 상태 제거
-- 더 이상 사용하지 않는 훅/액션 삭제
+- Remove migrated state from existing store
+- Delete unused hooks/actions
 
-## 검증 체크리스트
+## Verification Checklist
 
-- [ ] URL 직접 입력 시 상태 반영
-- [ ] 뒤로가기/앞으로가기 동작
-- [ ] 새로고침 시 상태 유지
-- [ ] 링크 공유 시 같은 화면 표시
-- [ ] 기본값일 때 URL이 깔끔한지
+- [ ] State reflected when entering URL directly
+- [ ] Back/forward navigation works
+- [ ] State persists on refresh
+- [ ] Same screen shown when sharing link
+- [ ] URL is clean when at default values
 
-## 기술적 요구사항
+## Technical Requirements
 
-- `nuqs` 라이브러리 필요 (`pnpm add nuqs`)
-- App Router: `<NuqsAdapter>` 래퍼
-- 클라이언트 컴포넌트: `<Suspense>` 래퍼
+- `nuqs` library required (`pnpm add nuqs`)
+- App Router: `<NuqsAdapter>` wrapper
+- Client components: `<Suspense>` wrapper

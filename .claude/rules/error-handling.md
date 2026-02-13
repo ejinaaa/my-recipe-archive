@@ -1,33 +1,33 @@
 ---
-description: 에러 처리 패턴
+description: Error handling patterns
 globs: '**/api/**/*.ts, **/ui/**/*.tsx, **/views/**/*.tsx'
 ---
 
-# 에러 처리 패턴
+# Error Handling Patterns
 
-## 에러 유형별 UI 패턴
+## Error Type → UI Pattern
 
-| 에러 유형 | UI 패턴 | 컴포넌트 |
-|----------|---------|---------|
-| 쿼리 에러 (페이지 메인) | Skeleton + ErrorBottomSheet | `QueryErrorFallback` |
-| 쿼리 에러 (Drawer 내부) | Inline Error UI | 직접 구현 |
-| 쿼리 에러 (폼 필수 데이터) | 폼 영역 대체 Error UI | `ErrorFallback` |
-| Mutation 에러 (retry 가능) | ErrorBottomSheet | `ErrorBottomSheet` |
-| Mutation 에러 (권한/데이터 없음) | Toast 3초 auto-dismiss | `MutationCache` 자동 처리 |
-| Mutation 에러 (기타) | Toast | `MutationCache` 자동 처리 |
-| Mutation 에러 (비치명적) | 에러 무시 | `meta.suppressErrorToast` |
-| 라우트 에러 | 전체 페이지 Error UI | `error.tsx`, `global-error.tsx` |
-| 404 | Not Found 페이지 | `not-found.tsx` |
+| Error Type | UI Pattern | Component |
+|-----------|---------|---------|
+| Query error (page main) | Skeleton + ErrorBottomSheet | `QueryErrorFallback` |
+| Query error (inside Drawer) | Inline Error UI | Custom implementation |
+| Query error (form required data) | Error UI replacing form area | `ErrorFallback` |
+| Mutation error (retryable) | ErrorBottomSheet | `ErrorBottomSheet` |
+| Mutation error (auth/data missing) | Toast 3s auto-dismiss | `MutationCache` auto-handled |
+| Mutation error (other) | Toast | `MutationCache` auto-handled |
+| Mutation error (non-critical) | Ignore error | `meta.suppressErrorToast` |
+| Route error | Full-page Error UI | `error.tsx`, `global-error.tsx` |
+| 404 | Not Found page | `not-found.tsx` |
 
-## 에러 처리 유틸리티
+## Error Handling Utilities
 
-| 유틸리티 | 위치 | 용도 |
+| Utility | Location | Purpose |
 |---------|------|------|
-| `ApiError` | `shared/api/fetchWithError.ts` | status 포함 에러 클래스 |
-| `handleApiResponse` | `shared/api/fetchWithError.ts` | client.ts fetch 응답 공통 처리 |
-| `handleRouteError` | `shared/api/handleRouteError.ts` | Route API catch 블록 공통 처리 |
+| `ApiError` | `shared/api/fetchWithError.ts` | Error class with status |
+| `handleApiResponse` | `shared/api/fetchWithError.ts` | Common client.ts fetch response handler |
+| `handleRouteError` | `shared/api/handleRouteError.ts` | Common Route API catch block handler |
 
-## 쿼리 에러 패턴 (ErrorBoundary + Suspense)
+## Query Error Pattern (ErrorBoundary + Suspense)
 
 ```typescript
 <ErrorBoundary fallbackRender={({ resetErrorBoundary }) => (
@@ -45,18 +45,18 @@ globs: '**/api/**/*.ts, **/ui/**/*.tsx, **/views/**/*.tsx'
 </ErrorBoundary>
 ```
 
-## Mutation 에러 패턴 (ErrorBottomSheet)
+## Mutation Error Pattern (ErrorBottomSheet)
 
-페이지에서 직접 Bottom Sheet로 처리하는 mutation은 `meta.handleErrorManually` 설정.
+For mutations handled directly via Bottom Sheet on the page, set `meta.handleErrorManually`.
 
 ```typescript
-// hooks.ts — meta 설정
+// hooks.ts — meta configuration
 useMutation({
   mutationFn: createRecipeAction,
   meta: { handleErrorManually: true },
 });
 
-// Page.tsx — 에러 상태 + retry
+// Page.tsx — error state + retry
 const [mutationError, setMutationError] = useState<{ retry: () => void } | null>(null);
 
 const handleSubmit = async (formData) => {
@@ -77,18 +77,18 @@ const handleSubmit = async (formData) => {
 />
 ```
 
-## MutationCache 글로벌 에러 핸들러
+## MutationCache Global Error Handler
 
-`QueryProvider`의 `MutationCache.onError`가 모든 mutation 에러를 포착.
-개별 mutation의 `meta`로 동작 분기:
+`QueryProvider`'s `MutationCache.onError` catches all mutation errors.
+Behavior branches based on individual mutation `meta`:
 
-| meta 옵션 | 동작 | 사용 예 |
+| meta Option | Behavior | Example |
 |-----------|------|--------|
-| `suppressErrorToast: true` | 에러 무시 (toast 없음) | `useIncrementViewCountMutation`, `useAddCookingLogMutation` |
-| `handleErrorManually: true` | 글로벌 toast 건너뜀 (페이지에서 직접 처리) | `useCreateRecipeMutation`, `useUpdateRecipeMutation`, `useDeleteRecipeMutation` |
-| (없음) | 글로벌 toast 표시 | `useToggleFavoriteMutation` 등 나머지 |
+| `suppressErrorToast: true` | Ignore error (no toast) | `useIncrementViewCountMutation`, `useAddCookingLogMutation` |
+| `handleErrorManually: true` | Skip global toast (page handles directly) | `useCreateRecipeMutation`, `useUpdateRecipeMutation`, `useDeleteRecipeMutation` |
+| (none) | Show global toast | `useToggleFavoriteMutation` etc. |
 
-## API 에러 처리
+## API Error Handling
 
 ### Route API (`app/api/**/route.ts`)
 
@@ -115,7 +115,7 @@ export const fetchData = async (): Promise<Data> => {
   return handleApiResponse<Data>(res, '데이터를 가져오지 못했어요');
 };
 
-// 404 → null 패턴
+// 404 → null pattern
 export const fetchItem = async (id: string): Promise<Item | null> => {
   const res = await fetch(`${getBaseUrl()}/api/items/${id}`);
   if (res.status === 404) return null;
@@ -123,27 +123,27 @@ export const fetchItem = async (id: string): Promise<Item | null> => {
 };
 ```
 
-## 에러 메시지 톤앤매너
+## Error Message Tone
 
-**공감 중심 문체** 사용. `~했습니다` 대신 `~했어요` 종결.
+**Empathetic tone** — use `~했어요` endings (not formal `~했습니다`).
 
-| 패턴 | 예시 |
+| Pattern | Example |
 |------|------|
-| 조회 실패 | `~을(를) 가져오지 못했어요` |
-| 생성 실패 | `~을(를) 저장하지 못했어요` / `추가하지 못했어요` |
-| 수정 실패 | `~을(를) 수정하지 못했어요` |
-| 삭제 실패 | `~을(를) 삭제하지 못했어요` |
-| 네트워크 안내 | `네트워크 상태를 확인하고 다시 시도해주세요` |
-| 내용 유지 안내 | `작성한 내용은 유지돼요. 다시 시도해주세요` |
+| Fetch failure | `~을(를) 가져오지 못했어요` |
+| Create failure | `~을(를) 저장하지 못했어요` / `추가하지 못했어요` |
+| Update failure | `~을(를) 수정하지 못했어요` |
+| Delete failure | `~을(를) 삭제하지 못했어요` |
+| Network guide | `네트워크 상태를 확인하고 다시 시도해주세요` |
+| Content preserved | `작성한 내용은 유지돼요. 다시 시도해주세요` |
 | 404 | `~을(를) 찾을 수 없어요` |
-| 파라미터 누락 | `필수 정보가 누락되었어요` |
+| Missing params | `필수 정보가 누락되었어요` |
 
 ```typescript
-// ✅ 올바른 예
+// ✅ Correct
 throw new Error('레시피 목록을 가져오지 못했어요');
 throw new Error('즐겨찾기에 추가하지 못했어요');
 
-// ❌ 사용 금지
+// ❌ Forbidden
 throw new Error('레시피 목록을 불러오는데 실패했습니다.');
 throw new Error('즐겨찾기 추가에 실패했습니다.');
 ```

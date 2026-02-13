@@ -1,50 +1,50 @@
-# 테스트 실행 및 에러 수정
+# Run Tests and Fix Errors
 
-테스트를 실행하고 실패하는 테스트를 자동으로 수정합니다.
+Run tests and automatically fix failing tests.
 
-> 테스트 컨벤션은 `rules/testing.md`, 생성 워크플로우는 `skills/test.md` 참고
+> See `rules/testing.md` for test conventions, `skills/test.md` for generation workflow
 
-## 사용법
+## Usage
 
 ```
-/test              # 전체 테스트 실행
-/test [파일경로]    # 특정 파일만 실행
+/test              # Run all tests
+/test [file-path]  # Run specific file only
 ```
 
-## 워크플로우
+## Workflow
 
-### 1단계: 테스트 실행
+### Step 1: Run Tests
 
 ```bash
-pnpm vitest run              # 전체
-pnpm vitest run [파일경로]    # 특정 파일
+pnpm vitest run              # All
+pnpm vitest run [file-path]  # Specific file
 ```
 
-### 2단계: 실패 분석 및 수정
+### Step 2: Analyze and Fix Failures
 
-실패 시:
+On failure:
 
-1. 에러 메시지 파싱 (assertion 실패, 타입 에러, import 에러 등)
-2. **테스트가 잘못된 경우** → 테스트 수정
-3. **소스 코드가 잘못된 경우** → 소스 수정
-4. 판단이 어려운 경우 사용자에게 확인
+1. Parse error messages (assertion failure, type error, import error, etc.)
+2. **If test is wrong** → fix the test
+3. **If source code is wrong** → fix the source
+4. Ask user for confirmation if judgment is unclear
 
-### 3단계: 재실행
+### Step 3: Re-run
 
-수정 후 다시 테스트 실행
+Run tests again after fixing
 
-### 4단계: 결과 보고
+### Step 4: Report Results
 
 ```
-## 테스트 결과
+## Test Results
 
-### 수정된 에러
-1. [파일:라인] - [에러] → [수정 내용]
+### Fixed Errors
+1. [file:line] - [error] → [fix description]
 
-### 최종 상태
-✅ 전체 통과 / ❌ N개 실패
+### Final Status
+✅ All passed / ❌ N failed
 ```
 
-## 반복
+## Repeat
 
-전체 통과까지 2~4단계 반복
+Repeat steps 2–4 until all tests pass

@@ -1,34 +1,34 @@
 ---
-description: 데이터 페칭 패턴
+description: Data fetching patterns
 globs: '**/api/**/*.ts'
 ---
 
-# 데이터 페칭 패턴
+# Data Fetching Patterns
 
-## 5가지 패턴
+## 5 Patterns
 
-| 패턴 | 파일 | 용도 |
-|------|------|------|
-| Server API | `server.ts` | SSR prefetch, Route API 내부 |
-| Route API | `app/api/**/route.ts` | 클라이언트 데이터 조회 엔드포인트 |
-| Client Fetch | `client.ts` | Route API 호출 (hooks queryFn) |
-| Server Actions | `actions.ts` | mutation + revalidation (쓰기 전용) |
-| React Query Hooks | `hooks.ts` | 클라이언트 상태 관리 |
+| Pattern | File | Purpose |
+|---------|------|---------|
+| Server API | `server.ts` | SSR prefetch, inside Route API |
+| Route API | `app/api/**/route.ts` | Client data query endpoints |
+| Client Fetch | `client.ts` | Route API calls (hooks queryFn) |
+| Server Actions | `actions.ts` | Mutation + revalidation (write-only) |
+| React Query Hooks | `hooks.ts` | Client state management |
 
-## Entity API 파일 구조
+## Entity API File Structure
 
 ```
 entities/{entity}/api/
-├── server.ts    # Supabase 직접 접근 (서버 전용)
-├── client.ts    # Route API fetch 함수 (hooks queryFn)
-├── actions.ts   # Server Actions (mutation 전용)
+├── server.ts    # Direct Supabase access (server-only)
+├── client.ts    # Route API fetch functions (hooks queryFn)
+├── actions.ts   # Server Actions (mutation-only)
 ├── hooks.ts     # React Query hooks
 └── keys.ts      # Query keys factory
 ```
 
-## 읽기 패턴: prefetch + HydrationBoundary
+## Read Pattern: prefetch + HydrationBoundary
 
-### page.tsx (서버 컴포넌트)
+### page.tsx (Server Component)
 
 ```typescript
 import { createServerQueryClient, dehydrate, HydrationBoundary } from '@/shared/lib/prefetch';
@@ -39,7 +39,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const { id } = await params;
   const queryClient = createServerQueryClient();
 
-  // server.ts 함수로 직접 prefetch (Route API 아님!)
+  // Prefetch directly with server.ts function (NOT Route API!)
   await queryClient.prefetchQuery({
     queryKey: recipeKeys.detail(id),
     queryFn: () => getRecipeApi(id),
@@ -53,42 +53,42 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 }
 ```
 
-### 클라이언트 컴포넌트 (useSuspenseQuery)
+### Client Component (useSuspenseQuery)
 
 ```typescript
-// 메인 콘텐츠 데이터 → useSuspenseQuery + Suspense/ErrorBoundary
+// Main content data → useSuspenseQuery + Suspense/ErrorBoundary
 export function RecipeDetailPage({ id }: { id: string }) {
   const { data: recipe } = useSuspenseRecipeQuery(id);
-  // data는 항상 존재 (Suspense가 로딩 처리)
+  // data always exists (Suspense handles loading)
 }
 ```
 
-### 클라이언트 컴포넌트 (useQuery)
+### Client Component (useQuery)
 
 ```typescript
-// 보조/조건부 데이터 → useQuery (enabled 옵션 필요)
+// Auxiliary/conditional data → useQuery (needs enabled option)
 export function FavoriteButton({ userId, recipeId }: Props) {
   const { data: isFavorited } = useIsFavoritedQuery(userId, recipeId);
   // enabled: !!userId && !!recipeId
 }
 ```
 
-## hooks 쿼리 분류
+## Hook Query Classification
 
-### useSuspenseQuery 사용 (prefetch + HydrationBoundary 필수)
-- 페이지의 **메인 콘텐츠** 데이터
-- `enabled` 옵션이 **필요 없는** 쿼리
-- 예: `useSuspenseRecipeQuery`, `useSuspenseInfiniteRecipesQuery`, `useSuspenseCategoryGroupsQuery`
+### useSuspenseQuery (prefetch + HydrationBoundary required)
+- **Main content** data for the page
+- Queries that **don't need** `enabled` option
+- e.g., `useSuspenseRecipeQuery`, `useSuspenseInfiniteRecipesQuery`, `useSuspenseCategoryGroupsQuery`
 
-### useQuery 유지
-- `enabled` 옵션이 **필요한** 조건부 쿼리
-- 보조 데이터 (자체 로딩/에러 처리)
-- 예: `useIsFavoritedQuery`, `useFavoriteStatusesQuery`, `useProfileQuery`, `useCurrentProfileQuery`
+### useQuery (keep as-is)
+- **Conditional** queries that **need** `enabled` option
+- Auxiliary data (self-managed loading/error)
+- e.g., `useIsFavoritedQuery`, `useFavoriteStatusesQuery`, `useProfileQuery`, `useCurrentProfileQuery`
 
-## 쓰기 패턴: Server Actions
+## Write Pattern: Server Actions
 
 ```typescript
-// actions.ts - mutation 전용, 읽기 action 금지
+// actions.ts - mutation-only, NO read actions
 'use server';
 import { revalidatePath } from 'next/cache';
 
@@ -99,10 +99,10 @@ export async function createRecipeAction(data: RecipeInsert) {
 }
 ```
 
-## Route API (client.ts queryFn용)
+## Route API (for client.ts queryFn)
 
 ```typescript
-// client.ts - Route API 호출 함수
+// client.ts - Route API fetch functions
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
 import { handleApiResponse } from '@/shared/api/fetchWithError';
 
@@ -114,12 +114,12 @@ export const fetchRecipe = async (id: string): Promise<Recipe | null> => {
 };
 ```
 
-> 에러 처리 세부 패턴은 `error-handling.md` 참고
+> See `error-handling.md` for detailed error handling patterns
 
-## 핵심 원칙
+## Core Principles
 
-- **읽기는 Route API** (client.ts) → hooks queryFn으로 사용
-- **쓰기는 Server Actions** (actions.ts) → mutation + revalidation
-- **읽기용 Server Action 금지** → Route API로 대체
-- **SSR에서 자기 자신 호출 금지** → prefetch는 server.ts 함수 직접 호출
-- **prefetch + HydrationBoundary** → SSR 중 queryFn 실행 방지
+- **Reads use Route API** (client.ts) → used as hooks queryFn
+- **Writes use Server Actions** (actions.ts) → mutation + revalidation
+- **No read Server Actions** → use Route API instead
+- **No self-calls in SSR** → prefetch calls server.ts functions directly
+- **prefetch + HydrationBoundary** → prevents queryFn execution during SSR

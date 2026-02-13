@@ -1,125 +1,125 @@
 ---
-description: 리팩터링 원칙
+description: Refactoring principles
 ---
 
-# 리팩터링 원칙
+# Refactoring Principles
 
-## 핵심 철학
+## Core Philosophy
 
-### 리팩터링의 목적
+### Purpose of Refactoring
 
-리팩터링은 **외부 동작을 유지**하면서 **내부 구조를 개선**하는 것이다. 목적 없는 리팩터링은 위험하다.
+Refactoring is improving **internal structure** while **preserving external behavior**. Purposeless refactoring is dangerous.
 
-**올바른 리팩터링 동기:**
+**Valid refactoring motivations:**
 
-- 새 기능 추가가 어려울 때 (확장성)
-- 버그 수정이 다른 버그를 유발할 때 (유지보수성)
-- 코드 이해에 시간이 오래 걸릴 때 (가독성)
-- 같은 변경이 여러 곳에서 필요할 때 (DRY)
+- Adding new features is difficult (extensibility)
+- Fixing bugs causes other bugs (maintainability)
+- Understanding code takes too long (readability)
+- Same change needed in multiple places (DRY)
 
-## SRP (단일 책임 원칙)
+## SRP (Single Responsibility Principle)
 
-### 컴포넌트 책임 분리
+### Component Responsibility Separation
 
-컴포넌트가 **하나의 변경 이유**만 가지도록 설계한다.
+Design components to have **one reason to change**.
 
-**분리 신호:**
+**Separation signals:**
 
-- 150줄 이상
-- "그리고"로 설명되는 기능 ("필터를 보여주고 **그리고** URL을 관리한다")
-- 서로 다른 이유로 변경되는 코드가 공존
+- 150+ lines
+- Features described with "and" ("shows filters **and** manages URL")
+- Code that changes for different reasons coexists
 
-**책임 분리 방향:**
+**Responsibility separation direction:**
 
 ```
-UI 렌더링 ← 컴포넌트의 유일한 책임
-상태 관리 → 훅 또는 상위 컴포넌트로
-비즈니스 로직 → 별도 함수/훅으로
-부수 효과 → 훅으로
+UI rendering ← Component's sole responsibility
+State management → Hook or parent component
+Business logic → Separate function/hook
+Side effects → Hook
 ```
 
-### 함수 책임 분리
+### Function Responsibility Separation
 
-- 20줄 이상이면 분리 검토
-- 함수명이 역할을 완전히 설명해야 함
-- "~하고 ~한다"면 분리 대상
+- Consider splitting at 20+ lines
+- Function name should fully describe its role
+- "does X and Y" → candidate for splitting
 
-## DRY (반복 금지)
+## DRY (Don't Repeat Yourself)
 
-### 컴포넌트 통합
+### Component Consolidation
 
-**통합해야 하는 신호:**
+**Signals for consolidation:**
 
-- 90% 이상 코드 중복
-- 복사-붙여넣기로 만들어진 컴포넌트
-- 이름만 다른 거의 동일한 구조
+- 90%+ code duplication
+- Components created via copy-paste
+- Nearly identical structures with different names
 
-**통합 전략:**
+**Consolidation strategy:**
 
-1. 공통 부분을 기본 동작으로
-2. 차이점을 optional props로 추출
-3. 조건부 렌더링으로 분기
+1. Common parts become default behavior
+2. Extract differences as optional props
+3. Branch with conditional rendering
 
 ```typescript
-// 차이점을 props로 추상화
+// Abstract differences as props
 interface Props {
-  onPrimary: () => void;      // 공통
-  onSecondary?: () => void;   // 선택적 기능
-  variant?: 'strict' | 'flexible';  // 동작 분기
+  onPrimary: () => void;      // Common
+  onSecondary?: () => void;   // Optional feature
+  variant?: 'strict' | 'flexible';  // Behavior branching
 }
 ```
 
-### 로직 추출
+### Logic Extraction
 
-**추출 기준:**
+**Extraction criteria:**
 
-- 2회 이상 반복되는 로직
-- 여러 컴포넌트에서 사용되는 상태 패턴
-- 복잡한 계산/변환 로직
+- Logic repeated 2+ times
+- State patterns used across multiple components
+- Complex calculation/transform logic
 
-**추출 위치:**
+**Extraction targets:**
 
-| 로직 유형 | 추출 위치 |
+| Logic Type | Extract To |
 |----------|----------|
-| 상태 + 부수효과 | 커스텀 훅 |
-| 순수 계산/변환 | 유틸 함수 |
-| 타입 정의 | `model/types.ts` |
+| State + side effects | Custom hook |
+| Pure calculation/transform | Utility function |
+| Type definitions | `model/types.ts` |
 
-## 의존성 역전 (DIP)
+## Dependency Inversion (DIP)
 
-컴포넌트가 구체적인 구현(store, router)에 강결합되어 있으면 props로 대체한다.
+When a component is tightly coupled to concrete implementations (store, router), replace with props.
 
-> 구체적인 패턴은 `component-creation.md` 안티패턴 #1 참고
+> See `component-creation.md` Anti-Pattern #1 for specific patterns
 
-## FSD 레이어 이동
+## FSD Layer Movement
 
-| 이동 조건 | From → To |
+| Movement Condition | From → To |
 |----------|-----------|
-| 2곳 이상에서 사용되는 유틸 | 컴포넌트 → `shared/lib/` |
-| 복잡한 상태 관리 추가 | features → widgets |
-| 여러 파일에서 사용되는 타입 | 컴포넌트 → `model/types.ts` |
-| 비즈니스 엔티티 표현 | features → entities |
+| Utility used in 2+ places | Component → `shared/lib/` |
+| Complex state management added | features → widgets |
+| Types used across multiple files | Component → `model/types.ts` |
+| Business entity representation | features → entities |
 
-## 리팩터링 안전 장치
+## Refactoring Safety Checks
 
 ### Before
 
-- 기존 동작을 이해하고 문서화
-- 테스트가 있다면 통과 확인
-- 영향 범위 파악 (import 추적)
+- Understand and document existing behavior
+- Verify tests pass (if any)
+- Identify impact scope (trace imports)
 
 ### After
 
-- 빌드 성공 확인
-- 기존 기능 동작 확인
-- 삭제된 export 정리
-- 스토리북 정상 동작 확인
+- Verify build success
+- Confirm existing features work
+- Clean up deleted exports
+- Verify Storybook works correctly
 
-### 점진적 리팩터링
+### Incremental Refactoring
 
-한 번에 너무 많이 바꾸지 않는다. 작은 단위로 나누어:
+Don't change too much at once. Break into small units:
 
-1. 하나의 관심사만 변경
-2. 빌드/테스트 확인
-3. 커밋
-4. 다음 변경으로
+1. Change one concern only
+2. Verify build/tests
+3. Commit
+4. Move to next change

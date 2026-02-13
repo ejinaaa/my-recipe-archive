@@ -1,41 +1,41 @@
 ---
-description: Claude rules/skills/commands 작성 가이드라인
+description: Claude rules/skills/commands authoring guidelines
 globs: '.claude/**/*.md'
 ---
 
-# Claude Rules/Skills/Commands 작성 가이드라인
+# Claude Rules/Skills/Commands Authoring Guidelines
 
-## 파일 유형 선택
+## File Type Selection
 
-| 유형 | 용도 | 트리거 |
+| Type | Purpose | Trigger |
 |------|------|--------|
-| Rule (`rules/`) | 코딩 컨벤션, 패턴 가이드 | globs 매칭 또는 alwaysApply 시 자동 |
-| Skill (`skills/`) | 멀티스텝 워크플로우 (생성, 리팩터링) | description 매칭 시 자동 감지 |
-| Command (`commands/`) | 단순 실행 작업 (빌드, 테스트, 검증) | `/command` 명시 호출 |
+| Rule (`rules/`) | Coding conventions, pattern guides | Auto on globs match or alwaysApply |
+| Skill (`skills/`) | Multi-step workflows (creation, refactoring) | Auto-detected on description match |
+| Command (`commands/`) | Simple execution tasks (build, test, validate) | Explicit `/command` invocation |
 
-## 토큰 비용 우선순위
+## Token Cost Priority
 
-`alwaysApply` rule > 빈번한 globs rule (`*.tsx`) > 좁은 globs rule (`*.test.ts`) > skill/command (on-demand)
+`alwaysApply` rule > frequent globs rule (`*.tsx`) > narrow globs rule (`*.test.ts`) > skill/command (on-demand)
 
-**원칙**: 비용이 높을수록 더 짧게 작성. `alwaysApply` rule은 100줄 이내 목표.
+**Principle**: Higher cost → shorter content. Target under 100 lines for `alwaysApply` rules.
 
-## 작성 원칙
+## Writing Principles
 
-### 간결성
+### Conciseness
 
-- **테이블 > 코드블록**: 매핑/비교는 테이블로
-- **불릿 > 산문**: 설명은 짧은 불릿 포인트로
-- **❌ 반례 금지**: ✅ 올바른 패턴만 제시 (반례는 토큰만 소모)
-- **코드블록 최소화**: 패턴 1개당 코드 예시 1개, 변형은 테이블로 차이만 설명
-- **중복 금지**: 다른 rule에 이미 있는 내용은 `> ~는 rule-name.md 참고`로 교차 참조
+- **Tables > code blocks**: Use tables for mappings/comparisons
+- **Bullets > prose**: Use short bullet points for explanations
+- **No counter-examples**: Show only correct patterns (counter-examples waste tokens)
+- **Minimize code blocks**: One code example per pattern, explain variations in tables
+- **No duplication**: Cross-reference with `> See rule-name.md for ~` when content exists in another rule
 
-### 구조
+### Structure
 
-- Frontmatter: `description` (1줄 요약), `globs` 또는 `alwaysApply`
-- 핵심 패턴/규칙을 먼저, 예시는 최소한으로
-- 관련 규칙 간 교차 참조로 중복 방지
+- Frontmatter: `description` (1-line summary), `globs` or `alwaysApply`
+- Core patterns/rules first, examples minimal
+- Cross-reference between related rules to prevent duplication
 
-### Skill/Command 특화
+### Skill/Command Specifics
 
-- Skill: `description`에 트리거 키워드 포함 (어떤 요청에 매칭될지)
-- Command: 다른 rule/skill 참조로 내용 최소화 (`> 컨벤션은 rules/xxx.md 참고`)
+- Skill: Include trigger keywords in `description` (what requests it should match)
+- Command: Minimize content by referencing other rules/skills (`> See rules/xxx.md for conventions`)

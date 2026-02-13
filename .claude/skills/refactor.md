@@ -1,108 +1,108 @@
 ---
-description: 리팩터링 워크플로우 — 코드를 분석하고 리팩터링을 수행할 때 사용 (컴포넌트 분리, 통합, 순수 UI 변환, 레이어 이동 등)
+description: Refactoring workflow — Use when analyzing and refactoring code (component splitting, consolidation, pure UI conversion, layer movement, etc.)
 ---
 
-# 리팩터링 워크플로우
+# Refactoring Workflow
 
-사용자가 지정한 코드를 분석하고 리팩터링을 수행합니다.
+Analyze user-specified code and perform refactoring.
 
-## 워크플로우
+## Workflow
 
-### 1단계: 분석
+### Step 1: Analysis
 
-대상 코드를 읽고 다음을 분석합니다:
+Read the target code and analyze:
 
-- 현재 코드 구조 파악
-- 컴포넌트/함수 크기 (줄 수)
-- 책임 분리 상태
-- 중복 코드 여부
-- FSD 레이어 적합성
-- **상태 관리 위치 적합성** (URL/로컬/전역)
-- **유사 컴포넌트 통합 가능 여부**
+- Current code structure
+- Component/function size (line count)
+- Responsibility separation status
+- Code duplication
+- FSD layer appropriateness
+- **State management location appropriateness** (URL/local/global)
+- **Similar component consolidation potential**
 
-### 2단계: 문제점 보고
+### Step 2: Report Issues
 
-발견된 문제점을 정리하여 보고합니다:
+Organize and report discovered issues:
 
 ```
-## 분석 결과
+## Analysis Results
 
-### 현재 상태
-- 파일: [파일 경로]
-- 크기: [줄 수]
-- 레이어: [현재 레이어]
+### Current State
+- File: [file path]
+- Size: [line count]
+- Layer: [current layer]
 
-### 발견된 문제
-1. [문제 1]: [설명]
-2. [문제 2]: [설명]
+### Discovered Issues
+1. [Issue 1]: [description]
+2. [Issue 2]: [description]
 ...
 ```
 
-### 3단계: 리팩터링 제안
+### Step 3: Propose Refactoring
 
-구체적인 리팩터링 방안을 제시합니다:
+Present specific refactoring proposals:
 
 ```
-## 리팩터링 제안
+## Refactoring Proposals
 
-### 방안 1: [제안명]
-- 변경 내용: [설명]
-- 예상 결과: [설명]
+### Option 1: [proposal name]
+- Changes: [description]
+- Expected result: [description]
 
-### 방안 2: [제안명]
-- 변경 내용: [설명]
-- 예상 결과: [설명]
+### Option 2: [proposal name]
+- Changes: [description]
+- Expected result: [description]
 ```
 
-**일반적인 리팩터링 유형:**
+**Common refactoring types:**
 
-| 유형 | 설명 | 관련 스킬 |
+| Type | Description | Related Skill |
 |------|------|----------|
-| 컴포넌트 분리 | 150줄 이상, 책임 분리 | - |
-| 컴포넌트 통합 | 90% 이상 중복되는 유사 컴포넌트 | - |
-| 순수 UI 변환 | 외부 의존성(URL/store) 분리 | - |
-| URL 상태 이동 | Zustand → URL 쿼리 파라미터 | `/url-state` |
-| 레이어 이동 | FSD 레이어 간 이동 | - |
+| Component splitting | 150+ lines, responsibility separation | - |
+| Component consolidation | 90%+ duplicate similar components | - |
+| Pure UI conversion | Separate external dependencies (URL/store) | - |
+| URL state migration | Zustand → URL query parameters | `/url-state` |
+| Layer movement | Movement between FSD layers | - |
 
-### 4단계: 사용자 확인
+### Step 4: User Confirmation
 
-사용자에게 어떤 방안으로 진행할지 확인합니다.
+Confirm with user which option to proceed with.
 
-### 5단계: 구현
+### Step 5: Implementation
 
-승인된 방안에 따라 리팩터링을 수행합니다:
+Perform refactoring according to the approved option:
 
-1. 코드 분리/수정
-2. FSD 구조에 맞게 파일 배치
-3. import 경로 업데이트
-4. index.ts export 정리
-5. 기존 코드와의 호환성 확인
+1. Split/modify code
+2. Place files according to FSD structure
+3. Update import paths
+4. Clean up index.ts exports
+5. Verify compatibility with existing code
 
-**컴포넌트 통합 시:**
-- 공통 props 추출
-- 선택적 기능은 optional props로
-- 동작 분기는 boolean/enum props로
+**When consolidating components:**
+- Extract common props
+- Optional features as optional props
+- Behavior branching via boolean/enum props
 
-**순수 UI 변환 시:**
-- initialValue props (optional + 기본값)
-- onApply 콜백 props
-- 내부는 로컬 임시 상태만 사용
-- open 시 초기값 동기화 useEffect
+**When converting to pure UI:**
+- initialValue props (optional + defaults)
+- onApply callback props
+- Internal local draft state only
+- useEffect to sync initial value on open
 
-### 6단계: 검증
+### Step 6: Verify
 
-리팩터링 완료 후:
+After refactoring:
 
-1. `pnpm build` 실행하여 빌드 확인
-2. 에러가 있으면 수정
-3. 삭제된 파일의 import 오류 확인
-4. 변경 사항 요약 보고
+1. Run `pnpm build` to verify build
+2. Fix any errors
+3. Check for import errors from deleted files
+4. Report summary of changes
 
-## 주의사항
+## Cautions
 
-- 기존 기능이 유지되도록 함
-- 한 번에 너무 많은 변경을 하지 않음
-- 각 단계별로 사용자 확인을 받음
-- FSD 아키텍처 규칙 준수
-- 프로젝트 코드 스타일 유지
-- **삭제된 파일의 스토리 파일도 함께 삭제**
+- Preserve existing functionality
+- Don't make too many changes at once
+- Get user confirmation at each step
+- Follow FSD architecture rules
+- Maintain project code style
+- **Delete story files for deleted components**

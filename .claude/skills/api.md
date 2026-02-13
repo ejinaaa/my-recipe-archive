@@ -1,42 +1,42 @@
 ---
-description: Entity API 생성 — 새로운 Entity의 API 파일들(server.ts, client.ts, actions.ts, hooks.ts, keys.ts, model/types.ts, model/utils.ts)을 자동 생성할 때 사용
+description: Entity API generation — Use when auto-generating API files (server.ts, client.ts, actions.ts, hooks.ts, keys.ts, model/types.ts, model/utils.ts) for a new Entity
 ---
 
-# Entity API 생성
+# Entity API Generation
 
-새로운 Entity의 API 파일들을 자동 생성합니다.
+Auto-generate API files for a new Entity.
 
-## 사용법
+## Usage
 
 ```
 /api [entity-name] [table-name?]
 ```
 
-예시:
+Examples:
 ```
 /api comment
 /api bookmark bookmarks
 ```
 
-## 워크플로우
+## Workflow
 
-### 1단계: 정보 확인
+### Step 1: Gather Information
 
-사용자에게 질문:
-- Entity 이름 (예: comment, bookmark)
-- Supabase 테이블 이름 (기본: entity 복수형)
-- 필요한 CRUD 작업 선택
+Ask user:
+- Entity name (e.g., comment, bookmark)
+- Supabase table name (default: entity plural form)
+- Required CRUD operations
 
-### 2단계: model 파일 생성
+### Step 2: Generate Model Files
 
-**`src/entities/[entity]/model/types.ts`** - 타입 정의:
+**`src/entities/[entity]/model/types.ts`** - Type definitions:
 
 ```typescript
 export interface [Entity]DB {
   id: string;
   created_at: Date;
   updated_at: Date;
-  // 필드 정의
+  // field definitions
 }
 
 export interface [Entity] extends [Entity]DB {}
@@ -45,7 +45,7 @@ export type [Entity]Insert = Omit<[Entity]DB, 'id' | 'created_at' | 'updated_at'
 export type [Entity]Update = Partial<[Entity]Insert>;
 ```
 
-**`src/entities/[entity]/model/utils.ts`** - 변환 함수:
+**`src/entities/[entity]/model/utils.ts`** - Transform functions:
 
 ```typescript
 import type { [Entity], [Entity]DB } from './types';
@@ -55,15 +55,15 @@ export const to[Entity] = (row: [Entity]DB): [Entity] => ({
 });
 ```
 
-### 3단계: API 파일 생성
+### Step 3: Generate API Files
 
-**server.ts** - 서버 컴포넌트용 CRUD:
+**server.ts** - Server component CRUD:
 ```typescript
 import { createClient } from '@/shared/api/supabase/server';
 // get[Entity]sApi, get[Entity]Api, create[Entity]Api, update[Entity]Api, delete[Entity]Api
 ```
 
-**Route API** - 읽기 엔드포인트:
+**Route API** - Read endpoints:
 ```typescript
 // src/app/api/[entities]/route.ts
 import { get[Entity]sApi } from '@/entities/[entity]/api/server';
@@ -80,7 +80,7 @@ export async function GET(request, { params }) {
 }
 ```
 
-**client.ts** - Route API 호출 함수:
+**client.ts** - Route API fetch functions:
 ```typescript
 import { getBaseUrl } from '@/shared/api/getBaseUrl';
 import { handleApiResponse } from '@/shared/api/fetchWithError';
@@ -102,12 +102,12 @@ export const [entity]Keys = {
 };
 ```
 
-**actions.ts** - Server Actions (mutation 전용):
+**actions.ts** - Server Actions (mutation-only):
 ```typescript
 'use server';
 import { revalidatePath } from 'next/cache';
 // create[Entity]Action, update[Entity]Action, delete[Entity]Action
-// 읽기 action은 생성하지 않음 (Route API 사용)
+// No read actions (use Route API instead)
 ```
 
 **hooks.ts** - React Query hooks:
@@ -115,16 +115,16 @@ import { revalidatePath } from 'next/cache';
 'use client';
 import { fetchXxx } from './client';
 import { xxxKeys } from './keys';
-// queryFn에 client.ts 함수 사용
-// Optimistic Update 포함
+// Use client.ts functions as queryFn
+// Include Optimistic Update
 ```
 
-**index.ts** - 통합 export
+**index.ts** - Combined exports
 
-### 4단계: 검증
+### Step 4: Verify
 
 ```bash
 pnpm build
 ```
 
-타입 에러 확인 및 수정
+Check and fix type errors

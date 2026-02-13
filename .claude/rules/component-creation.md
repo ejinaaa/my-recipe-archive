@@ -1,109 +1,109 @@
 ---
-description: 컴포넌트 생성 원칙
+description: Component creation principles
 globs: '**/shared/ui/**/*.tsx,**/entities/**/ui/**/*.tsx,**/features/**/ui/**/*.tsx,**/widgets/**/ui/**/*.tsx'
 ---
 
-# 컴포넌트 설계 원칙
+# Component Design Principles
 
-## 설계 철학
+## Design Philosophy
 
-### 1. 합성 가능성 (Composability)
+### 1. Composability
 
-컴포넌트는 레고 블록처럼 조합 가능해야 한다. 작고 집중된 컴포넌트가 큰 복합 컴포넌트보다 낫다.
+Components should be composable like Lego blocks. Small, focused components are better than large monolithic ones.
 
-### 2. 예측 가능성 (Predictability)
+### 2. Predictability
 
-같은 props → 같은 결과. 외부 상태에 암묵적으로 의존하지 않는다.
+Same props → same result. No implicit dependency on external state.
 
-### 3. 재사용성 (Reusability)
+### 3. Reusability
 
-특정 컨텍스트에 강결합된 컴포넌트는 재사용이 어렵다. 범용성을 고려하여 설계한다.
+Components tightly coupled to specific contexts are hard to reuse. Design with generality in mind.
 
-## 생성 전 체크리스트
+## Pre-Creation Checklist
 
-1. **기존 컴포넌트 확인**: `shared/ui/`에 유사한 컴포넌트가 있는가?
-2. **레이어 결정**: 이 컴포넌트가 속해야 할 FSD 레이어는?
-3. **책임 범위**: 하나의 명확한 책임만 가지는가?
+1. **Check existing components**: Is there a similar component in `shared/ui/`?
+2. **Determine layer**: Which FSD layer should this component belong to?
+3. **Scope of responsibility**: Does it have one clear responsibility?
 
-## 레이어별 설계 원칙
+## Design Principles by Layer
 
-| 레이어 | 책임 | 의존성 |
-|--------|------|--------|
-| shared | 범용 UI 프리미티브 | 없음 (순수) |
-| entities | 비즈니스 엔티티 표현 | shared만 |
-| features | 사용자 인터랙션 | shared, entities |
-| widgets | 복합 UI 블록 | shared, entities, features |
-| views | 페이지 조합 | 모든 하위 레이어 |
+| Layer | Responsibility | Dependencies |
+|-------|---------------|-------------|
+| shared | Generic UI primitives | None (pure) |
+| entities | Business entity representation | shared only |
+| features | User interaction | shared, entities |
+| widgets | Composite UI blocks | shared, entities, features |
+| views | Page composition | All lower layers |
 
 ### shared/ui
 
-- **비즈니스 로직 금지**: 순수하게 UI만 담당
-- **최대 유연성**: 다양한 상황에서 사용 가능하도록
-- shadcn/ui 기반 + 프로젝트 디자인 시스템 적용
+- **No business logic**: Pure UI only
+- **Maximum flexibility**: Usable in various contexts
+- shadcn/ui base + project design system applied
 
-#### shadcn/ui 커스터마이징 절차
+#### shadcn/ui Customization Procedure
 
-1. `pnpm dlx shadcn@latest add [name]` 설치
-2. 생성된 코드 확인 (기본 스타일, 구조 파악)
-3. 프로젝트 디자인 시스템 적용 (typography: `text-body-2` 등, color: `text-text-primary` 등)
-4. 필요시 커스텀 prop 추가 (예: `required`)
-5. 스토리 작성
+1. Install with `pnpm dlx shadcn@latest add [name]`
+2. Review generated code (default styles, structure)
+3. Apply project design system (typography: `text-body-2` etc., color: `text-text-primary` etc.)
+4. Add custom props if needed (e.g., `required`)
+5. Write stories
 
 ### features/widgets
 
-- **Controlled Component**: 상태를 props로 제어
-- **의존성 주입**: 외부 상태 소스에 직접 의존하지 않음
-- **콜백 패턴**: 결과를 부모에게 위임
+- **Controlled Component**: State controlled via props
+- **Dependency Injection**: No direct dependency on external state sources
+- **Callback Pattern**: Delegate results to parent
 
-## Controlled Component 패턴
+## Controlled Component Pattern
 
-복잡한 인터랙션을 가진 컴포넌트(모달, 드로어, 폼)의 설계 원칙.
+Design principles for components with complex interactions (modals, drawers, forms).
 
-### 왜 Controlled인가?
+### Why Controlled?
 
 | Uncontrolled | Controlled |
 |--------------|------------|
-| 내부에서 상태 관리 | 외부에서 상태 주입 |
-| 테스트 시 모킹 필요 | props만으로 테스트 |
-| 하나의 상태 소스에 강결합 | 다양한 상태 소스와 연결 가능 |
+| Internal state management | State injected externally |
+| Mocking needed for testing | Testable with props alone |
+| Tightly coupled to one state source | Connectable to various state sources |
 
-### Props 설계 패턴
+### Props Design Pattern
 
 ```typescript
 interface ControlledComponentProps {
-  // 1. 제어 props - 열림/닫힘 상태
+  // 1. Control props - open/close state
   open: boolean;
   onOpenChange: (open: boolean) => void;
 
-  // 2. 데이터 props - optional + 기본값
+  // 2. Data props - optional + defaults
   initialValue?: T;
-  defaultValue?: T;  // 또는 이름 선택
+  defaultValue?: T;
 
-  // 3. 이벤트 콜백 - 결과 전달
+  // 3. Event callbacks - deliver results
   onApply: (value: T) => void;
   onCancel?: () => void;
 
-  // 4. 변형 props - 동작 분기
+  // 4. Variant props - behavior branching
   variant?: 'default' | 'compact';
   disabled?: boolean;
 }
 ```
 
-### 임시 상태 관리
+### Draft State Management
 
-사용자가 "적용" 전까지 변경을 미리보기할 때:
+When users preview changes before "Apply":
 
 ```typescript
 function Editor({ open, initialValue, onApply }) {
-  // 편집 중인 임시 상태 (draft)
+  // Draft state during editing
   const [draft, setDraft] = useState(initialValue);
 
-  // 열릴 때마다 초기값으로 리셋
+  // Reset to initial value on each open
   useEffect(() => {
     if (open) setDraft(initialValue);
   }, [open, initialValue]);
 
-  // 적용 시에만 외부로 전달
+  // Only propagate externally on apply
   const handleApply = () => {
     onApply(draft);
     onOpenChange(false);
@@ -111,51 +111,51 @@ function Editor({ open, initialValue, onApply }) {
 }
 ```
 
-## 확장성을 위한 설계
+## Designing for Extensibility
 
-### Optional Props로 변형 지원
+### Supporting Variants via Optional Props
 
 ```typescript
-// 기본 기능은 필수, 확장 기능은 선택
+// Core functionality required, extensions optional
 interface Props {
-  onPrimary: () => void;       // 항상 필요
-  onSecondary?: () => void;    // 있으면 추가 버튼 표시
-  requireValidation?: boolean; // true면 검증 로직 활성화
+  onPrimary: () => void;       // Always required
+  onSecondary?: () => void;    // Shows additional button if provided
+  requireValidation?: boolean; // Enables validation logic when true
 }
 ```
 
-### 기본값 전략
+### Default Value Strategy
 
-- 가장 일반적인 사용 사례를 기본값으로
-- 기본값이 있으면 사용처에서 코드가 간결해짐
-- `undefined`와 `null`의 의미를 구분 (필요시)
+- Use the most common use case as default
+- Defaults make usage sites more concise
+- Distinguish `undefined` vs `null` semantics (when needed)
 
-## 안티패턴
+## Anti-Patterns
 
-### 1. 외부 상태에 직접 의존
+### 1. Direct Dependency on External State
 
 ```typescript
 // BAD
 function Component() {
-  const data = useGlobalStore();  // 강결합
+  const data = useGlobalStore();  // Tight coupling
 }
 
 // GOOD
 function Component({ data }) {
-  // 상태 소스와 무관
+  // Independent of state source
 }
 ```
 
-### 2. 과도한 props
+### 2. Excessive Props
 
-10개 이상의 props → 컴포넌트 분리 또는 객체로 그룹화 검토
+10+ props → consider splitting component or grouping into objects
 
-### 3. 조건부 렌더링 남용
+### 3. Excessive Conditional Rendering
 
-3개 이상의 분기 → 별도 컴포넌트로 분리 검토
+3+ branches → consider splitting into separate components
 
-## 필수 산출물
+## Required Deliverables
 
-- `[ComponentName].tsx` - 컴포넌트
-- `[ComponentName].stories.tsx` - 스토리
-- `index.ts` - public API export
+- `[ComponentName].tsx` - Component
+- `[ComponentName].stories.tsx` - Story
+- `index.ts` - Public API export

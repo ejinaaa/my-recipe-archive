@@ -1,48 +1,48 @@
-# 코드 검증
+# Code Validation
 
-FSD 아키텍처 및 디자인 시스템 준수 여부를 검증합니다.
+Validate compliance with FSD architecture and design system.
 
-## 검증 항목
+## Validation Items
 
-### FSD 아키텍처
-- Import 규칙 위반 (하위→상위, 동일 레이어 간)
-- Views에 비즈니스 로직 존재
+### FSD Architecture
+- Import rule violations (lower→upper, same-layer cross-imports)
+- Business logic in Views
 
-### 디자인 시스템
-- Typography: `text-sm` 대신 `text-body-2` 사용 여부
-- Colors: `bg-red-500` 대신 `bg-primary-base` 사용 여부
-- Icons: lucide-react 외 라이브러리 사용 여부
+### Design System
+- Typography: Whether `text-body-2` is used instead of `text-sm`
+- Colors: Whether `bg-primary-base` is used instead of `bg-red-500`
+- Icons: Whether non-lucide-react libraries are used
 
-## 워크플로우
+## Workflow
 
-### 1단계: 대상 파일 수집
-
-```
-/validate              # 전체 src/
-/validate src/features # 특정 폴더
-```
-
-### 2단계: 검증 실행
-
-각 파일을 읽고 위반 사항 검출
-
-### 3단계: 결과 보고
+### Step 1: Collect Target Files
 
 ```
-## 검증 결과
+/validate              # Entire src/
+/validate src/features # Specific folder
+```
 
-### FSD 아키텍처
+### Step 2: Run Validation
+
+Read each file and detect violations
+
+### Step 3: Report Results
+
+```
+## Validation Results
+
+### FSD Architecture
 ❌ src/features/search/ui/SearchBar.tsx:5
-   → widgets에서 import (하위→상위 위반)
+   → Import from widgets (lower→upper violation)
 
-### 디자인 시스템
+### Design System
 ❌ src/shared/ui/card.tsx:12
-   → text-sm 사용 (text-body-2로 변경 필요)
+   → Uses text-sm (should change to text-body-2)
 
-### 요약
-- 위반: 2건
+### Summary
+- Violations: 2
 ```
 
-### 4단계: 자동 수정
+### Step 4: Auto-Fix
 
-수정 가능한 항목에 대해 자동 수정 제안
+Suggest automatic fixes for fixable items

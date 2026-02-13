@@ -1,38 +1,38 @@
-# 빌드 및 에러 수정
+# Build and Fix Errors
 
-프로젝트를 빌드하고 에러를 자동으로 수정합니다.
+Build the project and automatically fix errors.
 
-## 워크플로우
+## Workflow
 
-### 1단계: 빌드 실행
+### Step 1: Run Build
 
 ```bash
 pnpm build
 ```
 
-### 2단계: 에러 분석 및 수정
+### Step 2: Analyze and Fix Errors
 
-에러 발생 시:
-1. 에러 메시지 파싱
-2. 해당 파일로 이동하여 수정
-3. 수정이 어려운 경우 사용자에게 확인
+On error:
+1. Parse error messages
+2. Navigate to the file and fix
+3. Ask user for confirmation if fix is unclear
 
-### 3단계: 재빌드
+### Step 3: Rebuild
 
-에러 수정 후 다시 빌드 실행
+Run build again after fixing errors
 
-### 4단계: 결과 보고
+### Step 4: Report Results
 
 ```
-## 빌드 결과
+## Build Results
 
-### 수정된 에러
-1. [파일:라인] - [에러] → [수정 내용]
+### Fixed Errors
+1. [file:line] - [error] → [fix description]
 
-### 최종 상태
-✅ 빌드 성공 / ❌ 빌드 실패
+### Final Status
+✅ Build successful / ❌ Build failed
 ```
 
-## 반복
+## Repeat
 
-빌드 성공까지 2~4단계 반복
+Repeat steps 2–4 until build succeeds

@@ -1,113 +1,113 @@
 ---
-description: 스토리 생성 — 컴포넌트의 Storybook 스토리(.stories.tsx)를 자동 생성할 때 사용
+description: Story generation — Use when auto-generating Storybook stories (.stories.tsx) for a component
 ---
 
-# 스토리 생성
+# Story Generation
 
-컴포넌트의 Storybook 스토리를 자동 생성합니다.
+Auto-generate Storybook stories for a component.
 
-## 사용법
+## Usage
 
 ```
-/story [컴포넌트 경로 또는 이름]
+/story [component path or name]
 ```
 
-예시:
+Examples:
 ```
 /story RecipeCard
 /story src/shared/ui/button.tsx
 ```
 
-## 워크플로우
+## Workflow
 
-### 1단계: 컴포넌트 분석
+### Step 1: Analyze Component
 
-대상 컴포넌트 파일을 읽고 분석:
-- 컴포넌트 이름
-- Props 인터페이스
-- variants (variant, size, colorScheme 등)
-- 이벤트 핸들러 (onClick, onChange 등)
-- FSD 레이어 위치
+Read and analyze the target component file:
+- Component name
+- Props interface
+- Variants (variant, size, colorScheme, etc.)
+- Event handlers (onClick, onChange, etc.)
+- FSD layer location
 
-### 2단계: 컴포넌트 유형 판단
+### Step 2: Determine Component Type
 
-| 유형 | 레이어 | 스토리 특징 |
+| Type | Layer | Story Characteristics |
 |------|--------|------------|
-| UI Primitive | shared/ui | argTypes control 설정 |
-| Entity | entities/*/ui | mock 데이터 필요 |
-| Feature | features/*/ui | fn() 액션 핸들러 |
-| Widget | widgets/*/ui | Loading/Error/Empty 필수 |
-| View | views/*/ui | fullscreen layout, Loading/Error/Empty 필수 |
+| UI Primitive | shared/ui | argTypes control setup |
+| Entity | entities/*/ui | Mock data required |
+| Feature | features/*/ui | fn() action handlers |
+| Widget | widgets/*/ui | Loading/Error/Empty required |
+| View | views/*/ui | Fullscreen layout, Loading/Error/Empty required |
 
-### 3단계: React Query 의존성 파악
+### Step 3: Identify React Query Dependencies
 
-컴포넌트와 **하위 컴포넌트**에서 사용하는 React Query 훅을 검색:
+Search for React Query hooks used in the component and **child components**:
 
-1. **훅 종류 확인** — 각 훅에 따라 스토리 세팅이 다름:
+1. **Check hook types** — story setup differs per hook:
 
-| 훅 | 캐시 세팅 | Suspense | 비고 |
+| Hook | Cache Setup | Suspense | Notes |
 |----|----------|----------|------|
-| `useSuspenseQuery` | `setQueryData` 필수 | 필수 | 캐시 없으면 suspend |
-| `useSuspenseInfiniteQuery` | `setQueryData` (pages 구조) 필수 | 필수 | `{ pages, pageParams }` |
-| `useQuery` | `setQueryData` 권장 | 불필요 | enabled 조건 확인 |
-| `useMutation` | - | - | MutationError 스토리 추가 검토 |
+| `useSuspenseQuery` | `setQueryData` required | Required | Suspends without cache |
+| `useSuspenseInfiniteQuery` | `setQueryData` (pages structure) required | Required | `{ pages, pageParams }` |
+| `useQuery` | `setQueryData` recommended | Not needed | Check enabled conditions |
+| `useMutation` | - | - | Consider adding MutationError story |
 
-2. **query key → mock 데이터 매핑** — 사용되는 keys 함수와 대응하는 mock 데이터 파악
+2. **Query key → mock data mapping** — identify keys functions and corresponding mock data
 
-3. **mock 데이터 존재 여부 확인:**
-   - `entities/{entity}/model/mock.ts` 존재 → import 하여 사용
-   - **mock.ts가 없으면 생성:**
-     - `entities/{entity}/model/types.ts`에서 타입 확인
-     - 타입에 맞는 mock 데이터 작성
-     - `mock` 접두어 네이밍 (`mockProfile`, `mockRecipes` 등)
-     - 상수 값은 `SCREAMING_SNAKE_CASE` (`MOCK_COOK_COUNT`)
-     - 앱 톤앤매너에 맞는 한국어 데이터, 필수 필드만 최소 작성
-   - 생성 후 `src/shared/mocks/handlers.ts`에 해당 엔드포인트 핸들러 추가 검토
+3. **Check mock data availability:**
+   - `entities/{entity}/model/mock.ts` exists → import and use
+   - **If mock.ts doesn't exist, create it:**
+     - Check types from `entities/{entity}/model/types.ts`
+     - Write mock data matching types
+     - `mock` prefix naming (`mockProfile`, `mockRecipes`, etc.)
+     - Constants in `SCREAMING_SNAKE_CASE` (`MOCK_COOK_COUNT`)
+     - Korean data matching app tone, minimal required fields only
+   - After creation, review adding endpoint handlers to `src/shared/mocks/handlers.ts`
 
-4. **`nuqs` (useQueryState) 사용 여부** — 사용 시 `NuqsTestingAdapter` 래핑 필요
+4. **Check `nuqs` (useQueryState) usage** — wrap with `NuqsTestingAdapter` if used
 
-React Query 훅을 사용하지 않으면 이 단계를 건너뛰고 4단계로 진행.
+Skip this step and proceed to Step 4 if no React Query hooks are used.
 
-### 4단계: 스토리 파일 생성
+### Step 4: Generate Story File
 
-`[ComponentName].stories.tsx` 생성:
+Create `[ComponentName].stories.tsx`:
 
-1. CSF 3.0 형식으로 meta 작성
-2. title을 FSD 레이어에 맞게 설정
-3. 간단한 props는 argTypes로 control 설정
+1. Write meta in CSF 3.0 format
+2. Set title matching FSD layer
+3. Set simple props as argTypes controls
 
-#### React Query 미사용 컴포넌트
+#### Components Without React Query
 
-4. 컴포넌트 유형에 맞는 스토리 추가 (Default, edge case 등)
+4. Add stories matching component type (Default, edge cases, etc.)
 
-#### React Query 사용 컴포넌트 (Widget/View)
+#### Components With React Query (Widget/View)
 
-4. Skeleton/fallback 컴포넌트 확인 또는 스토리 내부에 생성
-5. QueryClient 팩토리 함수 작성:
-   - `createSuccessQueryClient()` — `staleTime: Infinity` + mock 데이터 세팅
-   - `createErrorQueryClient()` — `retry: false`만
-6. 스토리 작성 순서:
+4. Check or create Skeleton/fallback component inside story
+5. Write QueryClient factory functions:
+   - `createSuccessQueryClient()` — `staleTime: Infinity` + set mock data
+   - `createErrorQueryClient()` — `retry: false` only
+6. Story writing order:
 
-| 스토리 | 데이터 전략 | Decorator |
+| Story | Data Strategy | Decorator |
 |--------|-----------|-----------|
 | Default | `setQueryData` | `QueryClientProvider` + `Suspense` |
-| Empty | `setQueryData` (빈 배열/null) | Default와 동일 |
-| Loading | MSW `delay('infinite')` | `QueryClientProvider` (Suspense 없음) |
-| Error | MSW `HttpResponse 500` | `QueryClientProvider` (Suspense 없음) |
-| MutationError | `setQueryData` + `ErrorBottomSheet` 직접 렌더 | Default + ErrorBottomSheet |
+| Empty | `setQueryData` (empty array/null) | Same as Default |
+| Loading | MSW `delay('infinite')` | `QueryClientProvider` (no Suspense) |
+| Error | MSW `HttpResponse 500` | `QueryClientProvider` (no Suspense) |
+| MutationError | `setQueryData` + render `ErrorBottomSheet` directly | Default + ErrorBottomSheet |
 
-7. MSW 핸들러 작성 (`import { http, delay, HttpResponse } from 'msw'`):
+7. Write MSW handlers (`import { http, delay, HttpResponse } from 'msw'`):
    - Loading: `http.get('/api/*', async () => { await delay('infinite') })`
    - Error: `http.get('/api/*', () => HttpResponse.json({ error: 'Internal Server Error' }, { status: 500 }))`
-   - Default에서는 MSW 설정 불필요 (글로벌 핸들러가 성공 응답 제공)
+   - No MSW setup needed for Default (global handlers provide success response)
 
-8. `profileKeys.current()` — Loading/Error에서도 프로필 캐시 필수 세팅
-9. `nuqs` 사용 시 모든 decorator에 `NuqsTestingAdapter` 래핑
+8. `profileKeys.current()` — always set profile cache even in Loading/Error
+9. Wrap all decorators with `NuqsTestingAdapter` when using `nuqs`
 
-### 5단계: 검증
+### Step 5: Verify
 
 ```bash
 pnpm storybook
 ```
 
-스토리북에서 렌더링 확인
+Verify rendering in Storybook

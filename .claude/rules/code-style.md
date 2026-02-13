@@ -1,9 +1,9 @@
 ---
-description: 코드 스타일 및 컨벤션 규칙
+description: Code style and convention rules
 alwaysApply: true
 ---
 
-# 코드 스타일 규칙
+# Code Style Rules
 
 ## Type Import
 
@@ -13,35 +13,35 @@ import type { Recipe, RecipeInsert } from '../model/types';
 import { type UseQueryResult } from '@tanstack/react-query';
 ```
 
-## 네이밍 컨벤션
+## Naming Conventions
 
-| 대상 | 규칙 | 예시 |
-|------|------|------|
-| 컴포넌트 | PascalCase | `RecipeCard`, `SearchBar` |
-| 훅 | use + PascalCase + 접미사 | 아래 훅/함수 네이밍 참고 |
-| 유틸 함수 | camelCase | `formatDate`, `cn` |
-| 상수 | SCREAMING_SNAKE_CASE | `API_BASE_URL`, `MAX_ITEMS` |
-| 타입/인터페이스 | PascalCase | `Recipe`, `ButtonProps` |
-| 파일명 (컴포넌트) | PascalCase | `RecipeCard.tsx` |
-| 파일명 (유틸/훅) | camelCase | `hooks.ts`, `utils.ts` |
+| Target | Rule | Example |
+|--------|------|---------|
+| Component | PascalCase | `RecipeCard`, `SearchBar` |
+| Hook | use + PascalCase + suffix | See hook/function naming below |
+| Utility function | camelCase | `formatDate`, `cn` |
+| Constant | SCREAMING_SNAKE_CASE | `API_BASE_URL`, `MAX_ITEMS` |
+| Type/Interface | PascalCase | `Recipe`, `ButtonProps` |
+| Filename (component) | PascalCase | `RecipeCard.tsx` |
+| Filename (util/hook) | camelCase | `hooks.ts`, `utils.ts` |
 
-## 훅/함수 네이밍 컨벤션
+## Hook/Function Naming Conventions
 
-| 분류 | 패턴 | 예시 |
-|------|------|------|
-| Query 훅 | `use` + 명사 + `Query` | `useCurrentProfileQuery` |
-| Suspense Query 훅 | `useSuspense` + 명사 + `Query` | `useSuspenseRecipeQuery` |
-| Mutation 훅 | `use` + 동사 + 명사 + `Mutation` | `useCreateRecipeMutation` |
-| Server API 함수 | 동사 + 명사 + `Api` | `getRecipeApi`, `createRecipeApi` |
-| Client fetch 함수 | `fetch` + 명사 | `fetchRecipe`, `fetchRecipesPaginated` |
-| Server Action | 동사 + 명사 + `Action` | `createRecipeAction` |
+| Category | Pattern | Example |
+|----------|---------|---------|
+| Query hook | `use` + noun + `Query` | `useCurrentProfileQuery` |
+| Suspense Query hook | `useSuspense` + noun + `Query` | `useSuspenseRecipeQuery` |
+| Mutation hook | `use` + verb + noun + `Mutation` | `useCreateRecipeMutation` |
+| Server API function | verb + noun + `Api` | `getRecipeApi`, `createRecipeApi` |
+| Client fetch function | `fetch` + noun | `fetchRecipe`, `fetchRecipesPaginated` |
+| Server Action | verb + noun + `Action` | `createRecipeAction` |
 
-## 함수 선언
+## Function Declarations
 
-- **훅**: `function` 선언문 — `export function useRecipesQuery() { ... }`
-- **유틸리티**: `const` 화살표 함수 — `export const formatDate = () => { ... }`
-- **컴포넌트**: `function` 선언문 — `export function RecipeCard() { ... }`
-- **React 19 ref**: `forwardRef` 대신 props에 `ref?: React.Ref<T>` 직접 선언
+- **Hooks**: `function` declaration — `export function useRecipesQuery() { ... }`
+- **Utilities**: `const` arrow function — `export const formatDate = () => { ... }`
+- **Components**: `function` declaration — `export function RecipeCard() { ... }`
+- **React 19 ref**: Declare `ref?: React.Ref<T>` directly in props instead of `forwardRef`
 
 ## Query Keys Factory
 
@@ -55,32 +55,32 @@ export const recipeKeys = {
 };
 ```
 
-## 주석
+## Comments
 
-- **한글** 작성
-- JSDoc: 훅/함수의 목적과 특이사항 (1~2줄)
-- 인라인: 복잡한 로직에만 의도 설명
+- Write in **Korean**
+- JSDoc: Purpose and notable behavior of hooks/functions (1-2 lines)
+- Inline: Explain intent only for complex logic
 
 ## TypeScript
 
-- `interface`: 객체 타입, 확장 가능 (Props 등)
-- `type`: 유니온, 인터섹션, 유틸리티 타입
+- `interface`: Object types, extensible (Props, etc.)
+- `type`: Unions, intersections, utility types
 
 ## TDD
 
-ROI가 높은 함수/훅(복잡한 분기, 데이터 변환, edge case 다수)을 새로 작성하거나 수정할 때는 TDD로 진행한다.
-기존 테스트(`*.test.ts`)가 있는 함수/훅을 수정한 경우, 수정 완료 후 해당 테스트를 실행하여 통과를 확인한다.
+Use TDD when creating or modifying high-ROI functions/hooks (complex branching, data transformation, many edge cases).
+When modifying functions/hooks that have existing tests (`*.test.ts`), run those tests after changes to confirm they pass.
 
-> 테스트 패턴 및 TDD 사이클은 `testing.md` 참고
+> See `testing.md` for test patterns and TDD cycle
 
-## 파일 구조
+## File Structure
 
 ```typescript
-// 1. 'use client' 또는 'use server' (필요시)
+// 1. 'use client' or 'use server' (if needed)
 // 2. Imports
 // 3. Types/Interfaces
 // 4. Constants
 // 5. Helper functions
-// 6. Main export (컴포넌트/훅/함수)
+// 6. Main export (component/hook/function)
 // 7. Named exports
 ```

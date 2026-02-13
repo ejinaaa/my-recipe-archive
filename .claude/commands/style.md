@@ -1,58 +1,58 @@
-# 코드 스타일 정리
+# Code Style Cleanup
 
-> 컨벤션은 `rules/code-style.md` 참고
+> See `rules/code-style.md` for conventions
 
-## 사용법
+## Usage
 
 ```
-/style                     # 최근 변경 파일 대상
-/style src/features/search  # 특정 폴더 대상
-/style --all                # 프로젝트 전체 (src/)
+/style                     # Recently changed files
+/style src/features/search  # Specific folder
+/style --all                # Entire project (src/)
 ```
 
-## 워크플로우
+## Workflow
 
-### 1단계: 대상 파일 수집
+### Step 1: Collect Target Files
 
-| 인자 | 대상 |
+| Argument | Target |
 |------|------|
-| (없음) | `git diff --name-only HEAD` 최근 변경 `.ts`, `.tsx` |
-| 경로 | 해당 경로의 `.ts`, `.tsx` |
-| `--all` | `src/` 전체 `.ts`, `.tsx` |
+| (none) | `git diff --name-only HEAD` recently changed `.ts`, `.tsx` |
+| path | `.ts`, `.tsx` files in that path |
+| `--all` | All `.ts`, `.tsx` in `src/` |
 
-### 2단계: 검증 항목
+### Step 2: Validation Items
 
-| 항목 | 검증 내용 |
+| Item | Validation |
 |------|----------|
-| Type Import | `import type` 또는 `{ type ... }` 사용 여부 |
-| 네이밍 | 컴포넌트(PascalCase), 훅(use~Query/Mutation), API(~Api/fetch~/~Action) |
-| 함수 선언 | 훅/컴포넌트 → `function`, 유틸 → `const` 화살표 |
-| TypeScript | Props → `interface`, 유니온/유틸리티 → `type` |
-| 파일 구조 | import 순서, 타입/상수/함수 배치 |
-| 주석 | 한글 작성 여부 |
+| Type Import | Whether `import type` or `{ type ... }` is used |
+| Naming | Components(PascalCase), hooks(use~Query/Mutation), API(~Api/fetch~/~Action) |
+| Function Declaration | Hooks/components → `function`, utils → `const` arrow |
+| TypeScript | Props → `interface`, unions/utilities → `type` |
+| File Structure | Import order, type/constant/function placement |
+| Comments | Whether written in Korean |
 
-### 3단계: 자동 수정
+### Step 3: Auto-Fix
 
-위반 사항을 자동으로 수정하고, 수정이 어려운 경우 사용자에게 확인
+Automatically fix violations; ask user for confirmation if fix is unclear
 
-### 4단계: ESLint 실행
+### Step 4: Run ESLint
 
 ```bash
 pnpm lint
 ```
 
-lint 에러 발생 시 수정 후 재실행
+Fix and re-run if lint errors occur
 
-### 5단계: 결과 보고
+### Step 5: Report Results
 
 ```
-## 스타일 정리 결과
+## Style Cleanup Results
 
-### 수정 사항
-1. [파일:라인] - [위반] → [수정 내용]
+### Fixes
+1. [file:line] - [violation] → [fix description]
 
-### 요약
-- 검사 파일: N개
-- 수정: N건
-- lint: ✅ 통과 / ❌ 실패
+### Summary
+- Files checked: N
+- Fixes: N
+- lint: ✅ Passed / ❌ Failed
 ```

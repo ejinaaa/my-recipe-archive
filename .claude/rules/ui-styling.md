@@ -1,56 +1,56 @@
 ---
-description: UI 스타일링 및 디자인 시스템 규칙
+description: UI styling and design system rules
 globs: '**/*.tsx'
 ---
 
-# UI 스타일링 규칙
+# UI Styling Rules
 
 ## Typography
 
-커스텀 클래스만 사용 (임의의 `text-2xl font-bold` 등 금지):
+Use only custom classes (arbitrary `text-2xl font-bold` etc. forbidden):
 
 - `text-heading-1` (24px Bold), `text-heading-2` (20px Bold), `text-heading-3` (18px SemiBold)
 - `text-body-1` (16px), `text-body-2` (14px), `text-caption` (12px)
 
 ## Colors
 
-정의된 컬러만 사용 (임의의 `bg-red-500` 등 금지):
+Use only defined colors (arbitrary `bg-red-500` etc. forbidden):
 
 - Primary: `primary-base` (#FF8762), Secondary: `secondary-base` (#B9DA99)
 - Text: `text-text-primary` (#33312F), `text-text-secondary` (#666666)
 
 ## Icons
 
-`lucide-react`만 사용 (다른 아이콘 라이브러리 금지):
+`lucide-react` only (no other icon libraries):
 
 ```typescript
 import { Search, Heart, User } from 'lucide-react';
 <Search className="size-4" />  // 16px
 ```
 
-## 공통 컴포넌트
+## Shared Components
 
-`shared/ui` 컴포넌트 우선 사용 (공통 컴포넌트가 있는데 직접 스타일링 금지)
+Use `shared/ui` components first (no custom styling when a shared component exists)
 
-## Section Compound 패턴
+## Section Compound Pattern
 
-`Section` + `SectionHeader` 조합 (인라인 `<section>` + `<h2>` 직접 작성 금지):
+Use `Section` + `SectionHeader` composition (inline `<section>` + `<h2>` forbidden):
 
 ```typescript
 import { Section, SectionHeader } from '@/shared/ui/section';
 
 <Section>
   <SectionHeader title='섹션 제목' moreHref={ROUTES.SEARCH_RESULTS} />
-  {/* 콘텐츠 */}
+  {/* content */}
 </Section>
 ```
 
-- `size='lg'`: 큰 제목 (text-heading-2)
-- `disabled`: Skeleton/로딩 시 더보기 버튼 비활성화
+- `size='lg'`: Large title (text-heading-2)
+- `disabled`: Disable "more" button during skeleton/loading
 
-## 가로 스크롤
+## Horizontal Scroll
 
-`HorizontalScroll` 사용 (`overflow-x-auto` + scrollbar 숨김 직접 작성 금지):
+Use `HorizontalScroll` (manual `overflow-x-auto` + scrollbar hiding forbidden):
 
 ```typescript
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
@@ -60,9 +60,9 @@ import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 </HorizontalScroll>
 ```
 
-## 폼 필드
+## Form Fields
 
-`Field` + `FieldLabel` 조합 (인라인 `<Label>` + `<span>*</span>` 직접 작성 금지):
+Use `Field` + `FieldLabel` composition (inline `<Label>` + `<span>*</span>` forbidden):
 
 ```typescript
 import { Field, FieldLabel, FieldDescription, FieldError } from '@/shared/ui/field';
@@ -73,6 +73,6 @@ import { Field, FieldLabel, FieldDescription, FieldError } from '@/shared/ui/fie
 </Field>
 ```
 
-- `required`: 라벨에 `*` 표시
-- `className='gap-3'`: gap 오버라이드 (기본 gap-2)
-- `FieldDescription`: 도움말, `FieldError`: 에러 메시지
+- `required`: Shows `*` on label
+- `className='gap-3'`: Gap override (default gap-2)
+- `FieldDescription`: Help text, `FieldError`: Error message
