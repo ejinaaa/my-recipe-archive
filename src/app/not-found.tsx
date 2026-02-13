@@ -14,7 +14,7 @@ export default function NotFound() {
         찾으시는 페이지가 사라졌거나 주소가 바뀌었어요
       </p>
       <Button asChild>
-        <Link href={ROUTES.RECIPES.LIST}>홈으로 돌아가기</Link>
+        <Link href={ROUTES.HOME}>홈으로 돌아가기</Link>
       </Button>
     </div>
   );

@@ -19,17 +19,17 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
+            request.cookies.set(name, value),
           );
           response = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
+            response.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   const {
@@ -47,10 +47,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 이미 로그인한 사용자가 로그인 페이지에 접근하면 /recipes로 리다이렉트
+  // 이미 로그인한 사용자가 로그인 페이지에 접근하면 홈으로 리다이렉트
   if (user && request.nextUrl.pathname === ROUTES.AUTH.LOGIN) {
     const url = request.nextUrl.clone();
-    url.pathname = ROUTES.RECIPES.LIST;
+    url.pathname = ROUTES.HOME;
     return NextResponse.redirect(url);
   }
 

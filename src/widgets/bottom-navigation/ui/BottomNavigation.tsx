@@ -16,7 +16,7 @@ interface Tab {
 }
 
 const TABS: Tab[] = [
-  { id: 'home', icon: Home, label: '홈', href: ROUTES.RECIPES.LIST },
+  { id: 'home', icon: Home, label: '홈', href: ROUTES.HOME },
   { id: 'search', icon: Search, label: '검색', href: ROUTES.SEARCH },
   { id: 'favorites', icon: Heart, label: '즐겨찾기', href: ROUTES.FAVORITES },
   { id: 'register', icon: Plus, label: '등록하기', href: ROUTES.RECIPES.NEW },
@@ -27,8 +27,12 @@ export function BottomNavigation({
 }: {
   activeTab?: NavTab;
 }) {
-  const { lastSearchUrl, lastFavoritesUrl, setLastSearchUrl, setLastFavoritesUrl } =
-    useNavigationStore();
+  const {
+    lastSearchUrl,
+    lastFavoritesUrl,
+    setLastSearchUrl,
+    setLastFavoritesUrl,
+  } = useNavigationStore();
 
   /** 활성 탭이면 기본 경로, 아니면 저장된 URL 사용 */
   const getHref = (id: NavTab, baseHref: string) => {

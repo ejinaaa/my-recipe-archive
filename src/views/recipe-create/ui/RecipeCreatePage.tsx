@@ -80,7 +80,7 @@ export function RecipeCreatePage() {
           fallbackRender={({ resetErrorBoundary }) => (
             <ErrorFallback
               onRetry={resetErrorBoundary}
-              onBack={() => router.push(ROUTES.RECIPES.LIST)}
+              onBack={() => router.push(ROUTES.HOME)}
               title='카테고리 정보를 가져오지 못했어요'
               description='레시피 작성에 필요한 카테고리를 준비하지 못했어요'
             />

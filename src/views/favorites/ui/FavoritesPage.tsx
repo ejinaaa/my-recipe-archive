@@ -110,7 +110,7 @@ export function FavoritesPage() {
             <QueryErrorFallback
               skeleton={<RecipeListSkeleton />}
               onRetry={resetErrorBoundary}
-              onHome={() => router.push(ROUTES.RECIPES.LIST)}
+              onHome={() => router.push(ROUTES.HOME)}
               title='즐겨찾기 목록을 가져오지 못했어요'
               description='네트워크 상태를 확인하고 다시 시도해주세요'
             />

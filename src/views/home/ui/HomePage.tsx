@@ -21,14 +21,14 @@ import {
   RecipeCarouselSkeleton,
 } from '@/widgets/recipe-section';
 import { ProfileGreeting } from './ProfileGreeting';
-import { RecipesEmptyFallback } from './RecipesEmptyFallback';
+import { HomeEmptyFallback } from './HomeEmptyFallback';
 import { SilentErrorBoundary } from './sections/SilentErrorBoundary';
 import {
   TodayPickSection,
   TodayPickSectionSkeleton,
 } from './sections/TodayPickSection';
 
-export function RecipesPage() {
+export function HomePage() {
   const { data: profile } = useCurrentProfileQuery();
 
   return (
@@ -149,7 +149,7 @@ export function RecipesPage() {
                 size='lg'
                 moreHref={ROUTES.SEARCH_RESULTS}
               />
-              <RecipeList emptyFallback={<RecipesEmptyFallback />} />
+              <RecipeList emptyFallback={<HomeEmptyFallback />} />
             </Suspense>
           </ErrorBoundary>
         </Section>

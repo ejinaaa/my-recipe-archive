@@ -7,25 +7,25 @@ globs: '**/api/**/*.ts, **/ui/**/*.tsx, **/views/**/*.tsx'
 
 ## Error Type → UI Pattern
 
-| Error Type | UI Pattern | Component |
-|-----------|---------|---------|
-| Query error (page main) | Skeleton + ErrorBottomSheet | `QueryErrorFallback` |
-| Query error (inside Drawer) | Inline Error UI | Custom implementation |
-| Query error (form required data) | Error UI replacing form area | `ErrorFallback` |
-| Mutation error (retryable) | ErrorBottomSheet | `ErrorBottomSheet` |
-| Mutation error (auth/data missing) | Toast 3s auto-dismiss | `MutationCache` auto-handled |
-| Mutation error (other) | Toast | `MutationCache` auto-handled |
-| Mutation error (non-critical) | Ignore error | `meta.suppressErrorToast` |
-| Route error | Full-page Error UI | `error.tsx`, `global-error.tsx` |
-| 404 | Not Found page | `not-found.tsx` |
+| Error Type                         | UI Pattern                   | Component                       |
+| ---------------------------------- | ---------------------------- | ------------------------------- |
+| Query error (page main)            | Skeleton + ErrorBottomSheet  | `QueryErrorFallback`            |
+| Query error (inside Drawer)        | Inline Error UI              | Custom implementation           |
+| Query error (form required data)   | Error UI replacing form area | `ErrorFallback`                 |
+| Mutation error (retryable)         | ErrorBottomSheet             | `ErrorBottomSheet`              |
+| Mutation error (auth/data missing) | Toast 3s auto-dismiss        | `MutationCache` auto-handled    |
+| Mutation error (other)             | Toast                        | `MutationCache` auto-handled    |
+| Mutation error (non-critical)      | Ignore error                 | `meta.suppressErrorToast`       |
+| Route error                        | Full-page Error UI           | `error.tsx`, `global-error.tsx` |
+| 404                                | Not Found page               | `not-found.tsx`                 |
 
 ## Error Handling Utilities
 
-| Utility | Location | Purpose |
-|---------|------|------|
-| `ApiError` | `shared/api/fetchWithError.ts` | Error class with status |
-| `handleApiResponse` | `shared/api/fetchWithError.ts` | Common client.ts fetch response handler |
-| `handleRouteError` | `shared/api/handleRouteError.ts` | Common Route API catch block handler |
+| Utility             | Location                         | Purpose                                 |
+| ------------------- | -------------------------------- | --------------------------------------- |
+| `ApiError`          | `shared/api/fetchWithError.ts`   | Error class with status                 |
+| `handleApiResponse` | `shared/api/fetchWithError.ts`   | Common client.ts fetch response handler |
+| `handleRouteError`  | `shared/api/handleRouteError.ts` | Common Route API catch block handler    |
 
 ## Query Error Pattern (ErrorBoundary + Suspense)
 
@@ -34,7 +34,7 @@ globs: '**/api/**/*.ts, **/ui/**/*.tsx, **/views/**/*.tsx'
   <QueryErrorFallback
     skeleton={<RecipeListSkeleton />}
     onRetry={resetErrorBoundary}
-    onHome={() => router.push(ROUTES.RECIPES.LIST)}
+    onHome={() => router.push(ROUTES.HOME)}
     title="레시피 목록을 가져오지 못했어요"
     description="네트워크 상태를 확인하고 다시 시도해주세요"
   />
@@ -82,11 +82,11 @@ const handleSubmit = async (formData) => {
 `QueryProvider`'s `MutationCache.onError` catches all mutation errors.
 Behavior branches based on individual mutation `meta`:
 
-| meta Option | Behavior | Example |
-|-----------|------|--------|
-| `suppressErrorToast: true` | Ignore error (no toast) | `useIncrementViewCountMutation`, `useAddCookingLogMutation` |
+| meta Option                 | Behavior                                  | Example                                                                         |
+| --------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------- |
+| `suppressErrorToast: true`  | Ignore error (no toast)                   | `useIncrementViewCountMutation`, `useAddCookingLogMutation`                     |
 | `handleErrorManually: true` | Skip global toast (page handles directly) | `useCreateRecipeMutation`, `useUpdateRecipeMutation`, `useDeleteRecipeMutation` |
-| (none) | Show global toast | `useToggleFavoriteMutation` etc. |
+| (none)                      | Show global toast                         | `useToggleFavoriteMutation` etc.                                                |
 
 ## API Error Handling
 
@@ -127,16 +127,16 @@ export const fetchItem = async (id: string): Promise<Item | null> => {
 
 **Empathetic tone** — use `~했어요` endings (not formal `~했습니다`).
 
-| Pattern | Example |
-|------|------|
-| Fetch failure | `~을(를) 가져오지 못했어요` |
-| Create failure | `~을(를) 저장하지 못했어요` / `추가하지 못했어요` |
-| Update failure | `~을(를) 수정하지 못했어요` |
-| Delete failure | `~을(를) 삭제하지 못했어요` |
-| Network guide | `네트워크 상태를 확인하고 다시 시도해주세요` |
-| Content preserved | `작성한 내용은 유지돼요. 다시 시도해주세요` |
-| 404 | `~을(를) 찾을 수 없어요` |
-| Missing params | `필수 정보가 누락되었어요` |
+| Pattern           | Example                                           |
+| ----------------- | ------------------------------------------------- |
+| Fetch failure     | `~을(를) 가져오지 못했어요`                       |
+| Create failure    | `~을(를) 저장하지 못했어요` / `추가하지 못했어요` |
+| Update failure    | `~을(를) 수정하지 못했어요`                       |
+| Delete failure    | `~을(를) 삭제하지 못했어요`                       |
+| Network guide     | `네트워크 상태를 확인하고 다시 시도해주세요`      |
+| Content preserved | `작성한 내용은 유지돼요. 다시 시도해주세요`       |
+| 404               | `~을(를) 찾을 수 없어요`                          |
+| Missing params    | `필수 정보가 누락되었어요`                        |
 
 ```typescript
 // ✅ Correct

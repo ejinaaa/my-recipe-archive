@@ -4,7 +4,7 @@
  */
 
 export const ROUTES = {
-  /** 홈 (레시피 목록으로 리다이렉트) */
+  /** 홈 */
   HOME: '/',
 
   /** 인증 관련 */
@@ -15,7 +15,6 @@ export const ROUTES = {
 
   /** 레시피 관련 */
   RECIPES: {
-    LIST: '/recipes',
     DETAIL: (id: string) => `/recipes/${id}`,
     NEW: '/recipes/new',
     EDIT: (id: string) => `/recipes/${id}/edit`,

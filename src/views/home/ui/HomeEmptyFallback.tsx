@@ -2,7 +2,7 @@ import { BookOpen } from 'lucide-react';
 import { ROUTES } from '@/shared/config';
 import { LinkButton } from '@/shared/ui/link-button';
 
-export function RecipesEmptyFallback() {
+export function HomeEmptyFallback() {
   return (
     <div className='flex flex-col items-center justify-center py-20 px-3'>
       <BookOpen className='size-12 text-text-secondary mb-4' />

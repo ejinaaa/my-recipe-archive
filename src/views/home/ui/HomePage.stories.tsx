@@ -8,7 +8,7 @@ import { mockProfile } from '@/entities/user/model/mock';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { categoryKeys } from '@/entities/category/api/keys';
 import { profileKeys } from '@/entities/user/api/keys';
-import { RecipesPage } from './RecipesPage';
+import { HomePage } from './HomePage';
 
 /**
  * 모든 섹션 데이터가 채워진 QueryClient
@@ -101,13 +101,13 @@ function createErrorQueryClient() {
 }
 
 const meta = {
-  title: 'views/recipes/RecipesPage',
-  component: RecipesPage,
+  title: 'views/home/HomePage',
+  component: HomePage,
   parameters: {
     layout: 'fullscreen',
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof RecipesPage>;
+} satisfies Meta<typeof HomePage>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

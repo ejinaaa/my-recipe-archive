@@ -18,20 +18,20 @@ import {
  * Automatically revalidates related pages after creation
  */
 export async function createCategoryOptionAction(
-  data: CategoryOptionInsert
+  data: CategoryOptionInsert,
 ): Promise<CategoryOption> {
   try {
     const option = await createCategoryOptionApi(data);
 
     // Revalidate pages that use categories
-    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.HOME);
     revalidatePath('/categories');
 
     return option;
   } catch (error) {
     console.error(
       '[Category Actions] createCategoryOptionAction error:',
-      error
+      error,
     );
     throw error;
   }
@@ -43,20 +43,20 @@ export async function createCategoryOptionAction(
  */
 export async function updateCategoryOptionAction(
   id: number,
-  data: CategoryOptionUpdate
+  data: CategoryOptionUpdate,
 ): Promise<CategoryOption> {
   try {
     const option = await updateCategoryOptionApi(id, data);
 
     // Revalidate pages that use categories
-    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.HOME);
     revalidatePath('/categories');
 
     return option;
   } catch (error) {
     console.error(
       '[Category Actions] updateCategoryOptionAction error:',
-      error
+      error,
     );
     throw error;
   }
@@ -71,12 +71,12 @@ export async function deleteCategoryOptionAction(id: number): Promise<void> {
     await deleteCategoryOptionApi(id);
 
     // Revalidate pages that use categories
-    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.HOME);
     revalidatePath('/categories');
   } catch (error) {
     console.error(
       '[Category Actions] deleteCategoryOptionAction error:',
-      error
+      error,
     );
     throw error;
   }

@@ -19,7 +19,7 @@ export async function createRecipeAction(data: RecipeInsert): Promise<Recipe> {
     const recipe = await createRecipeApi(data);
 
     // Revalidate related pages
-    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.HOME);
     revalidatePath(ROUTES.RECIPES.DETAIL(recipe.id));
 
     return recipe;
@@ -35,13 +35,13 @@ export async function createRecipeAction(data: RecipeInsert): Promise<Recipe> {
  */
 export async function updateRecipeAction(
   id: string,
-  data: RecipeUpdate
+  data: RecipeUpdate,
 ): Promise<Recipe> {
   try {
     const recipe = await updateRecipeApi(id, data);
 
     // Revalidate related pages
-    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.HOME);
     revalidatePath(ROUTES.RECIPES.DETAIL(id));
 
     return recipe;
@@ -60,7 +60,7 @@ export async function deleteRecipeAction(id: string): Promise<void> {
     await deleteRecipeApi(id);
 
     // Revalidate related pages
-    revalidatePath(ROUTES.RECIPES.LIST);
+    revalidatePath(ROUTES.HOME);
     revalidatePath(ROUTES.RECIPES.DETAIL(id));
   } catch (error) {
     console.error('[Recipe Actions] deleteRecipeAction error:', error);
@@ -74,7 +74,7 @@ export async function deleteRecipeAction(id: string): Promise<void> {
  */
 export async function incrementViewCountAction(
   recipeId: string,
-  userId: string
+  userId: string,
 ): Promise<void> {
   await incrementViewCountApi(recipeId, userId);
 }

@@ -157,7 +157,7 @@ export function RecipeEditPage({ id }: RecipeEditPageProps) {
           fallbackRender={({ resetErrorBoundary }) => (
             <ErrorFallback
               onRetry={resetErrorBoundary}
-              onBack={() => router.push(ROUTES.RECIPES.LIST)}
+              onBack={() => router.push(ROUTES.HOME)}
               title='필요한 정보를 가져오지 못했어요'
               description='레시피 수정에 필요한 데이터를 준비하지 못했어요'
             />

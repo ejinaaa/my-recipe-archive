@@ -50,7 +50,7 @@ export const Default: Story = {
     colorScheme: 'primary',
     size: 'md',
     transparent: false,
-    href: ROUTES.RECIPES.LIST,
+    href: ROUTES.HOME,
     children: 'Go to Recipes',
   },
 };
@@ -75,7 +75,7 @@ export const WithIconRight: Story = {
     variant: 'outline',
     colorScheme: 'primary',
     size: 'md',
-    href: ROUTES.RECIPES.LIST,
+    href: ROUTES.HOME,
     children: (
       <>
         View More
