@@ -7,8 +7,8 @@ import { DebugLogoutButton } from '@/shared/ui/debug-logout-button';
 import { Toaster } from '@/shared/ui/sonner';
 import './globals.css';
 
-const defaultUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
+const defaultUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : 'http://localhost:3000';
 
 // 뷰포트 설정 — Next.js에서 <meta name="viewport"> 태그를 생성
