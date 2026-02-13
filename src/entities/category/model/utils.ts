@@ -9,7 +9,7 @@ import type {
 /**
  * Converts a database category option to an application category option
  */
-export function toCategoryOption(dbOption: CategoryOptionDB): CategoryOption {
+export const toCategoryOption = (dbOption: CategoryOptionDB): CategoryOption => {
   const baseOption = {
     id: dbOption.id,
     type: dbOption.type,
@@ -22,14 +22,14 @@ export function toCategoryOption(dbOption: CategoryOptionDB): CategoryOption {
 
   // Type assertion is safe here because CategoryOptionDB guarantees the correct type-code relationship
   return baseOption as CategoryOption;
-}
+};
 
 /**
  * Groups category options by type
  */
-export function groupCategoriesByType(
+export const groupCategoriesByType = (
   categories: CategoryOption[],
-): CategoryGroup[] {
+): CategoryGroup[] => {
   const grouped = categories.reduce((acc, category) => {
     if (!acc[category.type]) {
       acc[category.type] = [];
@@ -46,7 +46,7 @@ export function groupCategoriesByType(
       return aOrder - bOrder;
     }),
   }));
-}
+};
 
 /**
  * CategoryGroup 배열에서 특정 타입의 옵션 목록을 반환
@@ -61,10 +61,10 @@ export const getOptionsByType = (
 /**
  * Finds a category option by type and code
  */
-export function findCategoryOption(
+export const findCategoryOption = (
   categories: CategoryOption[],
   type: CategoryType,
   code: CategoryCode,
-): CategoryOption | undefined {
+): CategoryOption | undefined => {
   return categories.find(cat => cat.type === type && cat.code === code);
-}
+};

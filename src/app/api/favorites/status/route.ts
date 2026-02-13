@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { isFavoritedApi } from '@/entities/favorite/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 

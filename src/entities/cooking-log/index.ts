@@ -4,7 +4,7 @@ export type {
   CookingLogDB,
   RecipeCookCount,
 } from './model/types';
-export { toCookingLog } from './model/types';
+export { toCookingLog } from './model/utils';
 
 // Server API
 export {

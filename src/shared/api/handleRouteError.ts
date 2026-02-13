@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
  *
  * Supabase 에러 코드에 따라 적절한 HTTP 상태 코드 + 메시지를 반환한다.
  */
-export function handleRouteError(error: unknown, context: string) {
+export const handleRouteError = (error: unknown, context: string) => {
   console.error(`[API] ${context} error:`, error);
 
   if (error instanceof Error) {
@@ -40,4 +40,4 @@ export function handleRouteError(error: unknown, context: string) {
   const message =
     error instanceof Error ? error.message : '요청을 처리하지 못했어요';
   return NextResponse.json({ error: message }, { status: 500 });
-}
+};

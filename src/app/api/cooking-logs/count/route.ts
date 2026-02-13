@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { getCookCountApi } from '@/entities/cooking-log/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 

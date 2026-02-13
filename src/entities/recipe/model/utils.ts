@@ -27,7 +27,7 @@ export const formatCookingTime = (minutes: number): string => {
 /**
  * Converts a database recipe to an application recipe
  */
-export function toRecipe(dbRecipe: RecipeDB): Recipe {
+export const toRecipe = (dbRecipe: RecipeDB): Recipe => {
   return {
     id: dbRecipe.id,
     user_id: dbRecipe.user_id,
@@ -51,15 +51,15 @@ export function toRecipe(dbRecipe: RecipeDB): Recipe {
     ...(dbRecipe.created_at && { created_at: new Date(dbRecipe.created_at) }),
     ...(dbRecipe.updated_at && { updated_at: new Date(dbRecipe.updated_at) }),
   };
-}
+};
 
 /**
  * Converts an application recipe to database format
  */
-export function toRecipeDB(
+export const toRecipeDB = (
   recipe: RecipeInsert | RecipeUpdate,
   user_id?: string,
-): Partial<RecipeDB> {
+): Partial<RecipeDB> => {
   const result: Partial<RecipeDB> = {};
 
   if ('user_id' in recipe) result.user_id = recipe.user_id;
@@ -90,4 +90,4 @@ export function toRecipeDB(
   if (recipe.tags !== undefined) result.tags = recipe.tags;
 
   return result;
-}
+};

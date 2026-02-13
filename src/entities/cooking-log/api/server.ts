@@ -21,7 +21,7 @@ export async function addCookingLogApi(
     throw new Error('요리 기록을 추가하지 못했어요');
   }
 
-  const { toCookingLog } = await import('../model/types');
+  const { toCookingLog } = await import('../model/utils');
   return toCookingLog(data as CookingLogDB);
 }
 
@@ -119,6 +119,6 @@ export async function getCookingLogsApi(
     return [];
   }
 
-  const { toCookingLog } = await import('../model/types');
+  const { toCookingLog } = await import('../model/utils');
   return (data as CookingLogDB[]).map(toCookingLog);
 }

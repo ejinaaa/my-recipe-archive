@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface InfiniteScrollListProps {
@@ -31,28 +31,34 @@ interface InfiniteScrollListProps {
 }
 
 // 기본 로딩 컴포넌트
-const DefaultLoadingComponent = () => (
-  <div className='flex items-center justify-center py-8'>
-    <Loader2 className='size-6 animate-spin text-text-secondary' />
-    <span className='ml-2 text-body-2 text-text-secondary'>불러오는 중...</span>
-  </div>
-);
+function DefaultLoadingComponent() {
+  return (
+    <div className='flex items-center justify-center py-8'>
+      <Loader2 className='size-6 animate-spin text-text-secondary' />
+      <span className='ml-2 text-body-2 text-text-secondary'>불러오는 중...</span>
+    </div>
+  );
+}
 
 // 기본 종료 컴포넌트
-const DefaultEndComponent = () => (
-  <div className='flex items-center justify-center py-8'>
-    <p className='text-body-2 text-text-secondary'>더 이상 항목이 없어요</p>
-  </div>
-);
+function DefaultEndComponent() {
+  return (
+    <div className='flex items-center justify-center py-8'>
+      <p className='text-body-2 text-text-secondary'>더 이상 항목이 없어요</p>
+    </div>
+  );
+}
 
 // 기본 빈 상태 컴포넌트
-const DefaultEmptyComponent = () => (
-  <div className='flex flex-col items-center justify-center py-20 px-3'>
-    <p className='text-body-1 text-text-secondary text-center'>
-      아직 항목이 없어요
-    </p>
-  </div>
-);
+function DefaultEmptyComponent() {
+  return (
+    <div className='flex flex-col items-center justify-center py-20 px-3'>
+      <p className='text-body-1 text-text-secondary text-center'>
+        아직 항목이 없어요
+      </p>
+    </div>
+  );
+}
 
 export function InfiniteScrollList({
   fetchNextPage,

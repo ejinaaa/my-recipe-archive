@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { getCategoryOptionsApi } from '@/entities/category/api/server';
 import type { CategoryType } from '@/entities/category/model/types';
 import { handleRouteError } from '@/shared/api/handleRouteError';

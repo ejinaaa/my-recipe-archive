@@ -42,16 +42,3 @@ export interface RecipeCookCount {
   recipe_id: string;
   count: number;
 }
-
-/**
- * Converts a database cooking log to an application cooking log
- */
-export function toCookingLog(dbLog: CookingLogDB): CookingLog {
-  return {
-    id: dbLog.id,
-    user_id: dbLog.user_id,
-    recipe_id: dbLog.recipe_id,
-    cooked_at: new Date(dbLog.cooked_at),
-    created_at: new Date(dbLog.created_at),
-  };
-}

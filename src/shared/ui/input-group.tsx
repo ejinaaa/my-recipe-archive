@@ -23,10 +23,10 @@ const InputGroupContext = React.createContext<InputGroupContextValue>({
   disabled: false,
 });
 
-const useInputGroupContext = () => {
+function useInputGroupContext() {
   const context = React.useContext(InputGroupContext);
   return context;
-};
+}
 
 const inputGroupVariants = cva(
   'group/input-group relative flex w-full items-center transition-all outline-none',
