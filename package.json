@@ -6,7 +6,8 @@
     "start": "next start",
     "lint": "eslint .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -46,6 +47,8 @@
     "@storybook/addon-vitest": "^10.2.4",
     "@storybook/nextjs-vite": "^10.2.4",
     "@storybook/react": "^10.2.4",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -54,6 +57,7 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^9",
     "eslint-config-next": "15.3.1",
+    "jsdom": "^28.0.0",
     "msw": "^2.12.9",
     "msw-storybook-addon": "^2.0.6",
     "playwright": "^1.58.1",
