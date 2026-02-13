@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Recipe, RecipeCategory } from '@/entities/recipe/model/types';
 import { mockRecipes } from '@/entities/recipe/model/mock';
-import type { RecipeFormData } from './hooks';
+import type { RecipeFormData } from './schema';
 import {
   convertCategoriesToFormData,
   convertFormDataToRecipeData,

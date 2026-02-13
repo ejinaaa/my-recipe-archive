@@ -5,7 +5,7 @@ import type {
   CookingStep,
 } from '@/entities/recipe/model/types';
 import type { CategoryType } from '@/entities/category/model/types';
-import type { RecipeFormData } from './hooks';
+import type { RecipeFormData } from './schema';
 
 /**
  * convertFormDataToRecipeData의 반환 타입
