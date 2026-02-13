@@ -22,14 +22,24 @@ interface SectionHeaderProps {
   disabled?: boolean;
 }
 
-function SectionHeader({ title, size = 'sm', moreHref, disabled }: SectionHeaderProps) {
+function SectionHeader({
+  title,
+  size = 'sm',
+  moreHref,
+  disabled,
+}: SectionHeaderProps) {
   return (
-    <div className='flex items-center justify-between px-4 mb-3'>
-      <h2 className={cn('text-text-primary', size === 'lg' ? 'text-heading-2' : 'text-heading-3')}>
+    <div className='flex items-center justify-between px-5 mb-3'>
+      <h2
+        className={cn(
+          'text-text-primary',
+          size === 'lg' ? 'text-heading-2' : 'text-heading-3',
+        )}
+      >
         {title}
       </h2>
-      {moreHref && (
-        disabled ? (
+      {moreHref &&
+        (disabled ? (
           <span className='inline-flex items-center justify-center size-10 p-0 text-primary-base/40'>
             <ChevronRight className='size-4' />
           </span>
@@ -43,8 +53,7 @@ function SectionHeader({ title, size = 'sm', moreHref, disabled }: SectionHeader
           >
             <ChevronRight className='size-4' />
           </LinkButton>
-        )
-      )}
+        ))}
     </div>
   );
 }

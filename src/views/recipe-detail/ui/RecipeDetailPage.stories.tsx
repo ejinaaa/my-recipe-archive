@@ -22,7 +22,7 @@ function DetailSkeleton() {
   return (
     <div className='min-h-screen bg-background'>
       <Skeleton className='w-full h-[350px] rounded-b-3xl' />
-      <div className='px-4 pt-6 space-y-4'>
+      <div className='px-5 pt-6 space-y-4'>
         <div className='flex gap-1.5'>
           <Skeleton className='h-6 w-16 rounded-full' />
           <Skeleton className='h-6 w-16 rounded-full' />
@@ -47,10 +47,7 @@ function createSuccessQueryClient() {
     },
   });
 
-  queryClient.setQueryData(
-    recipeKeys.detail(MOCK_RECIPE_ID),
-    mockRecipes[0],
-  );
+  queryClient.setQueryData(recipeKeys.detail(MOCK_RECIPE_ID), mockRecipes[0]);
 
   queryClient.setQueryData(profileKeys.current(), mockProfile);
 

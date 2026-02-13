@@ -19,7 +19,7 @@ export function SearchPageSkeleton() {
         {/* 장르별 섹션 */}
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.cuisine} />
-          <HorizontalScroll className='gap-2 px-4'>
+          <HorizontalScroll className='gap-2 px-5'>
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className='h-16 w-32 rounded-full shrink-0' />
             ))}
@@ -29,7 +29,7 @@ export function SearchPageSkeleton() {
         {/* 상황별 섹션 */}
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.situation} />
-          <div className='grid grid-cols-2 gap-3 px-4'>
+          <div className='grid grid-cols-2 gap-3 px-5'>
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className='aspect-[4/3] rounded-2xl' />
             ))}
@@ -39,7 +39,7 @@ export function SearchPageSkeleton() {
         {/* 종류별 섹션 */}
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.dishType} />
-          <div className='grid grid-cols-2 gap-3 px-4'>
+          <div className='grid grid-cols-2 gap-3 px-5'>
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className='aspect-[4/3] rounded-2xl' />
             ))}

@@ -32,7 +32,7 @@ function RecipeCreateContent({
   const { data: categoryGroups } = useSuspenseCategoryGroupsQuery();
 
   return (
-    <div className='px-4 pt-6 pb-8'>
+    <div className='px-5 pt-6 pb-8'>
       <RecipeCreateForm
         categoryGroups={categoryGroups}
         onSubmit={onSubmit}

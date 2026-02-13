@@ -57,7 +57,7 @@ export function RecipeCarousel({
     <Section>
       <SectionHeader title={title} moreHref={moreHref} />
 
-      <HorizontalScroll className='gap-3 px-4'>
+      <HorizontalScroll className='gap-3 px-5'>
         {recipes.map(recipe => (
           <RecipeCardCompact
             key={recipe.id}

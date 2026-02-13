@@ -28,7 +28,7 @@ export function CategorySection() {
     <Section>
       <SectionHeader title='어떤 요리를 찾아볼까요?' />
 
-      <HorizontalScroll className='gap-2 px-4'>
+      <HorizontalScroll className='gap-2 px-5'>
         {categories.map(category => (
           <CategoryChip
             key={category.id}

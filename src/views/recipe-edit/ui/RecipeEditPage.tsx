@@ -60,7 +60,7 @@ function RecipeEditContent({
   return (
     <>
       {/* Form */}
-      <div className='px-4 pt-6 pb-6'>
+      <div className='px-5 pt-6 pb-6'>
         <RecipeCreateForm
           categoryGroups={categoryGroups}
           onSubmit={onSubmit}

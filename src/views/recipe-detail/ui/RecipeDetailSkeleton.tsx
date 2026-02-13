@@ -7,7 +7,7 @@ export function RecipeDetailSkeleton() {
   return (
     <div className='relative min-h-screen bg-background'>
       {/* Header */}
-      <div className='fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full px-4 py-2'>
+      <div className='fixed top-0 left-0 right-0 z-50 flex items-center justify-between w-full px-5 py-2'>
         <Skeleton className='size-10 rounded-full' />
         <Skeleton className='size-10 rounded-full' />
       </div>
@@ -16,7 +16,7 @@ export function RecipeDetailSkeleton() {
       <Skeleton className='w-full h-[350px] rounded-b-3xl' />
 
       {/* 컨텐츠 */}
-      <div className='pt-6 px-4 pb-20'>
+      <div className='pt-6 px-5 pb-20'>
         {/* 배지 */}
         <div className='flex gap-1.5 mb-4'>
           <Skeleton className='h-6 w-16 rounded-full' />

@@ -5,7 +5,7 @@ import { ROUTES } from '@/shared/config';
 
 export default function NotFound() {
   return (
-    <div className='min-h-screen bg-background flex flex-col items-center justify-center px-4'>
+    <div className='min-h-screen bg-background flex flex-col items-center justify-center px-5'>
       <Home className='size-12 text-text-secondary mb-4' />
       <h2 className='text-heading-3 text-text-primary mb-2'>
         앗, 여기엔 아무것도 없어요

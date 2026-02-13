@@ -15,7 +15,6 @@ import type { CategoryFilters, CookingTimeRange } from '../model/types';
 import { SORT_OPTIONS } from '../model/constants';
 import { isDefaultCookingTimeRange } from '../model/utils';
 
-
 interface ActiveFilterBadgesProps {
   /** 현재 적용된 정렬 */
   sortBy: RecipeSortBy | null;
@@ -52,7 +51,7 @@ export function ActiveFilterBadges(props: ActiveFilterBadgesProps) {
     <ErrorBoundary fallback={null}>
       <Suspense
         fallback={
-          <HorizontalScroll className='gap-1.5 px-4 py-2'>
+          <HorizontalScroll className='gap-1.5 px-5 py-2'>
             <Skeleton className='h-8 w-16 shrink-0 rounded-full' />
             <Skeleton className='h-8 w-16 shrink-0 rounded-full' />
             <Skeleton className='h-8 w-16 shrink-0 rounded-full' />
@@ -87,7 +86,9 @@ function ActiveFilterBadgesContent({
 
   // 카테고리 코드 → { icon, name } 변환
   const getCategoryInfo = (type: CategoryType, code: string) => {
-    const option = getOptionsByType(categoryGroups, type).find(opt => opt.code === code);
+    const option = getOptionsByType(categoryGroups, type).find(
+      opt => opt.code === code,
+    );
     return { icon: option?.icon, name: option?.name ?? code };
   };
 
@@ -96,7 +97,7 @@ function ActiveFilterBadgesContent({
     cookingTimeRange !== null && !isDefaultCookingTimeRange(cookingTimeRange);
 
   return (
-    <HorizontalScroll className='gap-1.5 px-4 py-2'>
+    <HorizontalScroll className='gap-1.5 px-5 py-2'>
       {/* 1. 정렬 */}
       {sortOption && (
         <Badge

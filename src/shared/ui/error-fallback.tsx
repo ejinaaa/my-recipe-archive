@@ -23,7 +23,7 @@ export function ErrorFallback({
   const handleRetry = onRetry ?? resetErrorBoundary;
 
   return (
-    <div className='flex flex-col items-center justify-center py-20 px-4'>
+    <div className='flex flex-col items-center justify-center py-20 px-5'>
       <AlertCircle className='size-12 text-text-secondary mb-4' />
       <p className='text-heading-3 text-text-primary mb-2'>{title}</p>
       <p className='text-body-2 text-text-secondary text-center mb-6'>

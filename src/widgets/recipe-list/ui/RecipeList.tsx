@@ -30,7 +30,7 @@ interface RecipeListProps {
 }
 
 const defaultEmptyFallback = (
-  <div className='flex flex-col items-center justify-center py-20 px-4'>
+  <div className='flex flex-col items-center justify-center py-20 px-5'>
     <p className='text-body-1 text-text-secondary text-center'>
       검색 결과를 찾지 못했어요
     </p>
@@ -52,9 +52,15 @@ export function RecipeList({
   const categoriesKey = JSON.stringify(categories);
   const cookingTimeKey = JSON.stringify(cookingTimeRange);
   const params = useMemo(
-    () => ({ searchQuery, categories, cookingTimeRange, sortBy, favoritesByUserId }),
+    () => ({
+      searchQuery,
+      categories,
+      cookingTimeRange,
+      sortBy,
+      favoritesByUserId,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchQuery, categoriesKey, cookingTimeKey, sortBy, favoritesByUserId]
+    [searchQuery, categoriesKey, cookingTimeKey, sortBy, favoritesByUserId],
   );
 
   // params 변경 시 이전 데이터를 유지하며 새 데이터를 transition으로 로딩
@@ -95,7 +101,7 @@ export function RecipeList({
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         isEmpty={recipes.length === 0}
-        containerClassName='grid grid-cols-2 gap-2 px-4'
+        containerClassName='grid grid-cols-2 gap-2 px-5'
         emptyComponent={emptyFallback}
         loadingComponent={<RecipeListLoadingIndicator />}
         endComponent={<RecipeListEndMessage />}

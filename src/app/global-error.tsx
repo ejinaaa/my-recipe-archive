@@ -12,7 +12,7 @@ export default function GlobalError({ reset }: GlobalErrorProps) {
   return (
     <html lang='ko'>
       <body className='antialiased'>
-        <div className='min-h-screen bg-background flex flex-col items-center justify-center px-4'>
+        <div className='min-h-screen bg-background flex flex-col items-center justify-center px-5'>
           <AlertCircle className='size-12 text-text-secondary mb-4' />
           <h2 className='text-heading-3 text-text-primary mb-2'>
             이런, 뭔가 잘못됐어요

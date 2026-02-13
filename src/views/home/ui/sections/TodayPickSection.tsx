@@ -15,7 +15,7 @@ export function TodayPickSection() {
   if (!recipe) return null;
 
   return (
-    <Section className='px-4'>
+    <Section className='px-5'>
       <RecipeCardHero recipe={recipe} />
     </Section>
   );
@@ -23,7 +23,7 @@ export function TodayPickSection() {
 
 export function TodayPickSectionSkeleton() {
   return (
-    <div className='px-4'>
+    <div className='px-5'>
       <div className='relative w-full h-[200px] overflow-hidden rounded-3xl bg-neutral-base/30'>
         {/* 그라데이션 오버레이 */}
         <div className='absolute inset-0 bg-gradient-to-br from-surface from-30% via-surface/60 via-60% to-transparent' />

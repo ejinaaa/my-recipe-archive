@@ -77,11 +77,18 @@ export function RecipeDetailPage({ id }: RecipeDetailPageProps) {
       />
 
       {/* Content Section */}
-      <PageContent className='relative bg-background pt-6 px-4 pb-20 z-10'>
+      <PageContent className='relative bg-background pt-6 px-5 pb-20 z-10'>
         {/* Badges */}
         <div className='flex flex-wrap gap-1.5 mb-4'>
-          {recipe.cooking_time && <CookingTimeBadge minutes={recipe.cooking_time} colorScheme='surface' />}
-          {recipe.servings && <ServingsBadge servings={recipe.servings} colorScheme='surface' />}
+          {recipe.cooking_time && (
+            <CookingTimeBadge
+              minutes={recipe.cooking_time}
+              colorScheme='surface'
+            />
+          )}
+          {recipe.servings && (
+            <ServingsBadge servings={recipe.servings} colorScheme='surface' />
+          )}
           {cookCount !== undefined && <CookCountBadge count={cookCount} />}
         </div>
 

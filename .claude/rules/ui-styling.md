@@ -55,7 +55,7 @@ Use `HorizontalScroll` (manual `overflow-x-auto` + scrollbar hiding forbidden):
 ```typescript
 import { HorizontalScroll } from '@/shared/ui/horizontal-scroll';
 
-<HorizontalScroll className='gap-3 px-4'>
+<HorizontalScroll className='gap-3 px-5'>
   {items.map(item => <Card key={item.id} />)}
 </HorizontalScroll>
 ```

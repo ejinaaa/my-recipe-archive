@@ -11,15 +11,25 @@ interface RecipeCarouselSkeletonProps {
 /**
  * RecipeCarousel 로딩 스켈레톤
  */
-export function RecipeCarouselSkeleton({ title, showMore = true }: RecipeCarouselSkeletonProps) {
+export function RecipeCarouselSkeleton({
+  title,
+  showMore = true,
+}: RecipeCarouselSkeletonProps) {
   return (
     <Section>
-      <SectionHeader title={title} moreHref={showMore ? '#' : undefined} disabled />
+      <SectionHeader
+        title={title}
+        moreHref={showMore ? '#' : undefined}
+        disabled
+      />
 
       {/* 카드 스켈레톤 */}
-      <div className='flex gap-3 px-4'>
+      <div className='flex gap-3 px-5'>
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className='h-[200px] w-[160px] flex-shrink-0 rounded-2xl' />
+          <Skeleton
+            key={i}
+            className='h-[200px] w-[160px] flex-shrink-0 rounded-2xl'
+          />
         ))}
       </div>
     </Section>

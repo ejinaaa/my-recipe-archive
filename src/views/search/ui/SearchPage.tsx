@@ -50,7 +50,7 @@ function SearchContent({
       <PageContent className='space-y-6 py-6'>
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.cuisine} />
-          <HorizontalScroll className='gap-2 px-4'>
+          <HorizontalScroll className='gap-2 px-5'>
             {cuisines.map(cuisine => (
               <CategoryChip
                 key={cuisine.id}
@@ -63,7 +63,7 @@ function SearchContent({
 
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.situation} />
-          <div className='grid grid-cols-2 gap-3 px-4'>
+          <div className='grid grid-cols-2 gap-3 px-5'>
             {situations.map(category => (
               <CategoryCard
                 key={category.id}
@@ -76,7 +76,7 @@ function SearchContent({
 
         <Section>
           <SectionHeader title={CATEGORY_TYPE_LABELS.dishType} />
-          <div className='grid grid-cols-2 gap-3 px-4'>
+          <div className='grid grid-cols-2 gap-3 px-5'>
             {dishTypes.map(category => (
               <CategoryCard
                 key={category.id}

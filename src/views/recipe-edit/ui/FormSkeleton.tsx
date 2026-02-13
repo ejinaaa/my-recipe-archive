@@ -2,7 +2,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
 
 export function FormSkeleton() {
   return (
-    <div className='px-4 pt-6 flex flex-col gap-6'>
+    <div className='px-5 pt-6 flex flex-col gap-6'>
       <div className='flex flex-col items-center gap-2'>
         <Skeleton className='size-24 rounded-full' />
         <Skeleton className='h-3 w-32' />

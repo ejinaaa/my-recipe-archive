@@ -59,7 +59,7 @@ export function SortBottomSheet({
         </DrawerHeader>
 
         {/* Content */}
-        <div className='flex-1 overflow-y-auto px-4 pt-4 pb-10'>
+        <div className='flex-1 overflow-y-auto px-5 pt-4 pb-10'>
           <div className='flex flex-wrap gap-2'>
             {SORT_OPTIONS.map(option => (
               <Badge
@@ -70,7 +70,8 @@ export function SortBottomSheet({
                 selected={tempSortBy === option.value}
                 onClick={() => setTempSortBy(option.value)}
               >
-                {option.icon}{option.label}
+                {option.icon}
+                {option.label}
               </Badge>
             ))}
           </div>

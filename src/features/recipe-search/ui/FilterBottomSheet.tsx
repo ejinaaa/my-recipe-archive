@@ -5,7 +5,10 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useSuspenseCategoryGroupsQuery } from '@/entities/category/api/hooks';
 import type { CategoryType } from '@/entities/category/model/types';
 import { getOptionsByType } from '@/entities/category/model/utils';
-import { CATEGORY_TYPES, CATEGORY_TYPE_LABELS } from '@/entities/category/model/constants';
+import {
+  CATEGORY_TYPES,
+  CATEGORY_TYPE_LABELS,
+} from '@/entities/category/model/constants';
 import {
   COOKING_TIME_MIN,
   COOKING_TIME_MAX,
@@ -26,7 +29,6 @@ import { toggleCategoryFilter } from '../model/utils';
 import { initialFilters, initialCookingTimeRange } from '../model/constants';
 import { CategoryFilterSection } from './CategoryFilterSection';
 import { CookingTimeFilterSection } from './CookingTimeFilterSection';
-
 
 interface FilterBottomSheetProps {
   /** 바텀시트 열림 상태 */
@@ -77,7 +79,7 @@ function FilterErrorContent({
 }) {
   return (
     <>
-      <div className='flex flex-1 flex-col items-center justify-center gap-2 px-4 py-10'>
+      <div className='flex flex-1 flex-col items-center justify-center gap-2 px-5 py-10'>
         <AlertCircle className='size-10 text-text-secondary mb-2' />
         <p className='text-heading-3 text-text-primary'>
           카테고리 정보를 가져오지 못했어요
@@ -156,7 +158,8 @@ export function FilterBottomSheet({
   onApply,
 }: FilterBottomSheetProps) {
   // 로컬 임시 상태 (바텀시트 내 편집용)
-  const [tempFilters, setTempFilters] = useState<CategoryFilters>(propInitialFilters);
+  const [tempFilters, setTempFilters] =
+    useState<CategoryFilters>(propInitialFilters);
   const [tempCookingTime, setTempCookingTime] = useState<[number, number]>([
     propInitialCookingTime.min,
     propInitialCookingTime.max,
@@ -166,7 +169,10 @@ export function FilterBottomSheet({
   useEffect(() => {
     if (open) {
       setTempFilters(propInitialFilters);
-      setTempCookingTime([propInitialCookingTime.min, propInitialCookingTime.max]);
+      setTempCookingTime([
+        propInitialCookingTime.min,
+        propInitialCookingTime.max,
+      ]);
     }
   }, [open, propInitialFilters, propInitialCookingTime]);
 
@@ -206,7 +212,7 @@ export function FilterBottomSheet({
             />
           )}
         >
-          <div className='flex items-end px-4'>
+          <div className='flex items-end px-5'>
             <Button
               variant='ghost'
               size='sm'
@@ -217,7 +223,7 @@ export function FilterBottomSheet({
               모두 지우기
             </Button>
           </div>
-          <div className='flex-1 overflow-y-auto px-4 pb-10 space-y-6'>
+          <div className='flex-1 overflow-y-auto px-5 pb-10 space-y-6'>
             <Suspense fallback={<CategorySectionsSkeleton />}>
               <CategorySections
                 tempFilters={tempFilters}

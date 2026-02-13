@@ -8,7 +8,7 @@ export function CategorySectionSkeleton() {
   return (
     <Section>
       <SectionHeader title='어떤 요리를 찾아볼까요?' />
-      <div className='flex gap-2 px-4'>
+      <div className='flex gap-2 px-5'>
         {Array.from({ length: 4 }).map((_, i) => (
           <Skeleton
             key={i}
