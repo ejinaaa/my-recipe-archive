@@ -1,6 +1,8 @@
 import { getRecipeApi } from '@/entities/recipe/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

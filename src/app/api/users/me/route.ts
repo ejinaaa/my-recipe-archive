@@ -1,6 +1,8 @@
 import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const profile = await getCurrentProfileApi();

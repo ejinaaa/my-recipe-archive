@@ -8,6 +8,8 @@ import type {
 import { RECIPE_PAGE_SIZE } from '@/entities/recipe/model/constants';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 

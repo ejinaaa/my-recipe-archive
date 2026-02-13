@@ -8,6 +8,8 @@ import { getRecipeApi } from '@/entities/recipe/api/server';
 import { recipeKeys } from '@/entities/recipe/api/keys';
 import { RecipeDetailPage, RecipeDetailSkeleton } from '@/views/recipe-detail';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }

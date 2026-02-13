@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 import { getCategoryOptionApi } from '@/entities/category/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

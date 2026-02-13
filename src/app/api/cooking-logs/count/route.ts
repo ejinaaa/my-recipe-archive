@@ -2,6 +2,8 @@ import type { NextRequest } from 'next/server';
 import { getCookCountApi } from '@/entities/cooking-log/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const userId = searchParams.get('userId');

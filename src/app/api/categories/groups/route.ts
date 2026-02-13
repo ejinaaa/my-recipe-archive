@@ -1,6 +1,8 @@
 import { getCategoryGroupsApi } from '@/entities/category/api/server';
 import { handleRouteError } from '@/shared/api/handleRouteError';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const data = await getCategoryGroupsApi();

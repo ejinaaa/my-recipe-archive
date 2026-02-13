@@ -12,6 +12,8 @@ import { getCurrentProfileApi } from '@/entities/user/api/server';
 import { profileKeys } from '@/entities/user/api/keys';
 import { RecipeEditPage, RecipeEditSkeleton } from '@/views/recipe-edit';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }
